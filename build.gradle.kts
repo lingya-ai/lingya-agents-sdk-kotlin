@@ -1,0 +1,122 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.openapitools.generator.gradle.plugin.tasks.GenerateTask
+import org.gradle.api.tasks.compile.JavaCompile
+import org.gradle.plugins.signing.Sign
+
+plugins {
+    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.openapi.generator)
+    alias(libs.plugins.dokka)
+    alias(libs.plugins.maven.publish)
+}
+
+description = "Kotlin/JVM SDK for the signed Lingya Agents OpenAPI"
+
+kotlin {
+    compilerOptions {
+        jvmTarget.set(JvmTarget.JVM_17)
+        javaParameters.set(true)
+        freeCompilerArgs.add("-Xjsr305=strict")
+    }
+}
+
+tasks.withType<JavaCompile>().configureEach {
+    options.release.set(17)
+}
+
+java {
+    withSourcesJar()
+}
+
+dependencyLocking {
+    lockAllConfigurations()
+}
+
+sourceSets {
+    main {
+        kotlin.srcDir("generated/src/main/kotlin")
+    }
+}
+
+dependencies {
+    api(libs.coroutines.core)
+    api(libs.jackson.kotlin)
+    api(libs.jackson.jsr310)
+    api(libs.okhttp)
+    implementation(libs.okhttp.logging)
+    api(libs.retrofit)
+    api(libs.retrofit.jackson)
+    implementation(libs.retrofit.scalars)
+
+    testImplementation(platform(libs.junit.bom))
+    testImplementation(libs.junit.jupiter)
+    testImplementation(libs.mockwebserver)
+    testImplementation(libs.coroutines.test)
+    testRuntimeOnly(libs.junit.launcher)
+}
+
+val generatedOutput = layout.buildDirectory.dir("openapi-generator")
+
+tasks.named<GenerateTask>("openApiGenerate") {
+    configFile.set(layout.projectDirectory.file("openapi-generator/config.yaml").asFile.absolutePath)
+    inputSpec.set(layout.projectDirectory.file("openapi/lingya-agents-v1.yaml").asFile.absolutePath)
+    outputDir.set(generatedOutput.get().asFile.absolutePath)
+    templateDir.set(layout.projectDirectory.dir("openapi-generator/templates").asFile.absolutePath)
+    cleanupOutput.set(true)
+}
+
+val generateSdk = tasks.register<Sync>("generateSdk") {
+    group = "openapi tools"
+    description = "Regenerates typed API interfaces and models from the pinned contract."
+    dependsOn(tasks.named("openApiGenerate"))
+    from(generatedOutput.map { it.dir("src/main/kotlin") })
+    into(layout.projectDirectory.dir("generated/src/main/kotlin"))
+}
+
+tasks.named("compileKotlin") {
+    dependsOn(generateSdk)
+}
+
+tasks.matching { it.name == "sourcesJar" || it.name.startsWith("dokkaGenerate") }.configureEach {
+    dependsOn(generateSdk)
+}
+
+tasks.withType<Test>().configureEach {
+    useJUnitPlatform()
+}
+
+val signingKeyPresent = providers.gradleProperty("signingInMemoryKey").orNull != null
+tasks.withType<Sign>().configureEach {
+    enabled = signingKeyPresent
+}
+
+mavenPublishing {
+    publishToMavenCentral()
+    signAllPublications()
+    coordinates("ai.lingya", "lingya-agents-sdk", project.version.toString())
+    pom {
+        name.set("Lingya Agents Kotlin SDK")
+        description.set(project.description)
+        inceptionYear.set("2026")
+        url.set("https://github.com/lingya-ai/lingya-agents-sdk-kotlin")
+        licenses {
+            license {
+                name.set("MIT License")
+                url.set("https://opensource.org/licenses/MIT")
+                distribution.set("repo")
+            }
+        }
+        developers {
+            developer {
+                id.set("lingya-ai")
+                name.set("Lingya AI")
+                url.set("https://github.com/lingya-ai")
+            }
+        }
+        scm {
+            connection.set("scm:git:https://github.com/lingya-ai/lingya-agents-sdk-kotlin.git")
+            developerConnection.set("scm:git:ssh://git@github.com/lingya-ai/lingya-agents-sdk-kotlin.git")
+            url.set("https://github.com/lingya-ai/lingya-agents-sdk-kotlin")
+        }
+    }
+}

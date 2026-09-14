@@ -1,0 +1,19 @@
+generatorName: kotlin
+library: jvm-retrofit2
+apiPackage: ai.lingya.agents.sdk.generated.api
+modelPackage: ai.lingya.agents.sdk.generated.model
+packageName: ai.lingya.agents.sdk.generated
+globalProperties:
+  apiTests: "false"
+  modelTests: "false"
+  apiDocs: "false"
+  modelDocs: "false"
+  apis: ""
+  models: ""
+  supportingFiles: CollectionFormats.kt,ResponseExt.kt,Serializer.kt
+additionalProperties:
+  serializationLibrary: jackson
+  dateLibrary: java8
+  useCoroutines: "true"
+  enumUnknownDefaultCase: "true"
+  hideGenerationTimestamp: "true"
