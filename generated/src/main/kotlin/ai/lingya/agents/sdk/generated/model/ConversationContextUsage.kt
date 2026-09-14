@@ -28,29 +28,86 @@ import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonProperty
 
 /**
- * 
+ * ConversationContextUsage 的公开协议结构。 / Public contract for conversation context usage.
  *
- * @param usedTokens 
- * @param maxTokens 
- * @param usageRatio 
+ * @param systemPromptTokens 字段 systemPromptTokens / system prompt tokens field。
+ * @param sessionMessageTokens 字段 sessionMessageTokens / session message tokens field。
+ * @param maxContextTokens 字段 maxContextTokens / max context tokens field。
+ * @param toolDefinitionTokens 字段 toolDefinitionTokens / tool definition tokens field。
+ * @param protocolReserveTokens 字段 protocolReserveTokens / protocol reserve tokens field。
+ * @param activeContextTokens 字段 activeContextTokens / active context tokens field。
+ * @param requestedOutputTokens 字段 requestedOutputTokens / requested output tokens field。
+ * @param messageAssemblyReserveTokens 字段 messageAssemblyReserveTokens / message assembly reserve tokens field。
+ * @param requiredContextTokens 字段 requiredContextTokens / required context tokens field。
+ * @param calculationSource 字段 calculationSource / calculation source field。
+ * @param activeUsageRatio 字段 activeUsageRatio / active usage ratio field。
+ * @param requiredUsageRatio 字段 requiredUsageRatio / required usage ratio field。
  */
 
 
 data class ConversationContextUsage (
 
-    @param:JsonProperty("usedTokens")
-    @get:JsonProperty("usedTokens")
-    val usedTokens: kotlin.Long? = null,
+    /* 字段 systemPromptTokens / system prompt tokens field。 */
+    @param:JsonProperty("systemPromptTokens")
+    @get:JsonProperty("systemPromptTokens")
+    val systemPromptTokens: kotlin.Int,
 
-    @param:JsonProperty("maxTokens")
-    @get:JsonProperty("maxTokens")
-    val maxTokens: kotlin.Long? = null,
+    /* 字段 sessionMessageTokens / session message tokens field。 */
+    @param:JsonProperty("sessionMessageTokens")
+    @get:JsonProperty("sessionMessageTokens")
+    val sessionMessageTokens: kotlin.Int,
 
-    @param:JsonProperty("usageRatio")
-    @get:JsonProperty("usageRatio")
-    val usageRatio: kotlin.Double? = null
+    /* 字段 maxContextTokens / max context tokens field。 */
+    @param:JsonProperty("maxContextTokens")
+    @get:JsonProperty("maxContextTokens")
+    val maxContextTokens: kotlin.Int,
 
-) : kotlin.collections.HashMap<String, kotlin.Any>() {
+    /* 字段 toolDefinitionTokens / tool definition tokens field。 */
+    @param:JsonProperty("toolDefinitionTokens")
+    @get:JsonProperty("toolDefinitionTokens")
+    val toolDefinitionTokens: kotlin.Int,
+
+    /* 字段 protocolReserveTokens / protocol reserve tokens field。 */
+    @param:JsonProperty("protocolReserveTokens")
+    @get:JsonProperty("protocolReserveTokens")
+    val protocolReserveTokens: kotlin.Int,
+
+    /* 字段 activeContextTokens / active context tokens field。 */
+    @param:JsonProperty("activeContextTokens")
+    @get:JsonProperty("activeContextTokens")
+    val activeContextTokens: kotlin.Long,
+
+    /* 字段 requestedOutputTokens / requested output tokens field。 */
+    @param:JsonProperty("requestedOutputTokens")
+    @get:JsonProperty("requestedOutputTokens")
+    val requestedOutputTokens: kotlin.Int,
+
+    /* 字段 messageAssemblyReserveTokens / message assembly reserve tokens field。 */
+    @param:JsonProperty("messageAssemblyReserveTokens")
+    @get:JsonProperty("messageAssemblyReserveTokens")
+    val messageAssemblyReserveTokens: kotlin.Int,
+
+    /* 字段 requiredContextTokens / required context tokens field。 */
+    @param:JsonProperty("requiredContextTokens")
+    @get:JsonProperty("requiredContextTokens")
+    val requiredContextTokens: kotlin.Long,
+
+    /* 字段 calculationSource / calculation source field。 */
+    @param:JsonProperty("calculationSource")
+    @get:JsonProperty("calculationSource")
+    val calculationSource: kotlin.String,
+
+    /* 字段 activeUsageRatio / active usage ratio field。 */
+    @param:JsonProperty("activeUsageRatio")
+    @get:JsonProperty("activeUsageRatio")
+    val activeUsageRatio: kotlin.Double? = null,
+
+    /* 字段 requiredUsageRatio / required usage ratio field。 */
+    @param:JsonProperty("requiredUsageRatio")
+    @get:JsonProperty("requiredUsageRatio")
+    val requiredUsageRatio: kotlin.Double? = null
+
+) {
 
 
 }

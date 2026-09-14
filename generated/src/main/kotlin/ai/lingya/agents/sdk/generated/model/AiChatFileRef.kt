@@ -28,24 +28,26 @@ import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonProperty
 
 /**
- * 
+ * AiChatFileRef 的公开协议结构。 / Public contract for ai chat file ref.
  *
- * @param fileId 
- * @param fileName 
+ * @param id 字段 id / id field。
+ * @param fileName 文件名 / file name。
  */
 
 
 data class AiChatFileRef (
 
-    @param:JsonProperty("fileId")
-    @get:JsonProperty("fileId")
-    val fileId: kotlin.Long,
+    /* 字段 id / id field。 */
+    @param:JsonProperty("id")
+    @get:JsonProperty("id")
+    val id: kotlin.Long,
 
+    /* 文件名 / file name。 */
     @param:JsonProperty("fileName")
     @get:JsonProperty("fileName")
     val fileName: kotlin.String? = null
 
-) : kotlin.collections.HashMap<String, kotlin.Any>() {
+) {
 
 
 }

@@ -1,9 +1,6 @@
 package ai.lingya.agents.sdk
 
-import ai.lingya.agents.sdk.event.EndAiChatBriefEvent
-import ai.lingya.agents.sdk.event.ErrorAiChatBriefEvent
-import ai.lingya.agents.sdk.event.TextAiChatBriefEvent
-import ai.lingya.agents.sdk.event.UnknownAiChatBriefEvent
+import ai.lingya.agents.sdk.event.AiChatBriefEvent
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.runBlocking
@@ -38,7 +35,7 @@ class SseClientTest {
                         "data: {\"type\":\n" +
                         "data: \"future-event\",\"payload\":{\"kept\":true}}\n\n" +
                         "data: {\"type\":\"error\",\"message\":\"recoverable\"}\n\n" +
-                        "data: {\"type\":\"end\",\"status\":\"completed\"}\n",
+                        "data: {\"type\":\"end\",\"executionTimeMillis\":1,\"totalUsage\":{\"inputTokens\":1,\"outputTokens\":1,\"totalTokens\":2},\"artifacts\":[],\"nonFileArtifacts\":[]}\n",
                     2,
                 ),
         )
@@ -48,11 +45,11 @@ class SseClientTest {
             .toList()
 
         assertEquals(4, events.size)
-        assertInstanceOf(TextAiChatBriefEvent::class.java, events[0])
-        val unknown = assertInstanceOf(UnknownAiChatBriefEvent::class.java, events[1])
-        assertEquals(true, unknown.raw.path("payload").path("kept").asBoolean())
-        assertInstanceOf(ErrorAiChatBriefEvent::class.java, events[2])
-        assertInstanceOf(EndAiChatBriefEvent::class.java, events[3])
+        assertInstanceOf(AiChatBriefEvent.Message::class.java, events[0])
+        val unknown = assertInstanceOf(AiChatBriefEvent.Unknown::class.java, events[1])
+        assertEquals(true, unknown.rawJson.contains("\"kept\":true"))
+        assertInstanceOf(AiChatBriefEvent.Error::class.java, events[2])
+        assertInstanceOf(AiChatBriefEvent.End::class.java, events[3])
     }
 
     @Test

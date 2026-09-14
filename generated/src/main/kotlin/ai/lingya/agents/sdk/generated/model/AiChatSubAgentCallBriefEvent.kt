@@ -26,42 +26,57 @@ package ai.lingya.agents.sdk.generated.model
 
 import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.annotation.JsonValue
 
 /**
- * 
+ * AiChatSubAgentCallBriefEvent 的公开协议结构。 / Public contract for ai chat sub agent call brief event.
  *
- * @param type 
- * @param toolCallId 
- * @param toolName 
- * @param subAgentConversationId 
- * @param subAgentMessageId 
+ * @param type 类型判别值 / type discriminator。
+ * @param toolCallId 字段 toolCallId / tool call id field。
+ * @param toolName 字段 toolName / tool name field。
+ * @param subAgentConversationId 字段 subAgentConversationId / sub agent conversation id field。
+ * @param subAgentMessageId 字段 subAgentMessageId / sub agent message id field。
  */
 
 
 data class AiChatSubAgentCallBriefEvent (
 
+    /* 类型判别值 / type discriminator。 */
     @param:JsonProperty("type")
     @get:JsonProperty("type")
-    val type: kotlin.Any?,
+    val type: AiChatSubAgentCallBriefEvent.Type,
 
+    /* 字段 toolCallId / tool call id field。 */
     @param:JsonProperty("toolCallId")
     @get:JsonProperty("toolCallId")
     val toolCallId: kotlin.String,
 
+    /* 字段 toolName / tool name field。 */
     @param:JsonProperty("toolName")
     @get:JsonProperty("toolName")
     val toolName: kotlin.String,
 
+    /* 字段 subAgentConversationId / sub agent conversation id field。 */
     @param:JsonProperty("subAgentConversationId")
     @get:JsonProperty("subAgentConversationId")
     val subAgentConversationId: kotlin.String,
 
+    /* 字段 subAgentMessageId / sub agent message id field。 */
     @param:JsonProperty("subAgentMessageId")
     @get:JsonProperty("subAgentMessageId")
     val subAgentMessageId: kotlin.String
 
 ) {
 
+    /**
+     * 类型判别值 / type discriminator。
+     *
+     * Values: toolMinusExecutionMinusSubMinusAgentMinusCall,unknown_default_open_api
+     */
+    enum class Type(@get:JsonValue val value: kotlin.String) {
+        @JsonProperty(value = "tool-execution-sub-agent-call") toolMinusExecutionMinusSubMinusAgentMinusCall("tool-execution-sub-agent-call"),
+        @JsonProperty(value = "unknown_default_open_api") @JsonEnumDefaultValue unknown_default_open_api("unknown_default_open_api");
+    }
 
 }
 

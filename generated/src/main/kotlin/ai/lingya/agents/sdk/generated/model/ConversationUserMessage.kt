@@ -23,31 +23,68 @@
 
 package ai.lingya.agents.sdk.generated.model
 
-import ai.lingya.agents.sdk.generated.model.AiChatFileRef
+import ai.lingya.agents.sdk.generated.model.MediaAttachment
+import ai.lingya.agents.sdk.generated.model.MultimodalMediaAttachment
 
 import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.annotation.JsonValue
 
 /**
- * 
+ * ConversationUserMessage 的公开协议结构。 / Public contract for conversation user message.
  *
- * @param query 
- * @param files 
+ * @param text 字段 text / text field。
+ * @param executionType 字段 executionType / execution type field。
+ * @param type 类型判别值 / type discriminator。
+ * @param multimodalAttachments 字段 multimodalAttachments / multimodal attachments field。
+ * @param attachments 字段 attachments / attachments field。
+ * @param metadataRawJson 字段 metadataRawJson / metadata raw json field。
  */
 
 
 data class ConversationUserMessage (
 
-    @param:JsonProperty("query")
-    @get:JsonProperty("query")
-    val query: kotlin.String? = null,
+    /* 字段 text / text field。 */
+    @param:JsonProperty("text")
+    @get:JsonProperty("text")
+    val text: kotlin.String,
 
-    @param:JsonProperty("files")
-    @get:JsonProperty("files")
-    val files: kotlin.collections.List<AiChatFileRef>? = null
+    /* 字段 executionType / execution type field。 */
+    @param:JsonProperty("executionType")
+    @get:JsonProperty("executionType")
+    val executionType: kotlin.String,
 
-) : kotlin.collections.HashMap<String, kotlin.Any>() {
+    /* 类型判别值 / type discriminator。 */
+    @param:JsonProperty("type")
+    @get:JsonProperty("type")
+    val type: ConversationUserMessage.Type,
 
+    /* 字段 multimodalAttachments / multimodal attachments field。 */
+    @param:JsonProperty("multimodalAttachments")
+    @get:JsonProperty("multimodalAttachments")
+    val multimodalAttachments: kotlin.collections.List<MultimodalMediaAttachment>? = null,
+
+    /* 字段 attachments / attachments field。 */
+    @param:JsonProperty("attachments")
+    @get:JsonProperty("attachments")
+    val attachments: kotlin.collections.List<MediaAttachment>? = null,
+
+    /* 字段 metadataRawJson / metadata raw json field。 */
+    @param:JsonProperty("metadataRawJson")
+    @get:JsonProperty("metadataRawJson")
+    val metadataRawJson: kotlin.String? = null
+
+) {
+
+    /**
+     * 类型判别值 / type discriminator。
+     *
+     * Values: USER,unknown_default_open_api
+     */
+    enum class Type(@get:JsonValue val value: kotlin.String) {
+        @JsonProperty(value = "USER") USER("USER"),
+        @JsonProperty(value = "unknown_default_open_api") @JsonEnumDefaultValue unknown_default_open_api("unknown_default_open_api");
+    }
 
 }
 

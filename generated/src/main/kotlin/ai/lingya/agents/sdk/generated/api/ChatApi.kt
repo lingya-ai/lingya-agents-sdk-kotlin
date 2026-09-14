@@ -17,10 +17,10 @@ import ai.lingya.agents.sdk.generated.model.ValidationError
 interface ChatApi {
     /**
      * POST api/agents/channel/openapi/v1/{channelId}/chat/conversations/{conversationId}/compact
-     * compactConversation
-     * 
+     * 压缩会话上下文 / Compact conversation context
+     * 压缩会话上下文 / Compact conversation context 请求会在身份验签和资源归属校验后执行；响应字段以本契约为准。 / The request runs after signature and resource-ownership validation; this contract defines the response fields.
      * Responses:
-     *  - 202: Successful response
+     *  - 202: 压缩会话上下文 / Compact conversation context 的成功响应。 / Successful response for compactConversation.
      *  - 401: API error
      *  - 403: API error
      *  - 413: API error
@@ -29,9 +29,9 @@ interface ChatApi {
      *  - 500: API error
      *  - 503: API error
      *
-     * @param channelId 
-     * @param conversationId 
-     * @param force  (optional, default to true)
+     * @param channelId Agent OpenAPI 渠道 UUID。 / Agent OpenAPI channel UUID.
+     * @param conversationId 会话 ID；必须属于当前外部用户。 / Conversation ID owned by the current external user.
+     * @param force 是否忽略当前阈值并强制压缩。 / Whether to compact regardless of the current threshold. (optional, default to true)
      * @return [Unit]
      */
     @POST("api/agents/channel/openapi/v1/{channelId}/chat/conversations/{conversationId}/compact")
@@ -39,10 +39,10 @@ interface ChatApi {
 
     /**
      * POST api/agents/channel/openapi/v1/{channelId}/chat/conversations/{conversationId}
-     * continueChat
-     * 
+     * 向已有会话提交消息 / Submit a message to an existing conversation
+     * 向已有会话提交消息 / Submit a message to an existing conversation 请求会在身份验签和资源归属校验后执行；响应字段以本契约为准。 / The request runs after signature and resource-ownership validation; this contract defines the response fields.
      * Responses:
-     *  - 201: Successful response
+     *  - 201: 向已有会话提交消息 / Submit a message to an existing conversation 的成功响应。 / Successful response for continueChat.
      *  - 401: API error
      *  - 403: API error
      *  - 413: API error
@@ -51,9 +51,9 @@ interface ChatApi {
      *  - 500: API error
      *  - 503: API error
      *
-     * @param channelId 
-     * @param conversationId 
-     * @param aiChatInput 
+     * @param channelId Agent OpenAPI 渠道 UUID。 / Agent OpenAPI channel UUID.
+     * @param conversationId 会话 ID；必须属于当前外部用户。 / Conversation ID owned by the current external user.
+     * @param aiChatInput 向已有会话提交消息 / Submit a message to an existing conversation 的 JSON 请求参数。 / JSON request parameters for continueChat.
      * @return [AiChatSubmission]
      */
     @POST("api/agents/channel/openapi/v1/{channelId}/chat/conversations/{conversationId}")
@@ -61,10 +61,10 @@ interface ChatApi {
 
     /**
      * POST api/agents/channel/openapi/v1/{channelId}/chat
-     * createChat
-     * 
+     * 创建会话并提交消息 / Create a conversation and submit a message
+     * 创建会话并提交消息 / Create a conversation and submit a message 请求会在身份验签和资源归属校验后执行；响应字段以本契约为准。 / The request runs after signature and resource-ownership validation; this contract defines the response fields.
      * Responses:
-     *  - 201: Successful response
+     *  - 201: 创建会话并提交消息 / Create a conversation and submit a message 的成功响应。 / Successful response for createChat.
      *  - 401: API error
      *  - 403: API error
      *  - 413: API error
@@ -73,8 +73,8 @@ interface ChatApi {
      *  - 500: API error
      *  - 503: API error
      *
-     * @param channelId 
-     * @param aiChatInput 
+     * @param channelId Agent OpenAPI 渠道 UUID。 / Agent OpenAPI channel UUID.
+     * @param aiChatInput 创建会话并提交消息 / Create a conversation and submit a message 的 JSON 请求参数。 / JSON request parameters for createChat.
      * @return [AiChatSubmission]
      */
     @POST("api/agents/channel/openapi/v1/{channelId}/chat")
@@ -82,10 +82,10 @@ interface ChatApi {
 
     /**
      * DELETE api/agents/channel/openapi/v1/{channelId}/chat/conversations/{conversationId}/interrupt
-     * interruptConversation
-     * 
+     * 中断会话执行 / Interrupt conversation execution
+     * 中断会话执行 / Interrupt conversation execution 请求会在身份验签和资源归属校验后执行；响应字段以本契约为准。 / The request runs after signature and resource-ownership validation; this contract defines the response fields.
      * Responses:
-     *  - 200: Successful response
+     *  - 200: 中断会话执行 / Interrupt conversation execution 的成功响应。 / Successful response for interruptConversation.
      *  - 401: API error
      *  - 403: API error
      *  - 413: API error
@@ -94,8 +94,8 @@ interface ChatApi {
      *  - 500: API error
      *  - 503: API error
      *
-     * @param channelId 
-     * @param conversationId 
+     * @param channelId Agent OpenAPI 渠道 UUID。 / Agent OpenAPI channel UUID.
+     * @param conversationId 会话 ID；必须属于当前外部用户。 / Conversation ID owned by the current external user.
      * @return [Unit]
      */
     @DELETE("api/agents/channel/openapi/v1/{channelId}/chat/conversations/{conversationId}/interrupt")

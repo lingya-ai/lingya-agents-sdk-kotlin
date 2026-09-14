@@ -28,14 +28,15 @@ import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonProperty
 
 /**
- * 
+ * ConversationTitleInput 的公开协议结构。 / Public contract for conversation title input.
  *
- * @param title 
+ * @param title 标题 / title。
  */
 
 
 data class ConversationTitleInput (
 
+    /* 标题 / title。 */
     @param:JsonProperty("title")
     @get:JsonProperty("title")
     val title: kotlin.String

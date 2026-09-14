@@ -23,29 +23,33 @@
 
 package ai.lingya.agents.sdk.generated.model
 
+import ai.lingya.agents.sdk.generated.model.AiChatEventsBatchSkipped
+import ai.lingya.agents.sdk.generated.model.AiChatMessageEvent
 
 import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonProperty
 
 /**
- * 
+ * AiChatEventsBatch 的公开协议结构。 / Public contract for ai chat events batch.
  *
- * @param messages 
- * @param skipped 
+ * @param records 记录列表 / records。
+ * @param skipped 字段 skipped / skipped field。
  */
 
 
 data class AiChatEventsBatch (
 
-    @param:JsonProperty("messages")
-    @get:JsonProperty("messages")
-    val messages: kotlin.collections.List<kotlin.collections.Map<kotlin.String, kotlin.Any>>? = null,
+    /* 记录列表 / records。 */
+    @param:JsonProperty("records")
+    @get:JsonProperty("records")
+    val records: kotlin.collections.List<AiChatMessageEvent>,
 
+    /* 字段 skipped / skipped field。 */
     @param:JsonProperty("skipped")
     @get:JsonProperty("skipped")
-    val skipped: kotlin.collections.List<kotlin.collections.Map<kotlin.String, kotlin.Any>>? = null
+    val skipped: kotlin.collections.List<AiChatEventsBatchSkipped>
 
-) : kotlin.collections.HashMap<String, kotlin.Any>() {
+) {
 
 
 }

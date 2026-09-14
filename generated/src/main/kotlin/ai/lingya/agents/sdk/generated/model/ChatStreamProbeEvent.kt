@@ -28,24 +28,27 @@ import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonProperty
 
 /**
- * 
+ * ChatStreamProbeEvent 的公开协议结构。 / Public contract for chat stream probe event.
  *
- * @param probeId 
- * @param sequence 
- * @param serverElapsedMs 
+ * @param probeId 字段 probeId / probe id field。
+ * @param sequence 字段 sequence / sequence field。
+ * @param serverElapsedMs 字段 serverElapsedMs / server elapsed ms field。
  */
 
 
 data class ChatStreamProbeEvent (
 
+    /* 字段 probeId / probe id field。 */
     @param:JsonProperty("probeId")
     @get:JsonProperty("probeId")
     val probeId: kotlin.String,
 
+    /* 字段 sequence / sequence field。 */
     @param:JsonProperty("sequence")
     @get:JsonProperty("sequence")
     val sequence: kotlin.Int,
 
+    /* 字段 serverElapsedMs / server elapsed ms field。 */
     @param:JsonProperty("serverElapsedMs")
     @get:JsonProperty("serverElapsedMs")
     val serverElapsedMs: kotlin.Long

@@ -39,9 +39,15 @@ All generated groups are available through `user.apis`, for example `user.apis.c
 
 ```kotlin
 user.streamChatEvents(submission.conversationId, submission.messageId).collect { event ->
-    println("${event.type}: ${event.raw}")
+    when (event) {
+        is AiChatBriefEvent.Message -> println(event.value.message)
+        is AiChatBriefEvent.Unknown -> println("Unknown ${event.type}: ${event.rawJson}")
+        else -> println(event.type)
+    }
 }
 ```
+
+Every published response uses an explicit data class. Events, tool extensions, model messages, and SQL chart columns use sealed types; production APIs expose no `JsonNode`, `Map`, or dynamic `Any`. A future discriminator value is retained only through the corresponding `Unknown.rawJson: String` branch.
 
 Unknown event types retain their original Jackson `JsonNode`, so a newer server can extend the stream without losing data.
 

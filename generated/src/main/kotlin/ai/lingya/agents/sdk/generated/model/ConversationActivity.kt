@@ -28,49 +28,63 @@ import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonProperty
 
 /**
- * 
+ * ConversationActivity 的公开协议结构。 / Public contract for conversation activity.
  *
- * @param conversationId 
- * @param hasUnreadCompletion 
- * @param executionStatus 
- * @param activeMessageId 
- * @param executionEpoch 
- * @param executionStartedTime 
- * @param latestTerminalMessageId 
- * @param latestTerminalTime 
+ * @param conversationId 会话 ID / conversation ID。
+ * @param executionStatus 字段 executionStatus / execution status field。
+ * @param hasUnreadCompletion 字段 hasUnreadCompletion / has unread completion field。
+ * @param requiresUserConfirmation 字段 requiresUserConfirmation / requires user confirmation field。
+ * @param activeMessageId 字段 activeMessageId / active message id field。
+ * @param executionEpoch 字段 executionEpoch / execution epoch field。
+ * @param executionStartedTime 字段 executionStartedTime / execution started time field。
+ * @param latestTerminalMessageId 字段 latestTerminalMessageId / latest terminal message id field。
+ * @param latestTerminalTime 字段 latestTerminalTime / latest terminal time field。
  */
 
 
 data class ConversationActivity (
 
+    /* 会话 ID / conversation ID。 */
     @param:JsonProperty("conversationId")
     @get:JsonProperty("conversationId")
     val conversationId: kotlin.String,
 
+    /* 字段 executionStatus / execution status field。 */
+    @param:JsonProperty("executionStatus")
+    @get:JsonProperty("executionStatus")
+    val executionStatus: kotlin.String,
+
+    /* 字段 hasUnreadCompletion / has unread completion field。 */
     @param:JsonProperty("hasUnreadCompletion")
     @get:JsonProperty("hasUnreadCompletion")
     val hasUnreadCompletion: kotlin.Boolean,
 
-    @param:JsonProperty("executionStatus")
-    @get:JsonProperty("executionStatus")
-    val executionStatus: kotlin.String? = null,
+    /* 字段 requiresUserConfirmation / requires user confirmation field。 */
+    @param:JsonProperty("requiresUserConfirmation")
+    @get:JsonProperty("requiresUserConfirmation")
+    val requiresUserConfirmation: kotlin.Boolean,
 
+    /* 字段 activeMessageId / active message id field。 */
     @param:JsonProperty("activeMessageId")
     @get:JsonProperty("activeMessageId")
     val activeMessageId: kotlin.String? = null,
 
+    /* 字段 executionEpoch / execution epoch field。 */
     @param:JsonProperty("executionEpoch")
     @get:JsonProperty("executionEpoch")
-    val executionEpoch: kotlin.Long? = null,
+    val executionEpoch: kotlin.String? = null,
 
+    /* 字段 executionStartedTime / execution started time field。 */
     @param:JsonProperty("executionStartedTime")
     @get:JsonProperty("executionStartedTime")
     val executionStartedTime: java.time.OffsetDateTime? = null,
 
+    /* 字段 latestTerminalMessageId / latest terminal message id field。 */
     @param:JsonProperty("latestTerminalMessageId")
     @get:JsonProperty("latestTerminalMessageId")
     val latestTerminalMessageId: kotlin.String? = null,
 
+    /* 字段 latestTerminalTime / latest terminal time field。 */
     @param:JsonProperty("latestTerminalTime")
     @get:JsonProperty("latestTerminalTime")
     val latestTerminalTime: java.time.OffsetDateTime? = null

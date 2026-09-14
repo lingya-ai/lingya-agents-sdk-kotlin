@@ -28,29 +28,32 @@ import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonProperty
 
 /**
- * 
+ * GeneratePreSignedUrlOutput 的公开协议结构。 / Public contract for generate pre signed url output.
  *
- * @param url 
- * @param fileUk 
- * @param headers 
+ * @param support 当前存储是否支持该操作 / whether the storage supports this operation。
+ * @param fileUk 字段 fileUk / file uk field。
+ * @param url 预签名 URL / presigned URL。
  */
 
 
 data class GeneratePreSignedUrlOutput (
 
-    @param:JsonProperty("url")
-    @get:JsonProperty("url")
-    val url: java.net.URI,
+    /* 当前存储是否支持该操作 / whether the storage supports this operation。 */
+    @param:JsonProperty("support")
+    @get:JsonProperty("support")
+    val support: kotlin.Boolean,
 
+    /* 字段 fileUk / file uk field。 */
     @param:JsonProperty("fileUk")
     @get:JsonProperty("fileUk")
     val fileUk: kotlin.String? = null,
 
-    @param:JsonProperty("headers")
-    @get:JsonProperty("headers")
-    val headers: kotlin.collections.Map<kotlin.String, kotlin.String>? = null
+    /* 预签名 URL / presigned URL。 */
+    @param:JsonProperty("url")
+    @get:JsonProperty("url")
+    val url: java.net.URI? = null
 
-) : kotlin.collections.HashMap<String, kotlin.Any>() {
+) {
 
 
 }

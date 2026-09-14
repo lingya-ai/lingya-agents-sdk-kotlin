@@ -28,24 +28,27 @@ import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonProperty
 
 /**
- * 
+ * PageInfo 的公开协议结构。 / Public contract for page info.
  *
- * @param current 
- * @param propertySize 
- * @param total 
+ * @param current 字段 current / current field。
+ * @param propertySize 大小（字节）或分页容量 / byte size or page size。
+ * @param total 字段 total / total field。
  */
 
 
 data class PageInfo (
 
+    /* 字段 current / current field。 */
     @param:JsonProperty("current")
     @get:JsonProperty("current")
     val current: kotlin.Int,
 
+    /* 大小（字节）或分页容量 / byte size or page size。 */
     @param:JsonProperty("size")
     @get:JsonProperty("size")
     val propertySize: kotlin.Int,
 
+    /* 字段 total / total field。 */
     @param:JsonProperty("total")
     @get:JsonProperty("total")
     val total: kotlin.Long

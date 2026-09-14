@@ -28,19 +28,21 @@ import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonProperty
 
 /**
- * 
+ * AiChatEventsBatchInput 的公开协议结构。 / Public contract for ai chat events batch input.
  *
- * @param conversationId 
- * @param messageIds 
+ * @param conversationId 会话 ID / conversation ID。
+ * @param messageIds 字段 messageIds / message ids field。
  */
 
 
 data class AiChatEventsBatchInput (
 
+    /* 会话 ID / conversation ID。 */
     @param:JsonProperty("conversationId")
     @get:JsonProperty("conversationId")
     val conversationId: kotlin.String,
 
+    /* 字段 messageIds / message ids field。 */
     @param:JsonProperty("messageIds")
     @get:JsonProperty("messageIds")
     val messageIds: kotlin.collections.List<kotlin.String>

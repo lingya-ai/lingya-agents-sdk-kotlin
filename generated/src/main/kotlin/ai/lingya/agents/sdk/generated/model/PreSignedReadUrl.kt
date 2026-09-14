@@ -28,24 +28,20 @@ import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonProperty
 
 /**
- * 
+ * PreSignedReadUrl 的公开协议结构。 / Public contract for pre signed read url.
  *
- * @param url 
- * @param expiresAt 
+ * @param url 预签名 URL / presigned URL。
  */
 
 
 data class PreSignedReadUrl (
 
+    /* 预签名 URL / presigned URL。 */
     @param:JsonProperty("url")
     @get:JsonProperty("url")
-    val url: java.net.URI,
+    val url: java.net.URI
 
-    @param:JsonProperty("expiresAt")
-    @get:JsonProperty("expiresAt")
-    val expiresAt: java.time.OffsetDateTime? = null
-
-) : kotlin.collections.HashMap<String, kotlin.Any>() {
+) {
 
 
 }

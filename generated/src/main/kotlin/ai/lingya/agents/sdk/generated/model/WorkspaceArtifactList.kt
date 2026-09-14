@@ -23,30 +23,33 @@
 
 package ai.lingya.agents.sdk.generated.model
 
-import ai.lingya.agents.sdk.generated.model.AgentFile
+import ai.lingya.agents.sdk.generated.model.WorkspaceFilePage
+import ai.lingya.agents.sdk.generated.model.WorkspaceNonFileArtifact
 
 import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonProperty
 
 /**
- * 
+ * WorkspaceArtifactList 的公开协议结构。 / Public contract for workspace artifact list.
  *
- * @param files 
- * @param nonFileArtifacts 
+ * @param fileArtifacts 字段 fileArtifacts / file artifacts field。
+ * @param nonFileArtifacts 字段 nonFileArtifacts / non file artifacts field。
  */
 
 
 data class WorkspaceArtifactList (
 
-    @param:JsonProperty("files")
-    @get:JsonProperty("files")
-    val files: kotlin.collections.List<AgentFile>? = null,
+    /* 字段 fileArtifacts / file artifacts field。 */
+    @param:JsonProperty("fileArtifacts")
+    @get:JsonProperty("fileArtifacts")
+    val fileArtifacts: WorkspaceFilePage,
 
+    /* 字段 nonFileArtifacts / non file artifacts field。 */
     @param:JsonProperty("nonFileArtifacts")
     @get:JsonProperty("nonFileArtifacts")
-    val nonFileArtifacts: kotlin.collections.List<kotlin.collections.Map<kotlin.String, kotlin.Any>>? = null
+    val nonFileArtifacts: kotlin.collections.List<WorkspaceNonFileArtifact>
 
-) : kotlin.collections.HashMap<String, kotlin.Any>() {
+) {
 
 
 }

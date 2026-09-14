@@ -28,14 +28,15 @@ import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonProperty
 
 /**
- * 
+ * ConversationActivityBatchInput 的公开协议结构。 / Public contract for conversation activity batch input.
  *
- * @param conversationIds 
+ * @param conversationIds 字段 conversationIds / conversation ids field。
  */
 
 
 data class ConversationActivityBatchInput (
 
+    /* 字段 conversationIds / conversation ids field。 */
     @param:JsonProperty("conversationIds")
     @get:JsonProperty("conversationIds")
     val conversationIds: kotlin.collections.List<kotlin.String>

@@ -30,24 +30,27 @@ import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonProperty
 
 /**
- * 
+ * AgentsConfig 的公开协议结构。 / Public contract for agents config.
  *
- * @param modelConfig 
- * @param supportAttachmentExt 
- * @param maxAttachmentCount 
+ * @param modelConfig 字段 modelConfig / model config field。
+ * @param supportAttachmentExt 字段 supportAttachmentExt / support attachment ext field。
+ * @param maxAttachmentCount 字段 maxAttachmentCount / max attachment count field。
  */
 
 
 data class AgentsConfig (
 
+    /* 字段 modelConfig / model config field。 */
     @param:JsonProperty("modelConfig")
     @get:JsonProperty("modelConfig")
     val modelConfig: ModelConfig,
 
+    /* 字段 supportAttachmentExt / support attachment ext field。 */
     @param:JsonProperty("supportAttachmentExt")
     @get:JsonProperty("supportAttachmentExt")
     val supportAttachmentExt: kotlin.collections.List<AttachmentExtension>,
 
+    /* 字段 maxAttachmentCount / max attachment count field。 */
     @param:JsonProperty("maxAttachmentCount")
     @get:JsonProperty("maxAttachmentCount")
     val maxAttachmentCount: kotlin.Int

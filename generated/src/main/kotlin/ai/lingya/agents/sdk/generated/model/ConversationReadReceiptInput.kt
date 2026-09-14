@@ -28,14 +28,15 @@ import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonProperty
 
 /**
- * 
+ * ConversationReadReceiptInput 的公开协议结构。 / Public contract for conversation read receipt input.
  *
- * @param messageId 
+ * @param messageId 消息 ID / message ID。
  */
 
 
 data class ConversationReadReceiptInput (
 
+    /* 消息 ID / message ID。 */
     @param:JsonProperty("messageId")
     @get:JsonProperty("messageId")
     val messageId: kotlin.String

@@ -28,31 +28,33 @@ import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonProperty
 
 /**
- * 
+ * AiChatSubmission 的公开协议结构。 / Public contract for ai chat submission.
  *
- * @param conversationId 
- * @param messageId 
- * @param disposition Dispatch disposition. Unknown future values must be preserved.
- * @param status Persisted message status. Unknown future values must be preserved.
+ * @param conversationId 会话 ID / conversation ID。
+ * @param messageId 消息 ID / message ID。
+ * @param disposition 字段 disposition / disposition field。 Dispatch disposition. Unknown future values must be preserved.
+ * @param status 当前状态 / current status。 Persisted message status. Unknown future values must be preserved.
  */
 
 
 data class AiChatSubmission (
 
+    /* 会话 ID / conversation ID。 */
     @param:JsonProperty("conversationId")
     @get:JsonProperty("conversationId")
     val conversationId: kotlin.String,
 
+    /* 消息 ID / message ID。 */
     @param:JsonProperty("messageId")
     @get:JsonProperty("messageId")
     val messageId: kotlin.String,
 
-    /* Dispatch disposition. Unknown future values must be preserved. */
+    /* 字段 disposition / disposition field。 Dispatch disposition. Unknown future values must be preserved. */
     @param:JsonProperty("disposition")
     @get:JsonProperty("disposition")
     val disposition: kotlin.String,
 
-    /* Persisted message status. Unknown future values must be preserved. */
+    /* 当前状态 / current status。 Persisted message status. Unknown future values must be preserved. */
     @param:JsonProperty("status")
     @get:JsonProperty("status")
     val status: kotlin.String

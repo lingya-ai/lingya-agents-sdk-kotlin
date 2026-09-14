@@ -28,14 +28,15 @@ import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonProperty
 
 /**
- * 
+ * ConversationStatusInput 的公开协议结构。 / Public contract for conversation status input.
  *
- * @param status 
+ * @param status 当前状态 / current status。
  */
 
 
 data class ConversationStatusInput (
 
+    /* 当前状态 / current status。 */
     @param:JsonProperty("status")
     @get:JsonProperty("status")
     val status: kotlin.String

@@ -28,39 +28,50 @@ import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonProperty
 
 /**
- * 
+ * AgentFile 的公开协议结构。 / Public contract for agent file.
  *
- * @param id 
- * @param fileName 
- * @param contentMd5 
- * @param propertySize 
- * @param contentType 
+ * @param id 字段 id / id field。
+ * @param fileName 文件名 / file name。
+ * @param contentMd5 字段 contentMd5 / content md5 field。
+ * @param propertySize 大小（字节）或分页容量 / byte size or page size。
+ * @param createdTime 创建时间 / creation time。
+ * @param lastUpdateTime 最后更新时间 / last update time。
  */
 
 
 data class AgentFile (
 
+    /* 字段 id / id field。 */
     @param:JsonProperty("id")
     @get:JsonProperty("id")
     val id: kotlin.Long,
 
+    /* 文件名 / file name。 */
     @param:JsonProperty("fileName")
     @get:JsonProperty("fileName")
     val fileName: kotlin.String,
 
+    /* 字段 contentMd5 / content md5 field。 */
     @param:JsonProperty("contentMd5")
     @get:JsonProperty("contentMd5")
-    val contentMd5: kotlin.String? = null,
+    val contentMd5: kotlin.String,
 
+    /* 大小（字节）或分页容量 / byte size or page size。 */
     @param:JsonProperty("size")
     @get:JsonProperty("size")
-    val propertySize: kotlin.Long? = null,
+    val propertySize: kotlin.Long,
 
-    @param:JsonProperty("contentType")
-    @get:JsonProperty("contentType")
-    val contentType: kotlin.String? = null
+    /* 创建时间 / creation time。 */
+    @param:JsonProperty("createdTime")
+    @get:JsonProperty("createdTime")
+    val createdTime: java.time.OffsetDateTime,
 
-) : kotlin.collections.HashMap<String, kotlin.Any>() {
+    /* 最后更新时间 / last update time。 */
+    @param:JsonProperty("lastUpdateTime")
+    @get:JsonProperty("lastUpdateTime")
+    val lastUpdateTime: java.time.OffsetDateTime
+
+) {
 
 
 }

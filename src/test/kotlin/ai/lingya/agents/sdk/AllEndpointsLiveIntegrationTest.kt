@@ -1,6 +1,6 @@
 package ai.lingya.agents.sdk
 
-import ai.lingya.agents.sdk.event.EndAiChatBriefEvent
+import ai.lingya.agents.sdk.event.AiChatBriefEvent
 import ai.lingya.agents.sdk.generated.api.SQLApi
 import ai.lingya.agents.sdk.generated.model.AiChatEventsBatchInput
 import ai.lingya.agents.sdk.generated.model.AiChatInput
@@ -50,7 +50,7 @@ class AllEndpointsLiveIntegrationTest {
             val firstEvents = withTimeout(120.seconds) {
                 fixture.user.streamChatEvents(first.conversationId, first.messageId).toList()
             }
-            assertTrue(firstEvents.any { it is EndAiChatBriefEvent })
+            assertTrue(firstEvents.any { it is AiChatBriefEvent.End })
 
             coverage.successful("GET", "/conversations/{conversationId}/config") {
                 fixture.user.apis.configuration.getConversationConfig(fixture.channelId, first.conversationId)
@@ -266,7 +266,11 @@ class AllEndpointsLiveIntegrationTest {
         val upload = coverage.successful("POST", "/files/pre-signed-url/write") {
             fixture.user.apis.files.createPreSignedUpload(
                 fixture.channelId,
-                GeneratePreSignedUrlInput("lingya-sdk-endpoint-test.txt", "ai-chat-attachments", contentMd5),
+                GeneratePreSignedUrlInput(
+                    "lingya-sdk-endpoint-test.txt",
+                    GeneratePreSignedUrlInput.Module.aiMinusChatMinusAttachments,
+                    contentMd5,
+                ),
             )
         }
         coverage.expectedDomainResult("POST", "/files/pre-signed-url/confirm") {

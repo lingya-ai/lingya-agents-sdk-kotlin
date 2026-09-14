@@ -28,14 +28,15 @@ import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonProperty
 
 /**
- * 
+ * FileExists 的公开协议结构。 / Public contract for file exists.
  *
- * @param exists 
+ * @param exists 字段 exists / exists field。
  */
 
 
 data class FileExists (
 
+    /* 字段 exists / exists field。 */
     @param:JsonProperty("exists")
     @get:JsonProperty("exists")
     val exists: kotlin.Boolean

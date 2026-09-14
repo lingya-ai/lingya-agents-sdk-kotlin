@@ -28,29 +28,26 @@ import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonProperty
 
 /**
- * 
+ * AskUserQuestionOption 的公开协议结构。 / Public contract for ask user question option.
  *
- * @param shareId 
- * @param url 
- * @param expiresAt 
+ * @param text 字段 text / text field。
+ * @param recommended 字段 recommended / recommended field。
  */
 
 
-data class ConversationShare (
+data class AskUserQuestionOption (
 
-    @param:JsonProperty("shareId")
-    @get:JsonProperty("shareId")
-    val shareId: kotlin.Long,
+    /* 字段 text / text field。 */
+    @param:JsonProperty("text")
+    @get:JsonProperty("text")
+    val text: kotlin.String,
 
-    @param:JsonProperty("url")
-    @get:JsonProperty("url")
-    val url: java.net.URI? = null,
+    /* 字段 recommended / recommended field。 */
+    @param:JsonProperty("recommended")
+    @get:JsonProperty("recommended")
+    val recommended: kotlin.Boolean
 
-    @param:JsonProperty("expiresAt")
-    @get:JsonProperty("expiresAt")
-    val expiresAt: java.time.OffsetDateTime? = null
-
-) : kotlin.collections.HashMap<String, kotlin.Any>() {
+) {
 
 
 }

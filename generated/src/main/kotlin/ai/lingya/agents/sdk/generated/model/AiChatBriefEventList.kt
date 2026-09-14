@@ -28,17 +28,18 @@ import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonProperty
 
 /**
- * 
+ * AiChatBriefEventList 的公开协议结构。 / Public contract for ai chat brief event list.
  *
- * @param records 
+ * @param records 记录列表 / records。
  */
 
 
 data class AiChatBriefEventList (
 
+    /* 记录列表 / records。 */
     @param:JsonProperty("records")
     @get:JsonProperty("records")
-    val records: kotlin.collections.List<com.fasterxml.jackson.databind.JsonNode>
+    val records: kotlin.collections.List<ai.lingya.agents.sdk.event.AiChatBriefEvent>
 
 ) {
 

@@ -28,39 +28,45 @@ import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonProperty
 
 /**
- * 
+ * ConversationStats 的公开协议结构。 / Public contract for conversation stats.
  *
- * @param publishId 
- * @param totalConversations 
- * @param activeConversations 
- * @param totalMessages 
- * @param totalTokens 
- * @param avgMessagesPerConversation 
+ * @param publishId 字段 publishId / publish id field。
+ * @param totalConversations 字段 totalConversations / total conversations field。
+ * @param activeConversations 字段 activeConversations / active conversations field。
+ * @param totalMessages 字段 totalMessages / total messages field。
+ * @param totalTokens 总 Token 数 / total token count。
+ * @param avgMessagesPerConversation 字段 avgMessagesPerConversation / avg messages per conversation field。
  */
 
 
 data class ConversationStats (
 
+    /* 字段 publishId / publish id field。 */
     @param:JsonProperty("publishId")
     @get:JsonProperty("publishId")
     val publishId: kotlin.String,
 
+    /* 字段 totalConversations / total conversations field。 */
     @param:JsonProperty("totalConversations")
     @get:JsonProperty("totalConversations")
     val totalConversations: kotlin.Long,
 
+    /* 字段 activeConversations / active conversations field。 */
     @param:JsonProperty("activeConversations")
     @get:JsonProperty("activeConversations")
     val activeConversations: kotlin.Long,
 
+    /* 字段 totalMessages / total messages field。 */
     @param:JsonProperty("totalMessages")
     @get:JsonProperty("totalMessages")
     val totalMessages: kotlin.Long,
 
+    /* 总 Token 数 / total token count。 */
     @param:JsonProperty("totalTokens")
     @get:JsonProperty("totalTokens")
     val totalTokens: kotlin.Long,
 
+    /* 字段 avgMessagesPerConversation / avg messages per conversation field。 */
     @param:JsonProperty("avgMessagesPerConversation")
     @get:JsonProperty("avgMessagesPerConversation")
     val avgMessagesPerConversation: kotlin.Double

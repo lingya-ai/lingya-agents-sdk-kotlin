@@ -30,29 +30,33 @@ import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonProperty
 
 /**
- * 
+ * AiChatInput 的公开协议结构。 / Public contract for ai chat input.
  *
- * @param query 
- * @param conversationId 
- * @param chatModelSpec 
- * @param files 
+ * @param query 用户问题 / user query。
+ * @param conversationId 会话 ID / conversation ID。
+ * @param chatModelSpec 字段 chatModelSpec / chat model spec field。
+ * @param files 字段 files / files field。
  */
 
 
 data class AiChatInput (
 
+    /* 用户问题 / user query。 */
     @param:JsonProperty("query")
     @get:JsonProperty("query")
     val query: kotlin.String,
 
+    /* 会话 ID / conversation ID。 */
     @param:JsonProperty("conversationId")
     @get:JsonProperty("conversationId")
     val conversationId: kotlin.String? = null,
 
+    /* 字段 chatModelSpec / chat model spec field。 */
     @param:JsonProperty("chatModelSpec")
     @get:JsonProperty("chatModelSpec")
     val chatModelSpec: ChatModelSpec? = null,
 
+    /* 字段 files / files field。 */
     @param:JsonProperty("files")
     @get:JsonProperty("files")
     val files: kotlin.collections.List<AiChatFileRef>? = null

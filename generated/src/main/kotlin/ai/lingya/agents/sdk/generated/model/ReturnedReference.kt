@@ -28,19 +28,21 @@ import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonProperty
 
 /**
- * 
+ * ReturnedReference 的公开协议结构。 / Public contract for returned reference.
  *
- * @param citationType 
- * @param referenceId 
+ * @param type 类型判别值 / type discriminator。
+ * @param referenceId 字段 referenceId / reference id field。
  */
 
 
 data class ReturnedReference (
 
-    @param:JsonProperty("citationType")
-    @get:JsonProperty("citationType")
-    val citationType: kotlin.String,
+    /* 类型判别值 / type discriminator。 */
+    @param:JsonProperty("type")
+    @get:JsonProperty("type")
+    val type: kotlin.String,
 
+    /* 字段 referenceId / reference id field。 */
     @param:JsonProperty("referenceId")
     @get:JsonProperty("referenceId")
     val referenceId: kotlin.Long

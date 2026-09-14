@@ -28,22 +28,24 @@ import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonProperty
 
 /**
- * 
+ * ChartTimeContext 的公开协议结构。 / Public contract for chart time context.
  *
- * @param type 
- * @param message 
+ * @param asOfInstant 字段 asOfInstant / as of instant field。
+ * @param tenantZoneId 字段 tenantZoneId / tenant zone id field。
  */
 
 
-data class AiChatTextBriefEvent (
+data class ChartTimeContext (
 
-    @param:JsonProperty("type")
-    @get:JsonProperty("type")
-    val type: kotlin.String,
+    /* 字段 asOfInstant / as of instant field。 */
+    @param:JsonProperty("asOfInstant")
+    @get:JsonProperty("asOfInstant")
+    val asOfInstant: java.time.OffsetDateTime,
 
-    @param:JsonProperty("message")
-    @get:JsonProperty("message")
-    val message: kotlin.String
+    /* 字段 tenantZoneId / tenant zone id field。 */
+    @param:JsonProperty("tenantZoneId")
+    @get:JsonProperty("tenantZoneId")
+    val tenantZoneId: kotlin.String
 
 ) {
 

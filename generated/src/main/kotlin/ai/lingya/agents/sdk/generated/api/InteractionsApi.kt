@@ -17,10 +17,10 @@ import ai.lingya.agents.sdk.generated.model.ValidationError
 interface InteractionsApi {
     /**
      * POST api/agents/channel/openapi/v1/{channelId}/chat/user-input/answer
-     * answerUserInput
-     * 
+     * 提交用户回答 / Submit a user answer
+     * 提交用户回答 / Submit a user answer 请求会在身份验签和资源归属校验后执行；响应字段以本契约为准。 / The request runs after signature and resource-ownership validation; this contract defines the response fields.
      * Responses:
-     *  - 201: Successful response
+     *  - 201: 提交用户回答 / Submit a user answer 的成功响应。 / Successful response for answerUserInput.
      *  - 401: API error
      *  - 403: API error
      *  - 413: API error
@@ -29,8 +29,8 @@ interface InteractionsApi {
      *  - 500: API error
      *  - 503: API error
      *
-     * @param channelId 
-     * @param userInputAnswerInput 
+     * @param channelId Agent OpenAPI 渠道 UUID。 / Agent OpenAPI channel UUID.
+     * @param userInputAnswerInput 提交用户回答 / Submit a user answer 的 JSON 请求参数。 / JSON request parameters for answerUserInput.
      * @return [OperationResult]
      */
     @POST("api/agents/channel/openapi/v1/{channelId}/chat/user-input/answer")
@@ -38,10 +38,10 @@ interface InteractionsApi {
 
     /**
      * POST api/agents/channel/openapi/v1/{channelId}/chat/plan/approve
-     * approvePlan
-     * 
+     * 提交计划审批 / Submit plan approval
+     * 提交计划审批 / Submit plan approval 请求会在身份验签和资源归属校验后执行；响应字段以本契约为准。 / The request runs after signature and resource-ownership validation; this contract defines the response fields.
      * Responses:
-     *  - 201: Successful response
+     *  - 201: 提交计划审批 / Submit plan approval 的成功响应。 / Successful response for approvePlan.
      *  - 401: API error
      *  - 403: API error
      *  - 413: API error
@@ -50,8 +50,8 @@ interface InteractionsApi {
      *  - 500: API error
      *  - 503: API error
      *
-     * @param channelId 
-     * @param planApprovalInput 
+     * @param channelId Agent OpenAPI 渠道 UUID。 / Agent OpenAPI channel UUID.
+     * @param planApprovalInput 提交计划审批 / Submit plan approval 的 JSON 请求参数。 / JSON request parameters for approvePlan.
      * @return [OperationResult]
      */
     @POST("api/agents/channel/openapi/v1/{channelId}/chat/plan/approve")
@@ -59,10 +59,10 @@ interface InteractionsApi {
 
     /**
      * GET api/agents/channel/openapi/v1/{channelId}/chat/plan/{planId}/status
-     * getPlanStatus
-     * 
+     * 查询计划审批状态 / Get plan approval status
+     * 查询计划审批状态 / Get plan approval status 请求会在身份验签和资源归属校验后执行；响应字段以本契约为准。 / The request runs after signature and resource-ownership validation; this contract defines the response fields.
      * Responses:
-     *  - 200: Successful response
+     *  - 200: 查询计划审批状态 / Get plan approval status 的成功响应。 / Successful response for getPlanStatus.
      *  - 401: API error
      *  - 403: API error
      *  - 413: API error
@@ -71,8 +71,8 @@ interface InteractionsApi {
      *  - 500: API error
      *  - 503: API error
      *
-     * @param channelId 
-     * @param planId 
+     * @param channelId Agent OpenAPI 渠道 UUID。 / Agent OpenAPI channel UUID.
+     * @param planId 等待审批的计划 ID。 / Pending plan-approval ID.
      * @return [PlanStatus]
      */
     @GET("api/agents/channel/openapi/v1/{channelId}/chat/plan/{planId}/status")
@@ -80,10 +80,10 @@ interface InteractionsApi {
 
     /**
      * GET api/agents/channel/openapi/v1/{channelId}/chat/user-input/{questionId}/status
-     * getUserInputStatus
-     * 
+     * 查询用户问答状态 / Get user-input status
+     * 查询用户问答状态 / Get user-input status 请求会在身份验签和资源归属校验后执行；响应字段以本契约为准。 / The request runs after signature and resource-ownership validation; this contract defines the response fields.
      * Responses:
-     *  - 200: Successful response
+     *  - 200: 查询用户问答状态 / Get user-input status 的成功响应。 / Successful response for getUserInputStatus.
      *  - 401: API error
      *  - 403: API error
      *  - 413: API error
@@ -92,10 +92,10 @@ interface InteractionsApi {
      *  - 500: API error
      *  - 503: API error
      *
-     * @param channelId 
-     * @param questionId 
-     * @param conversationId 
-     * @param messageId 
+     * @param channelId Agent OpenAPI 渠道 UUID。 / Agent OpenAPI channel UUID.
+     * @param questionId 等待回答的问题 ID。 / Pending question ID.
+     * @param conversationId 会话 ID；必须属于当前外部用户。 / Conversation ID owned by the current external user.
+     * @param messageId 用户消息 ID；必须属于指定会话。 / User-message ID owned by the specified conversation.
      * @return [UserInputStatus]
      */
     @GET("api/agents/channel/openapi/v1/{channelId}/chat/user-input/{questionId}/status")

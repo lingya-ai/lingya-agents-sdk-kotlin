@@ -28,19 +28,21 @@ import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonProperty
 
 /**
- * 
+ * ConfirmUploadInput 的公开协议结构。 / Public contract for confirm upload input.
  *
- * @param fileUk 
- * @param contentMd5 
+ * @param fileUk 字段 fileUk / file uk field。
+ * @param contentMd5 字段 contentMd5 / content md5 field。
  */
 
 
 data class ConfirmUploadInput (
 
+    /* 字段 fileUk / file uk field。 */
     @param:JsonProperty("fileUk")
     @get:JsonProperty("fileUk")
     val fileUk: kotlin.String,
 
+    /* 字段 contentMd5 / content md5 field。 */
     @param:JsonProperty("contentMd5")
     @get:JsonProperty("contentMd5")
     val contentMd5: kotlin.String

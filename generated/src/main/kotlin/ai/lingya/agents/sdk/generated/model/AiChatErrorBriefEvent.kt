@@ -26,27 +26,39 @@ package ai.lingya.agents.sdk.generated.model
 
 import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.annotation.JsonValue
 
 /**
- * 
+ * AiChatErrorBriefEvent 的公开协议结构。 / Public contract for ai chat error brief event.
  *
- * @param type 
- * @param message 
+ * @param type 类型判别值 / type discriminator。
+ * @param message 消息正文 / message text。
  */
 
 
 data class AiChatErrorBriefEvent (
 
+    /* 类型判别值 / type discriminator。 */
     @param:JsonProperty("type")
     @get:JsonProperty("type")
-    val type: kotlin.Any?,
+    val type: AiChatErrorBriefEvent.Type,
 
+    /* 消息正文 / message text。 */
     @param:JsonProperty("message")
     @get:JsonProperty("message")
     val message: kotlin.String
 
 ) {
 
+    /**
+     * 类型判别值 / type discriminator。
+     *
+     * Values: error,unknown_default_open_api
+     */
+    enum class Type(@get:JsonValue val value: kotlin.String) {
+        @JsonProperty(value = "error") error("error"),
+        @JsonProperty(value = "unknown_default_open_api") @JsonEnumDefaultValue unknown_default_open_api("unknown_default_open_api");
+    }
 
 }
 

@@ -30,11 +30,17 @@ val user = client.forUser("稳定的外部用户 ID")
 val submission = user.createChat(AiChatInput(query = "你好"))
 
 user.streamChatEvents(submission.conversationId, submission.messageId).collect { event ->
-    println("${event.type}: ${event.raw}")
+    when (event) {
+        is AiChatBriefEvent.Message -> println(event.value.message)
+        is AiChatBriefEvent.Unknown -> println("未知事件 ${event.type}: ${event.rawJson}")
+        else -> println(event.type)
+    }
 }
 ```
 
 `user.apis` 暴露契约生成的全部接口分组；普通生成接口返回 Retrofit `Response<T>`，可以使用 `bodyOrThrow()` 统一处理失败响应。文件上传需要先调用 `createPreSignedUpload`，用独立、无 HMAC 的 HTTP 客户端向预签名 URL 上传原始字节，再调用 `confirmPreSignedUpload` 确认。
+
+所有已发布响应均使用明确的数据类。事件、工具扩展、模型消息和 SQL 图表列使用密封类型；SDK 不在生产 API 中暴露 `JsonNode`、`Map` 或 `Any`。服务端未来新增判别值时，仅对应的 `Unknown` 分支通过 `rawJson: String` 保留完整 JSON，现有类型不会退化为动态对象。
 
 默认不重试。配置 `RetryPolicy(maxAttempts = 3)` 后也只重试 `GET`/`HEAD`，写操作仍不重试；每次尝试都会重新生成 nonce 和签名。
 

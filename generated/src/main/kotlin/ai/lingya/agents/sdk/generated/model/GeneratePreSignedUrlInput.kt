@@ -26,43 +26,51 @@ package ai.lingya.agents.sdk.generated.model
 
 import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.annotation.JsonValue
 
 /**
- * 
+ * GeneratePreSignedUrlInput 的公开协议结构。 / Public contract for generate pre signed url input.
  *
- * @param fileName 
- * @param module Registered file module for public Agent chat attachments.
- * @param contentMd5 
- * @param fileId 
- * @param metadata 
+ * @param fileName 文件名 / file name。
+ * @param module 字段 module / module field。
+ * @param contentMd5 字段 contentMd5 / content md5 field。
+ * @param fileId 文件 ID / file ID。
  */
 
 
 data class GeneratePreSignedUrlInput (
 
+    /* 文件名 / file name。 */
     @param:JsonProperty("fileName")
     @get:JsonProperty("fileName")
     val fileName: kotlin.String,
 
-    /* Registered file module for public Agent chat attachments. */
+    /* 字段 module / module field。 */
     @param:JsonProperty("module")
     @get:JsonProperty("module")
-    val module: kotlin.String,
+    val module: GeneratePreSignedUrlInput.Module,
 
+    /* 字段 contentMd5 / content md5 field。 */
     @param:JsonProperty("contentMd5")
     @get:JsonProperty("contentMd5")
     val contentMd5: kotlin.String,
 
+    /* 文件 ID / file ID。 */
     @param:JsonProperty("fileId")
     @get:JsonProperty("fileId")
-    val fileId: kotlin.Long? = null,
-
-    @param:JsonProperty("metadata")
-    @get:JsonProperty("metadata")
-    val metadata: kotlin.collections.Map<kotlin.String, kotlin.Any>? = null
+    val fileId: kotlin.Long? = null
 
 ) {
 
+    /**
+     * 字段 module / module field。
+     *
+     * Values: aiMinusChatMinusAttachments,unknown_default_open_api
+     */
+    enum class Module(@get:JsonValue val value: kotlin.String) {
+        @JsonProperty(value = "ai-chat-attachments") aiMinusChatMinusAttachments("ai-chat-attachments"),
+        @JsonProperty(value = "unknown_default_open_api") @JsonEnumDefaultValue unknown_default_open_api("unknown_default_open_api");
+    }
 
 }
 

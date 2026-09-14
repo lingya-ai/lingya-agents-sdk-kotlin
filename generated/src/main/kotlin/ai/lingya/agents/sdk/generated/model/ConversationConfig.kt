@@ -29,14 +29,15 @@ import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonProperty
 
 /**
- * 
+ * ConversationConfig 的公开协议结构。 / Public contract for conversation config.
  *
- * @param lastChatModelSpec 
+ * @param lastChatModelSpec 字段 lastChatModelSpec / last chat model spec field。
  */
 
 
 data class ConversationConfig (
 
+    /* 字段 lastChatModelSpec / last chat model spec field。 */
     @param:JsonProperty("lastChatModelSpec")
     @get:JsonProperty("lastChatModelSpec")
     val lastChatModelSpec: ChatModelSpec? = null

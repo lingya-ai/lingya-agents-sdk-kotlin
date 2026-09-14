@@ -8,6 +8,7 @@ import okhttp3.ResponseBody
 import com.fasterxml.jackson.annotation.JsonProperty
 
 import ai.lingya.agents.sdk.generated.model.CodeMessage
+import ai.lingya.agents.sdk.generated.model.SqlChartDataset
 import ai.lingya.agents.sdk.generated.model.SqlQueryResultPage
 import ai.lingya.agents.sdk.generated.model.ValidationError
 
@@ -23,8 +24,8 @@ interface SQLApi {
 
     /**
      * GET api/agents/channel/openapi/v1/{channelId}/chat/conversations/{conversationId}/sql-query-results/{resultId}/export
-     * exportSqlQueryResult
-     * 
+     * 导出 SQL 结果 / Export SQL results
+     * 导出 SQL 结果 / Export SQL results 请求会在身份验签和资源归属校验后执行；响应字段以本契约为准。 / The request runs after signature and resource-ownership validation; this contract defines the response fields.
      * Responses:
      *  - 200: Streaming export
      *  - 401: API error
@@ -35,11 +36,11 @@ interface SQLApi {
      *  - 500: API error
      *  - 503: API error
      *
-     * @param channelId 
-     * @param conversationId 
-     * @param resultId 
-     * @param format 
-     * @param accept Requested export media type. (optional)
+     * @param channelId Agent OpenAPI 渠道 UUID。 / Agent OpenAPI channel UUID.
+     * @param conversationId 会话 ID；必须属于当前外部用户。 / Conversation ID owned by the current external user.
+     * @param resultId SQL 查询结果 ID。 / SQL query-result ID.
+     * @param format 导出格式。 / Export format.
+     * @param accept 期望的导出媒体类型。 / Requested export media type. (optional)
      * @return [ResponseBody]
      */
     @GET("api/agents/channel/openapi/v1/{channelId}/chat/conversations/{conversationId}/sql-query-results/{resultId}/export")
@@ -47,10 +48,10 @@ interface SQLApi {
 
     /**
      * GET api/agents/channel/openapi/v1/{channelId}/chat/conversations/{conversationId}/sql-query-results/{resultId}/chart-data
-     * getSqlQueryChartData
-     * 
+     * 读取 SQL 图表数据 / Get SQL chart data
+     * 读取 SQL 图表数据 / Get SQL chart data 请求会在身份验签和资源归属校验后执行；响应字段以本契约为准。 / The request runs after signature and resource-ownership validation; this contract defines the response fields.
      * Responses:
-     *  - 200: Successful response
+     *  - 200: 读取 SQL 图表数据 / Get SQL chart data 的成功响应。 / Successful response for getSqlQueryChartData.
      *  - 401: API error
      *  - 403: API error
      *  - 413: API error
@@ -59,20 +60,20 @@ interface SQLApi {
      *  - 500: API error
      *  - 503: API error
      *
-     * @param channelId 
-     * @param conversationId 
-     * @param resultId 
-     * @return [kotlin.collections.Map<kotlin.String, kotlin.Any>]
+     * @param channelId Agent OpenAPI 渠道 UUID。 / Agent OpenAPI channel UUID.
+     * @param conversationId 会话 ID；必须属于当前外部用户。 / Conversation ID owned by the current external user.
+     * @param resultId SQL 查询结果 ID。 / SQL query-result ID.
+     * @return [SqlChartDataset]
      */
     @GET("api/agents/channel/openapi/v1/{channelId}/chat/conversations/{conversationId}/sql-query-results/{resultId}/chart-data")
-    suspend fun getSqlQueryChartData(@Path("channelId") channelId: kotlin.String, @Path("conversationId") conversationId: kotlin.String, @Path("resultId") resultId: kotlin.String): Response<kotlin.collections.Map<kotlin.String, kotlin.Any>>
+    suspend fun getSqlQueryChartData(@Path("channelId") channelId: kotlin.String, @Path("conversationId") conversationId: kotlin.String, @Path("resultId") resultId: kotlin.String): Response<SqlChartDataset>
 
     /**
      * GET api/agents/channel/openapi/v1/{channelId}/chat/conversations/{conversationId}/sql-query-results/{resultId}
-     * getSqlQueryResult
-     * 
+     * 分页读取 SQL 结果 / Get paged SQL results
+     * 分页读取 SQL 结果 / Get paged SQL results 请求会在身份验签和资源归属校验后执行；响应字段以本契约为准。 / The request runs after signature and resource-ownership validation; this contract defines the response fields.
      * Responses:
-     *  - 200: Successful response
+     *  - 200: 分页读取 SQL 结果 / Get paged SQL results 的成功响应。 / Successful response for getSqlQueryResult.
      *  - 401: API error
      *  - 403: API error
      *  - 413: API error
@@ -81,11 +82,11 @@ interface SQLApi {
      *  - 500: API error
      *  - 503: API error
      *
-     * @param channelId 
-     * @param conversationId 
-     * @param resultId 
-     * @param current  (optional, default to 0)
-     * @param size  (optional, default to 100)
+     * @param channelId Agent OpenAPI 渠道 UUID。 / Agent OpenAPI channel UUID.
+     * @param conversationId 会话 ID；必须属于当前外部用户。 / Conversation ID owned by the current external user.
+     * @param resultId SQL 查询结果 ID。 / SQL query-result ID.
+     * @param current 从 0 开始的页码。 / Zero-based page index. (optional, default to 0)
+     * @param size 单页记录数。 / Number of records per page. (optional, default to 100)
      * @return [SqlQueryResultPage]
      */
     @GET("api/agents/channel/openapi/v1/{channelId}/chat/conversations/{conversationId}/sql-query-results/{resultId}")

@@ -28,54 +28,63 @@ import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonProperty
 
 /**
- * 
+ * ChatModelConfig 的公开协议结构。 / Public contract for chat model config.
  *
- * @param maker 
- * @param modelName 
- * @param modelLabel 
- * @param modelDescription 
- * @param maxContextTokens 
- * @param maxOutputTokens 
- * @param supportImage 
- * @param supportVideo 
- * @param thinkingMode 
+ * @param maker 字段 maker / maker field。
+ * @param modelName 字段 modelName / model name field。
+ * @param modelLabel 字段 modelLabel / model label field。
+ * @param modelDescription 字段 modelDescription / model description field。
+ * @param maxContextTokens 字段 maxContextTokens / max context tokens field。
+ * @param maxOutputTokens 字段 maxOutputTokens / max output tokens field。
+ * @param supportImage 字段 supportImage / support image field。
+ * @param supportVideo 字段 supportVideo / support video field。
+ * @param thinkingMode 字段 thinkingMode / thinking mode field。
  */
 
 
 data class ChatModelConfig (
 
+    /* 字段 maker / maker field。 */
     @param:JsonProperty("maker")
     @get:JsonProperty("maker")
     val maker: kotlin.String,
 
+    /* 字段 modelName / model name field。 */
     @param:JsonProperty("modelName")
     @get:JsonProperty("modelName")
     val modelName: kotlin.String,
 
+    /* 字段 modelLabel / model label field。 */
     @param:JsonProperty("modelLabel")
     @get:JsonProperty("modelLabel")
     val modelLabel: kotlin.String,
 
+    /* 字段 modelDescription / model description field。 */
     @param:JsonProperty("modelDescription")
     @get:JsonProperty("modelDescription")
     val modelDescription: kotlin.String,
 
+    /* 字段 maxContextTokens / max context tokens field。 */
     @param:JsonProperty("maxContextTokens")
     @get:JsonProperty("maxContextTokens")
     val maxContextTokens: kotlin.Int,
 
+    /* 字段 maxOutputTokens / max output tokens field。 */
     @param:JsonProperty("maxOutputTokens")
     @get:JsonProperty("maxOutputTokens")
     val maxOutputTokens: kotlin.Int,
 
+    /* 字段 supportImage / support image field。 */
     @param:JsonProperty("supportImage")
     @get:JsonProperty("supportImage")
     val supportImage: kotlin.Boolean,
 
+    /* 字段 supportVideo / support video field。 */
     @param:JsonProperty("supportVideo")
     @get:JsonProperty("supportVideo")
     val supportVideo: kotlin.Boolean,
 
+    /* 字段 thinkingMode / thinking mode field。 */
     @param:JsonProperty("thinkingMode")
     @get:JsonProperty("thinkingMode")
     val thinkingMode: kotlin.Boolean

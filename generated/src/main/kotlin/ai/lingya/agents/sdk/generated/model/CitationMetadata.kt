@@ -28,34 +28,38 @@ import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonProperty
 
 /**
- * 
+ * CitationMetadata 的公开协议结构。 / Public contract for citation metadata.
  *
- * @param citationType 
- * @param referenceId 
- * @param title 
- * @param content 
+ * @param type 类型判别值 / type discriminator。
+ * @param referenceId 字段 referenceId / reference id field。
+ * @param title 标题 / title。
+ * @param description 可读说明 / human-readable description。
  */
 
 
 data class CitationMetadata (
 
-    @param:JsonProperty("citationType")
-    @get:JsonProperty("citationType")
-    val citationType: kotlin.String,
+    /* 类型判别值 / type discriminator。 */
+    @param:JsonProperty("type")
+    @get:JsonProperty("type")
+    val type: kotlin.String,
 
+    /* 字段 referenceId / reference id field。 */
     @param:JsonProperty("referenceId")
     @get:JsonProperty("referenceId")
     val referenceId: kotlin.Long,
 
+    /* 标题 / title。 */
     @param:JsonProperty("title")
     @get:JsonProperty("title")
     val title: kotlin.String? = null,
 
-    @param:JsonProperty("content")
-    @get:JsonProperty("content")
-    val content: kotlin.String? = null
+    /* 可读说明 / human-readable description。 */
+    @param:JsonProperty("description")
+    @get:JsonProperty("description")
+    val description: kotlin.String? = null
 
-) : kotlin.collections.HashMap<String, kotlin.Any>() {
+) {
 
 
 }

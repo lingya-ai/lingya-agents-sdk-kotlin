@@ -28,19 +28,21 @@ import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonProperty
 
 /**
- * 
+ * PlanStatus 的公开协议结构。 / Public contract for plan status.
  *
- * @param pending 
- * @param status 
+ * @param pending 字段 pending / pending field。
+ * @param status 当前状态 / current status。
  */
 
 
 data class PlanStatus (
 
+    /* 字段 pending / pending field。 */
     @param:JsonProperty("pending")
     @get:JsonProperty("pending")
     val pending: kotlin.Boolean,
 
+    /* 当前状态 / current status。 */
     @param:JsonProperty("status")
     @get:JsonProperty("status")
     val status: kotlin.String

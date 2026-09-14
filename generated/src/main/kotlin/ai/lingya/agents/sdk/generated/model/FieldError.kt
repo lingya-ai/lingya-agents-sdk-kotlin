@@ -28,19 +28,21 @@ import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonProperty
 
 /**
- * 
+ * FieldError 的公开协议结构。 / Public contract for field error.
  *
- * @param `field` 
- * @param message 
+ * @param `field` 字段 field / field field。
+ * @param message 消息正文 / message text。
  */
 
 
 data class FieldError (
 
+    /* 字段 field / field field。 */
     @param:JsonProperty("field")
     @get:JsonProperty("field")
     val `field`: kotlin.String,
 
+    /* 消息正文 / message text。 */
     @param:JsonProperty("message")
     @get:JsonProperty("message")
     val message: kotlin.String

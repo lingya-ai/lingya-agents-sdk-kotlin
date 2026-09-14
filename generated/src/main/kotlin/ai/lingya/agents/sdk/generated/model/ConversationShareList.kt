@@ -23,23 +23,24 @@
 
 package ai.lingya.agents.sdk.generated.model
 
-import ai.lingya.agents.sdk.generated.model.ConversationShare
+import ai.lingya.agents.sdk.generated.model.ConversationShareRecord
 
 import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonProperty
 
 /**
- * 
+ * ConversationShareList 的公开协议结构。 / Public contract for conversation share list.
  *
- * @param records 
+ * @param records 记录列表 / records。
  */
 
 
 data class ConversationShareList (
 
+    /* 记录列表 / records。 */
     @param:JsonProperty("records")
     @get:JsonProperty("records")
-    val records: kotlin.collections.List<ConversationShare>
+    val records: kotlin.collections.List<ConversationShareRecord>
 
 ) {
 

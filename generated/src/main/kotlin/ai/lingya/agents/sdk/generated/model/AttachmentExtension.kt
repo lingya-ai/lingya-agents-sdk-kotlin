@@ -28,19 +28,21 @@ import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonProperty
 
 /**
- * 
+ * AttachmentExtension 的公开协议结构。 / Public contract for attachment extension.
  *
- * @param ext 
- * @param media 
+ * @param ext 字段 ext / ext field。
+ * @param media 字段 media / media field。
  */
 
 
 data class AttachmentExtension (
 
+    /* 字段 ext / ext field。 */
     @param:JsonProperty("ext")
     @get:JsonProperty("ext")
     val ext: kotlin.String,
 
+    /* 字段 media / media field。 */
     @param:JsonProperty("media")
     @get:JsonProperty("media")
     val media: kotlin.String

@@ -26,32 +26,45 @@ package ai.lingya.agents.sdk.generated.model
 
 import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.annotation.JsonValue
 
 /**
- * 
+ * AiChatCompactorWarningBriefEvent 的公开协议结构。 / Public contract for ai chat compactor warning brief event.
  *
- * @param type 
- * @param level 
- * @param warning 
+ * @param type 类型判别值 / type discriminator。
+ * @param level 字段 level / level field。
+ * @param warning 字段 warning / warning field。
  */
 
 
 data class AiChatCompactorWarningBriefEvent (
 
+    /* 类型判别值 / type discriminator。 */
     @param:JsonProperty("type")
     @get:JsonProperty("type")
-    val type: kotlin.Any?,
+    val type: AiChatCompactorWarningBriefEvent.Type,
 
+    /* 字段 level / level field。 */
     @param:JsonProperty("level")
     @get:JsonProperty("level")
     val level: kotlin.String,
 
+    /* 字段 warning / warning field。 */
     @param:JsonProperty("warning")
     @get:JsonProperty("warning")
     val warning: kotlin.String
 
 ) {
 
+    /**
+     * 类型判别值 / type discriminator。
+     *
+     * Values: compactorMinusWarning,unknown_default_open_api
+     */
+    enum class Type(@get:JsonValue val value: kotlin.String) {
+        @JsonProperty(value = "compactor-warning") compactorMinusWarning("compactor-warning"),
+        @JsonProperty(value = "unknown_default_open_api") @JsonEnumDefaultValue unknown_default_open_api("unknown_default_open_api");
+    }
 
 }
 

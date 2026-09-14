@@ -28,14 +28,15 @@ import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonProperty
 
 /**
- * 
+ * AiChatStreamInput 的公开协议结构。 / Public contract for ai chat stream input.
  *
- * @param messageId 
+ * @param messageId 消息 ID / message ID。
  */
 
 
 data class AiChatStreamInput (
 
+    /* 消息 ID / message ID。 */
     @param:JsonProperty("messageId")
     @get:JsonProperty("messageId")
     val messageId: kotlin.String

@@ -29,24 +29,27 @@ import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonProperty
 
 /**
- * 
+ * ValidationError 的公开协议结构。 / Public contract for validation error.
  *
- * @param code 
- * @param message 
- * @param fields 
+ * @param code 字段 code / code field。
+ * @param message 消息正文 / message text。
+ * @param fields 字段 fields / fields field。
  */
 
 
 data class ValidationError (
 
+    /* 字段 code / code field。 */
     @param:JsonProperty("code")
     @get:JsonProperty("code")
     val code: kotlin.String,
 
+    /* 消息正文 / message text。 */
     @param:JsonProperty("message")
     @get:JsonProperty("message")
     val message: kotlin.String,
 
+    /* 字段 fields / fields field。 */
     @param:JsonProperty("fields")
     @get:JsonProperty("fields")
     val fields: kotlin.collections.List<FieldError>

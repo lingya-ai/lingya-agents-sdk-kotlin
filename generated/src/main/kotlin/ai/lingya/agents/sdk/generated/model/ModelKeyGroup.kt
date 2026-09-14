@@ -29,24 +29,27 @@ import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonProperty
 
 /**
- * 
+ * ModelKeyGroup 的公开协议结构。 / Public contract for model key group.
  *
- * @param keyGroupId 
- * @param keyGroupName 
- * @param models 
+ * @param keyGroupId 字段 keyGroupId / key group id field。
+ * @param keyGroupName 字段 keyGroupName / key group name field。
+ * @param models 字段 models / models field。
  */
 
 
 data class ModelKeyGroup (
 
+    /* 字段 keyGroupId / key group id field。 */
     @param:JsonProperty("keyGroupId")
     @get:JsonProperty("keyGroupId")
     val keyGroupId: kotlin.Long,
 
+    /* 字段 keyGroupName / key group name field。 */
     @param:JsonProperty("keyGroupName")
     @get:JsonProperty("keyGroupName")
     val keyGroupName: kotlin.String,
 
+    /* 字段 models / models field。 */
     @param:JsonProperty("models")
     @get:JsonProperty("models")
     val models: kotlin.collections.List<ChatModelConfig>

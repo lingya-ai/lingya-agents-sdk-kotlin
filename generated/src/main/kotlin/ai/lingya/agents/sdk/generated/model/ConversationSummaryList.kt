@@ -29,14 +29,15 @@ import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonProperty
 
 /**
- * 
+ * ConversationSummaryList 的公开协议结构。 / Public contract for conversation summary list.
  *
- * @param records 
+ * @param records 记录列表 / records。
  */
 
 
 data class ConversationSummaryList (
 
+    /* 记录列表 / records。 */
     @param:JsonProperty("records")
     @get:JsonProperty("records")
     val records: kotlin.collections.List<ConversationSummary>

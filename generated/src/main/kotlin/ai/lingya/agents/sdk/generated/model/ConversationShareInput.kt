@@ -28,19 +28,21 @@ import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonProperty
 
 /**
- * 
+ * ConversationShareInput 的公开协议结构。 / Public contract for conversation share input.
  *
- * @param password 
- * @param expiresAt 
+ * @param password 字段 password / password field。
+ * @param expiresAt 字段 expiresAt / expires at field。
  */
 
 
 data class ConversationShareInput (
 
+    /* 字段 password / password field。 */
     @param:JsonProperty("password")
     @get:JsonProperty("password")
     val password: kotlin.String? = null,
 
+    /* 字段 expiresAt / expires at field。 */
     @param:JsonProperty("expiresAt")
     @get:JsonProperty("expiresAt")
     val expiresAt: java.time.OffsetDateTime? = null

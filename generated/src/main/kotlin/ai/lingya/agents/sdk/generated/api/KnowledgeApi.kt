@@ -15,10 +15,10 @@ import ai.lingya.agents.sdk.generated.model.ValidationError
 interface KnowledgeApi {
     /**
      * GET api/agents/channel/openapi/v1/{channelId}/chat/knowledge-bases/citations/{citationType}/{referenceId}/metadata
-     * getCitationMetadata
-     * 
+     * 读取引用元数据 / Get citation metadata
+     * 读取引用元数据 / Get citation metadata 请求会在身份验签和资源归属校验后执行；响应字段以本契约为准。 / The request runs after signature and resource-ownership validation; this contract defines the response fields.
      * Responses:
-     *  - 200: Successful response
+     *  - 200: 读取引用元数据 / Get citation metadata 的成功响应。 / Successful response for getCitationMetadata.
      *  - 401: API error
      *  - 403: API error
      *  - 413: API error
@@ -27,9 +27,9 @@ interface KnowledgeApi {
      *  - 500: API error
      *  - 503: API error
      *
-     * @param channelId 
-     * @param citationType 
-     * @param referenceId 
+     * @param channelId Agent OpenAPI 渠道 UUID。 / Agent OpenAPI channel UUID.
+     * @param citationType 知识引用类型。 / Knowledge citation type.
+     * @param referenceId 知识引用记录 ID。 / Knowledge-reference record ID.
      * @return [CitationMetadata]
      */
     @GET("api/agents/channel/openapi/v1/{channelId}/chat/knowledge-bases/citations/{citationType}/{referenceId}/metadata")
@@ -37,10 +37,10 @@ interface KnowledgeApi {
 
     /**
      * POST api/agents/channel/openapi/v1/{channelId}/chat/knowledge-bases/citations/metadata
-     * getCitationMetadataBatch
-     * 
+     * 批量读取引用元数据 / Get citation metadata in batch
+     * 批量读取引用元数据 / Get citation metadata in batch 请求会在身份验签和资源归属校验后执行；响应字段以本契约为准。 / The request runs after signature and resource-ownership validation; this contract defines the response fields.
      * Responses:
-     *  - 201: Successful response
+     *  - 201: 批量读取引用元数据 / Get citation metadata in batch 的成功响应。 / Successful response for getCitationMetadataBatch.
      *  - 401: API error
      *  - 403: API error
      *  - 413: API error
@@ -49,8 +49,8 @@ interface KnowledgeApi {
      *  - 500: API error
      *  - 503: API error
      *
-     * @param channelId 
-     * @param returnedReference 
+     * @param channelId Agent OpenAPI 渠道 UUID。 / Agent OpenAPI channel UUID.
+     * @param returnedReference 批量读取引用元数据 / Get citation metadata in batch 的 JSON 请求参数。 / JSON request parameters for getCitationMetadataBatch.
      * @return [CitationMetadataList]
      */
     @POST("api/agents/channel/openapi/v1/{channelId}/chat/knowledge-bases/citations/metadata")

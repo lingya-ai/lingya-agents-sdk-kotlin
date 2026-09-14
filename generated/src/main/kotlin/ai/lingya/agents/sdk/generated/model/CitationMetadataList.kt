@@ -29,14 +29,15 @@ import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonProperty
 
 /**
- * 
+ * CitationMetadataList 的公开协议结构。 / Public contract for citation metadata list.
  *
- * @param records 
+ * @param records 记录列表 / records。
  */
 
 
 data class CitationMetadataList (
 
+    /* 记录列表 / records。 */
     @param:JsonProperty("records")
     @get:JsonProperty("records")
     val records: kotlin.collections.List<CitationMetadata>

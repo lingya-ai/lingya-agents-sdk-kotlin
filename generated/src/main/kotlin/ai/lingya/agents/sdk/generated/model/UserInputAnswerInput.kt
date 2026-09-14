@@ -28,34 +28,39 @@ import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonProperty
 
 /**
- * 
+ * UserInputAnswerInput 的公开协议结构。 / Public contract for user input answer input.
  *
- * @param conversationId 
- * @param messageId 
- * @param questionId 
- * @param selectedOptions 
- * @param customInput 
+ * @param conversationId 会话 ID / conversation ID。
+ * @param messageId 消息 ID / message ID。
+ * @param questionId 字段 questionId / question id field。
+ * @param selectedOptions 字段 selectedOptions / selected options field。
+ * @param customInput 字段 customInput / custom input field。
  */
 
 
 data class UserInputAnswerInput (
 
+    /* 会话 ID / conversation ID。 */
     @param:JsonProperty("conversationId")
     @get:JsonProperty("conversationId")
     val conversationId: kotlin.String,
 
+    /* 消息 ID / message ID。 */
     @param:JsonProperty("messageId")
     @get:JsonProperty("messageId")
     val messageId: kotlin.String,
 
+    /* 字段 questionId / question id field。 */
     @param:JsonProperty("questionId")
     @get:JsonProperty("questionId")
     val questionId: kotlin.String,
 
+    /* 字段 selectedOptions / selected options field。 */
     @param:JsonProperty("selectedOptions")
     @get:JsonProperty("selectedOptions")
     val selectedOptions: kotlin.collections.List<kotlin.String>,
 
+    /* 字段 customInput / custom input field。 */
     @param:JsonProperty("customInput")
     @get:JsonProperty("customInput")
     val customInput: kotlin.String? = null

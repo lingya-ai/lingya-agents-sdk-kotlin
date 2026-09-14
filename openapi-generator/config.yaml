@@ -18,6 +18,12 @@ additionalProperties:
   enumUnknownDefaultCase: "true"
   hideGenerationTimestamp: "true"
 typeMappings:
-  AiChatBriefEvent: JsonNode
+  AiChatBriefEvent: AiChatBriefEvent
+  ToolExtension: ToolExtension
+  ChatMessage: ChatMessage
+  ChartColumnData: ChartColumnData
 importMappings:
-  JsonNode: com.fasterxml.jackson.databind.JsonNode
+  AiChatBriefEvent: ai.lingya.agents.sdk.event.AiChatBriefEvent
+  ToolExtension: ai.lingya.agents.sdk.event.ToolExtension
+  ChatMessage: ai.lingya.agents.sdk.event.ChatMessage
+  ChartColumnData: ai.lingya.agents.sdk.event.ChartColumnData

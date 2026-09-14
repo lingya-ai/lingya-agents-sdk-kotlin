@@ -30,19 +30,21 @@ import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonProperty
 
 /**
- * 
+ * AsyncTaskPage 的公开协议结构。 / Public contract for async task page.
  *
- * @param records 
- * @param page 
+ * @param records 记录列表 / records。
+ * @param page 分页信息 / page metadata。
  */
 
 
 data class AsyncTaskPage (
 
+    /* 记录列表 / records。 */
     @param:JsonProperty("records")
     @get:JsonProperty("records")
     val records: kotlin.collections.List<AsyncTask>,
 
+    /* 分页信息 / page metadata。 */
     @param:JsonProperty("page")
     @get:JsonProperty("page")
     val page: PageInfo

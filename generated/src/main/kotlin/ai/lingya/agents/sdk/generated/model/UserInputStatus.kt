@@ -28,34 +28,39 @@ import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonProperty
 
 /**
- * 
+ * UserInputStatus 的公开协议结构。 / Public contract for user input status.
  *
- * @param pending 
- * @param question 
- * @param questionDetails 
- * @param options 
- * @param multiple 
+ * @param pending 字段 pending / pending field。
+ * @param question 字段 question / question field。
+ * @param questionDetails 字段 questionDetails / question details field。
+ * @param options 字段 options / options field。
+ * @param multiple 字段 multiple / multiple field。
  */
 
 
 data class UserInputStatus (
 
+    /* 字段 pending / pending field。 */
     @param:JsonProperty("pending")
     @get:JsonProperty("pending")
     val pending: kotlin.Boolean,
 
+    /* 字段 question / question field。 */
     @param:JsonProperty("question")
     @get:JsonProperty("question")
     val question: kotlin.String? = null,
 
+    /* 字段 questionDetails / question details field。 */
     @param:JsonProperty("questionDetails")
     @get:JsonProperty("questionDetails")
     val questionDetails: kotlin.String? = null,
 
+    /* 字段 options / options field。 */
     @param:JsonProperty("options")
     @get:JsonProperty("options")
     val options: kotlin.collections.List<kotlin.String>? = null,
 
+    /* 字段 multiple / multiple field。 */
     @param:JsonProperty("multiple")
     @get:JsonProperty("multiple")
     val multiple: kotlin.Boolean? = null

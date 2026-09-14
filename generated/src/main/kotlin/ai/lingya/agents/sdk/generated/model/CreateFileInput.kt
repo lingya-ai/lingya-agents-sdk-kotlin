@@ -28,19 +28,21 @@ import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonProperty
 
 /**
- * 
+ * CreateFileInput 的公开协议结构。 / Public contract for create file input.
  *
- * @param fileName 
- * @param contentMd5 
+ * @param fileName 文件名 / file name。
+ * @param contentMd5 字段 contentMd5 / content md5 field。
  */
 
 
 data class CreateFileInput (
 
+    /* 文件名 / file name。 */
     @param:JsonProperty("fileName")
     @get:JsonProperty("fileName")
     val fileName: kotlin.String,
 
+    /* 字段 contentMd5 / content md5 field。 */
     @param:JsonProperty("contentMd5")
     @get:JsonProperty("contentMd5")
     val contentMd5: kotlin.String

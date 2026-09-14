@@ -8,6 +8,7 @@ import okhttp3.OkHttpClient
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertInstanceOf
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
@@ -124,8 +125,9 @@ class LingyaAgentsClientTest {
 
         val result = user.apis.events.getChatEvents("channel", "conversation-1", "message-1").bodyOrThrow()
 
-        assertEquals("future-event", result.records.single().path("type").asText())
-        assertTrue(result.records.single().path("payload").path("kept").asBoolean())
+        val event = assertInstanceOf(ai.lingya.agents.sdk.event.AiChatBriefEvent.Unknown::class.java, result.records.single())
+        assertEquals("future-event", event.type)
+        assertTrue(event.rawJson.contains("\"kept\":true"))
     }
 
     @Test

@@ -16,10 +16,10 @@ import ai.lingya.agents.sdk.generated.model.ValidationError
 interface MessagesApi {
     /**
      * DELETE api/agents/channel/openapi/v1/{channelId}/chat/conversations/{conversationId}/messages/{messageId}/queue
-     * cancelQueuedMessage
-     * 
+     * 取消排队消息 / Cancel a queued message
+     * 取消排队消息 / Cancel a queued message 请求会在身份验签和资源归属校验后执行；响应字段以本契约为准。 / The request runs after signature and resource-ownership validation; this contract defines the response fields.
      * Responses:
-     *  - 200: Successful response
+     *  - 200: 取消排队消息 / Cancel a queued message 的成功响应。 / Successful response for cancelQueuedMessage.
      *  - 401: API error
      *  - 403: API error
      *  - 413: API error
@@ -28,9 +28,9 @@ interface MessagesApi {
      *  - 500: API error
      *  - 503: API error
      *
-     * @param channelId 
-     * @param conversationId 
-     * @param messageId 
+     * @param channelId Agent OpenAPI 渠道 UUID。 / Agent OpenAPI channel UUID.
+     * @param conversationId 会话 ID；必须属于当前外部用户。 / Conversation ID owned by the current external user.
+     * @param messageId 用户消息 ID；必须属于指定会话。 / User-message ID owned by the specified conversation.
      * @return [ConversationMessage]
      */
     @DELETE("api/agents/channel/openapi/v1/{channelId}/chat/conversations/{conversationId}/messages/{messageId}/queue")
@@ -38,10 +38,10 @@ interface MessagesApi {
 
     /**
      * GET api/agents/channel/openapi/v1/{channelId}/chat/conversations/{conversationId}/async-tasks/{asyncTaskId}
-     * getConversationAsyncTask
-     * 
+     * 读取异步任务 / Get an asynchronous task
+     * 读取异步任务 / Get an asynchronous task 请求会在身份验签和资源归属校验后执行；响应字段以本契约为准。 / The request runs after signature and resource-ownership validation; this contract defines the response fields.
      * Responses:
-     *  - 200: Successful response
+     *  - 200: 读取异步任务 / Get an asynchronous task 的成功响应。 / Successful response for getConversationAsyncTask.
      *  - 401: API error
      *  - 403: API error
      *  - 413: API error
@@ -50,9 +50,9 @@ interface MessagesApi {
      *  - 500: API error
      *  - 503: API error
      *
-     * @param channelId 
-     * @param conversationId 
-     * @param asyncTaskId 
+     * @param channelId Agent OpenAPI 渠道 UUID。 / Agent OpenAPI channel UUID.
+     * @param conversationId 会话 ID；必须属于当前外部用户。 / Conversation ID owned by the current external user.
+     * @param asyncTaskId 异步任务 ID。 / Asynchronous task ID.
      * @return [AsyncTask]
      */
     @GET("api/agents/channel/openapi/v1/{channelId}/chat/conversations/{conversationId}/async-tasks/{asyncTaskId}")
@@ -60,10 +60,10 @@ interface MessagesApi {
 
     /**
      * GET api/agents/channel/openapi/v1/{channelId}/chat/conversations/{conversationId}/messages/{messageId}
-     * getConversationMessage
-     * 
+     * 读取单条会话消息 / Get a conversation message
+     * 读取单条会话消息 / Get a conversation message 请求会在身份验签和资源归属校验后执行；响应字段以本契约为准。 / The request runs after signature and resource-ownership validation; this contract defines the response fields.
      * Responses:
-     *  - 200: Successful response
+     *  - 200: 读取单条会话消息 / Get a conversation message 的成功响应。 / Successful response for getConversationMessage.
      *  - 401: API error
      *  - 403: API error
      *  - 413: API error
@@ -72,9 +72,9 @@ interface MessagesApi {
      *  - 500: API error
      *  - 503: API error
      *
-     * @param channelId 
-     * @param conversationId 
-     * @param messageId 
+     * @param channelId Agent OpenAPI 渠道 UUID。 / Agent OpenAPI channel UUID.
+     * @param conversationId 会话 ID；必须属于当前外部用户。 / Conversation ID owned by the current external user.
+     * @param messageId 用户消息 ID；必须属于指定会话。 / User-message ID owned by the specified conversation.
      * @return [ConversationMessage]
      */
     @GET("api/agents/channel/openapi/v1/{channelId}/chat/conversations/{conversationId}/messages/{messageId}")
@@ -101,10 +101,10 @@ interface MessagesApi {
 
     /**
      * GET api/agents/channel/openapi/v1/{channelId}/chat/conversations/{conversationId}/async-tasks
-     * listConversationAsyncTasks
-     * 
+     * 分页查询异步任务 / List asynchronous tasks
+     * 分页查询异步任务 / List asynchronous tasks 请求会在身份验签和资源归属校验后执行；响应字段以本契约为准。 / The request runs after signature and resource-ownership validation; this contract defines the response fields.
      * Responses:
-     *  - 200: Successful response
+     *  - 200: 分页查询异步任务 / List asynchronous tasks 的成功响应。 / Successful response for listConversationAsyncTasks.
      *  - 401: API error
      *  - 403: API error
      *  - 413: API error
@@ -113,15 +113,15 @@ interface MessagesApi {
      *  - 500: API error
      *  - 503: API error
      *
-     * @param channelId 
-     * @param conversationId 
-     * @param current  (optional)
-     * @param size  (optional, default to 30)
-     * @param orderBy  (optional)
-     * @param orderDirection  (optional, default to OrderDirection.ASC)
-     * @param orderNullHandling  (optional, default to OrderNullHandling.NATIVE)
-     * @param keyword  (optional)
-     * @param status  (optional)
+     * @param channelId Agent OpenAPI 渠道 UUID。 / Agent OpenAPI channel UUID.
+     * @param conversationId 会话 ID；必须属于当前外部用户。 / Conversation ID owned by the current external user.
+     * @param current 从 0 开始的页码。 / Zero-based page index. (optional)
+     * @param size 单页记录数。 / Number of records per page. (optional, default to 30)
+     * @param orderBy 排序字段列表。 / Ordered list of sort fields. (optional)
+     * @param orderDirection 排序方向。 / Sort direction. (optional, default to OrderDirection.ASC)
+     * @param orderNullHandling 空值排序策略。 / Null ordering strategy. (optional, default to OrderNullHandling.NATIVE)
+     * @param keyword 标题或正文检索关键字。 / Title or content search keyword. (optional)
+     * @param status 状态过滤条件。 / Status filter. (optional)
      * @return [AsyncTaskPage]
      */
     @GET("api/agents/channel/openapi/v1/{channelId}/chat/conversations/{conversationId}/async-tasks")
@@ -148,10 +148,10 @@ interface MessagesApi {
 
     /**
      * GET api/agents/channel/openapi/v1/{channelId}/chat/conversations/{conversationId}/messages
-     * listConversationMessages
-     * 
+     * 分页查询会话消息 / List conversation messages
+     * 分页查询会话消息 / List conversation messages 请求会在身份验签和资源归属校验后执行；响应字段以本契约为准。 / The request runs after signature and resource-ownership validation; this contract defines the response fields.
      * Responses:
-     *  - 200: Successful response
+     *  - 200: 分页查询会话消息 / List conversation messages 的成功响应。 / Successful response for listConversationMessages.
      *  - 401: API error
      *  - 403: API error
      *  - 413: API error
@@ -160,14 +160,14 @@ interface MessagesApi {
      *  - 500: API error
      *  - 503: API error
      *
-     * @param channelId 
-     * @param conversationId 
-     * @param current  (optional)
-     * @param size  (optional, default to 30)
-     * @param orderBy  (optional)
-     * @param orderDirection  (optional, default to OrderDirection.ASC)
-     * @param orderNullHandling  (optional, default to OrderNullHandling.NATIVE)
-     * @param keyword  (optional)
+     * @param channelId Agent OpenAPI 渠道 UUID。 / Agent OpenAPI channel UUID.
+     * @param conversationId 会话 ID；必须属于当前外部用户。 / Conversation ID owned by the current external user.
+     * @param current 从 0 开始的页码。 / Zero-based page index. (optional)
+     * @param size 单页记录数。 / Number of records per page. (optional, default to 30)
+     * @param orderBy 排序字段列表。 / Ordered list of sort fields. (optional)
+     * @param orderDirection 排序方向。 / Sort direction. (optional, default to OrderDirection.ASC)
+     * @param orderNullHandling 空值排序策略。 / Null ordering strategy. (optional, default to OrderNullHandling.NATIVE)
+     * @param keyword 标题或正文检索关键字。 / Title or content search keyword. (optional)
      * @return [ConversationMessagePage]
      */
     @GET("api/agents/channel/openapi/v1/{channelId}/chat/conversations/{conversationId}/messages")

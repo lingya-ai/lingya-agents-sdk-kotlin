@@ -30,19 +30,21 @@ import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonProperty
 
 /**
- * 
+ * ModelConfig 的公开协议结构。 / Public contract for model config.
  *
- * @param defaultModel 
- * @param modelKeyGroups 
+ * @param defaultModel 字段 defaultModel / default model field。
+ * @param modelKeyGroups 字段 modelKeyGroups / model key groups field。
  */
 
 
 data class ModelConfig (
 
+    /* 字段 defaultModel / default model field。 */
     @param:JsonProperty("defaultModel")
     @get:JsonProperty("defaultModel")
     val defaultModel: DefaultModel?,
 
+    /* 字段 modelKeyGroups / model key groups field。 */
     @param:JsonProperty("modelKeyGroups")
     @get:JsonProperty("modelKeyGroups")
     val modelKeyGroups: kotlin.collections.List<ModelKeyGroup>

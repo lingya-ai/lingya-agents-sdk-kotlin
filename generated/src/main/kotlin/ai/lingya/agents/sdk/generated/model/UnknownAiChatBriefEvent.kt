@@ -28,19 +28,26 @@ import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonProperty
 
 /**
- * 
+ * UnknownAiChatBriefEvent 的公开协议结构。 / Public contract for unknown ai chat brief event.
  *
- * @param type 
+ * @param type 类型判别值 / type discriminator。
+ * @param rawJson 未识别对象的原始 JSON / raw JSON for an unrecognized object。
  */
 
 
-data class BaseAiChatBriefEvent (
+data class UnknownAiChatBriefEvent (
 
+    /* 类型判别值 / type discriminator。 */
     @param:JsonProperty("type")
     @get:JsonProperty("type")
-    val type: kotlin.String
+    val type: kotlin.String,
 
-) : kotlin.collections.HashMap<String, kotlin.Any>() {
+    /* 未识别对象的原始 JSON / raw JSON for an unrecognized object。 */
+    @param:JsonProperty("rawJson")
+    @get:JsonProperty("rawJson")
+    val rawJson: kotlin.String
+
+) {
 
 
 }

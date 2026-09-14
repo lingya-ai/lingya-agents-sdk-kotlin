@@ -1,7 +1,6 @@
 package ai.lingya.agents.sdk
 
-import ai.lingya.agents.sdk.event.EndAiChatBriefEvent
-import ai.lingya.agents.sdk.event.TextAiChatBriefEvent
+import ai.lingya.agents.sdk.event.AiChatBriefEvent
 import ai.lingya.agents.sdk.generated.model.AiChatInput
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
@@ -68,8 +67,8 @@ class LiveApiIntegrationTest {
                 )
                 .bodyOrThrow()
 
-            assertTrue(events.any { it is TextAiChatBriefEvent })
-            assertTrue(events.any { it is EndAiChatBriefEvent })
+            assertTrue(events.any { it is AiChatBriefEvent.Message })
+            assertTrue(events.any { it is AiChatBriefEvent.End })
             assertEquals(submission.messageId, message.messageId)
         } finally {
             val deletion = fixture.user.apis.conversations

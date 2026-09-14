@@ -28,24 +28,26 @@ import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonProperty
 
 /**
- * 
+ * OperationResult 的公开协议结构。 / Public contract for operation result.
  *
- * @param success 
- * @param message 
+ * @param success 字段 success / success field。
+ * @param message 消息正文 / message text。
  */
 
 
 data class OperationResult (
 
+    /* 字段 success / success field。 */
     @param:JsonProperty("success")
     @get:JsonProperty("success")
     val success: kotlin.Boolean,
 
+    /* 消息正文 / message text。 */
     @param:JsonProperty("message")
     @get:JsonProperty("message")
     val message: kotlin.String? = null
 
-) : kotlin.collections.HashMap<String, kotlin.Any>() {
+) {
 
 
 }

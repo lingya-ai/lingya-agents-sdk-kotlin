@@ -28,24 +28,32 @@ import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonProperty
 
 /**
- * 
+ * ConversationTitle 的公开协议结构。 / Public contract for conversation title.
  *
- * @param title 
- * @param generating 
+ * @param conversationId 会话 ID / conversation ID。
+ * @param titleState 字段 titleState / title state field。
+ * @param title 标题 / title。
  */
 
 
 data class ConversationTitle (
 
+    /* 会话 ID / conversation ID。 */
+    @param:JsonProperty("conversationId")
+    @get:JsonProperty("conversationId")
+    val conversationId: kotlin.String,
+
+    /* 字段 titleState / title state field。 */
+    @param:JsonProperty("titleState")
+    @get:JsonProperty("titleState")
+    val titleState: kotlin.String,
+
+    /* 标题 / title。 */
     @param:JsonProperty("title")
     @get:JsonProperty("title")
-    val title: kotlin.String,
+    val title: kotlin.String? = null
 
-    @param:JsonProperty("generating")
-    @get:JsonProperty("generating")
-    val generating: kotlin.Boolean? = false
-
-) : kotlin.collections.HashMap<String, kotlin.Any>() {
+) {
 
 
 }

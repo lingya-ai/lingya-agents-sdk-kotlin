@@ -28,14 +28,15 @@ import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonProperty
 
 /**
- * 
+ * ChatStreamProbeInput 的公开协议结构。 / Public contract for chat stream probe input.
  *
- * @param probeId 
+ * @param probeId 字段 probeId / probe id field。
  */
 
 
 data class ChatStreamProbeInput (
 
+    /* 字段 probeId / probe id field。 */
     @param:JsonProperty("probeId")
     @get:JsonProperty("probeId")
     val probeId: kotlin.String
