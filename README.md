@@ -62,7 +62,7 @@ var events = user.collectChatEvents(result.getConversationId(), result.getMessag
 ```kotlin
 val upload = user.apis.files.createPreSignedUpload(
     channelId,
-    GeneratePreSignedUrlInput("report.pdf", "conversation", md5),
+    GeneratePreSignedUrlInput("report.pdf", "ai-chat-attachments", md5),
 ).bodyOrThrow()
 
 // Upload bytes directly to upload.url with the returned headers using an unsigned HTTP client.

@@ -31,7 +31,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
  * 
  *
  * @param fileName 
- * @param module 
+ * @param module Registered file module for public Agent chat attachments.
  * @param contentMd5 
  * @param fileId 
  * @param metadata 
@@ -44,6 +44,7 @@ data class GeneratePreSignedUrlInput (
     @get:JsonProperty("fileName")
     val fileName: kotlin.String,
 
+    /* Registered file module for public Agent chat attachments. */
     @param:JsonProperty("module")
     @get:JsonProperty("module")
     val module: kotlin.String,
