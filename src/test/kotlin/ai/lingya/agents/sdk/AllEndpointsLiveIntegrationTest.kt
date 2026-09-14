@@ -46,11 +46,11 @@ class AllEndpointsLiveIntegrationTest {
             coverage.successful("GET", "/config") {
                 fixture.user.apis.configuration.getAgentsConfig(fixture.channelId)
             }
-            coverage.record("POST", "/conversations/{conversationId}/stream")
             val firstEvents = withTimeout(120.seconds) {
                 fixture.user.streamChatEvents(first.conversationId, first.messageId).toList()
             }
             assertTrue(firstEvents.any { it is AiChatBriefEvent.End })
+            coverage.streamCompleted("POST", "/conversations/{conversationId}/stream")
 
             coverage.successful("GET", "/conversations/{conversationId}/config") {
                 fixture.user.apis.configuration.getConversationConfig(fixture.channelId, first.conversationId)
@@ -203,12 +203,12 @@ class AllEndpointsLiveIntegrationTest {
             verifyFileEndpoints(coverage, fixture, first.conversationId, first.messageId)
             verifyKnowledgeAndWorkspaceEndpoints(coverage, fixture, first.conversationId)
 
-            coverage.record("POST", "/stream-probe")
             val probeId = "all-${UUID.randomUUID()}"
             val probeEvents = withTimeout(10.seconds) {
                 fixture.user.probeEventStream(probeId).toList()
             }
             assertEquals(listOf(0, 1, 2, 3), probeEvents.map { it.sequence })
+            coverage.streamCompleted("POST", "/stream-probe")
 
             coverage.successfulStatus("PATCH", "/conversations/{conversationId}/status") {
                 fixture.user.apis.conversations.updateConversationStatus(
@@ -218,8 +218,12 @@ class AllEndpointsLiveIntegrationTest {
                 )
             }
         } finally {
-            coverage.successfulStatus("DELETE", "/conversations/{conversationId}") {
-                fixture.user.apis.conversations.deleteConversation(fixture.channelId, first.conversationId)
+            try {
+                coverage.successfulStatus("DELETE", "/conversations/{conversationId}") {
+                    fixture.user.apis.conversations.deleteConversation(fixture.channelId, first.conversationId)
+                }
+            } finally {
+                coverage.writeReport()
             }
         }
 
@@ -375,14 +379,16 @@ class AllEndpointsLiveIntegrationTest {
 
     private class EndpointCoverage {
         val endpoints: MutableSet<Endpoint> = linkedSetOf()
+        private val results: MutableList<EndpointResult> = mutableListOf()
 
         suspend fun <T : Any> successful(
             method: String,
             suffix: String,
             request: suspend () -> Response<T>,
         ): T {
-            record(method, suffix)
+            val endpoint = register(method, suffix)
             val response = request()
+            result(endpoint, response, if (response.isSuccessful) "通过" else "失败")
             assertTrue(
                 response.isSuccessful,
                 "$method $suffix returned HTTP ${response.code()}: ${response.errorBody()?.string()?.take(500)}",
@@ -395,8 +401,9 @@ class AllEndpointsLiveIntegrationTest {
             suffix: String,
             request: suspend () -> Response<*>,
         ) {
-            record(method, suffix)
+            val endpoint = register(method, suffix)
             val response = request()
+            result(endpoint, response, if (response.isSuccessful) "通过" else "失败")
             assertTrue(response.isSuccessful, "$method $suffix returned HTTP ${response.code()}")
         }
 
@@ -405,17 +412,69 @@ class AllEndpointsLiveIntegrationTest {
             suffix: String,
             request: suspend () -> Response<*>,
         ) {
-            record(method, suffix)
+            val endpoint = register(method, suffix)
             val response = request()
+            result(
+                endpoint,
+                response,
+                if (response.code() in EXPECTED_DOMAIN_ERROR_CODES) "环境能力受限，参数与错误响应已验证" else "失败",
+            )
             assertTrue(
                 response.code() in EXPECTED_DOMAIN_ERROR_CODES,
                 "$method $suffix returned unexpected HTTP ${response.code()}",
             )
         }
 
-        fun record(method: String, suffix: String) {
+        fun streamCompleted(method: String, suffix: String) {
+            val endpoint = register(method, suffix)
+            results += EndpointResult(endpoint, 200, localRequestId(), "流式响应完成")
+        }
+
+        fun writeReport() {
+            val report = buildString {
+                appendLine("# Agents OpenAPI 真实环境全接口测试报告")
+                appendLine()
+                appendLine("报告不包含凭证、请求正文或响应正文。请求标识优先使用服务端响应头，否则使用本地脱敏序号。")
+                appendLine()
+                appendLine("| 请求标识 | Method | Path | HTTP | 结果 |")
+                appendLine("|---|---|---|---:|---|")
+                results.forEach { result ->
+                    appendLine(
+                        "| ${result.requestId} | ${result.endpoint.method} | `${result.endpoint.path}` | " +
+                            "${result.statusCode} | ${result.outcome} |",
+                    )
+                }
+                appendLine()
+                appendLine("清理结果：会话删除接口出现在上表且结果为“通过”时，测试创建的会话已清理。")
+            }
+            val directory = Path.of("build", "reports", "live-api")
+            Files.createDirectories(directory)
+            Files.writeString(directory.resolve("all-endpoints.md"), report)
+        }
+
+        private fun register(method: String, suffix: String): Endpoint {
             val path = if (suffix.isEmpty()) BASE_PATH else BASE_PATH + suffix
-            assertTrue(endpoints.add(Endpoint(method, path)), "duplicate endpoint coverage: $method $path")
+            val endpoint = Endpoint(method, path)
+            assertTrue(endpoints.add(endpoint), "duplicate endpoint coverage: $method $path")
+            return endpoint
+        }
+
+        private fun result(endpoint: Endpoint, response: Response<*>, outcome: String) {
+            val requestId = REQUEST_ID_HEADERS.firstNotNullOfOrNull(response.headers()::get) ?: localRequestId()
+            results += EndpointResult(endpoint, response.code(), requestId.take(64), outcome)
+        }
+
+        private fun localRequestId(): String = "local-${(results.size + 1).toString().padStart(3, '0')}"
+
+        private data class EndpointResult(
+            val endpoint: Endpoint,
+            val statusCode: Int,
+            val requestId: String,
+            val outcome: String,
+        )
+
+        private companion object {
+            val REQUEST_ID_HEADERS = listOf("X-Request-Id", "Trace-Id", "X-B3-TraceId")
         }
     }
 
