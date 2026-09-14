@@ -23,7 +23,6 @@
 
 package ai.lingya.agents.sdk.generated.model
 
-import ai.lingya.agents.sdk.generated.model.AiChatBriefEvent
 
 import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonProperty
@@ -39,7 +38,7 @@ data class AiChatBriefEventList (
 
     @param:JsonProperty("records")
     @get:JsonProperty("records")
-    val records: kotlin.collections.List<AiChatBriefEvent>
+    val records: kotlin.collections.List<com.fasterxml.jackson.databind.JsonNode>
 
 ) {
 

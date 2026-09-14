@@ -6,7 +6,6 @@ import retrofit2.Response
 import okhttp3.RequestBody
 import com.fasterxml.jackson.annotation.JsonProperty
 
-import ai.lingya.agents.sdk.generated.model.AiChatBriefEvent
 import ai.lingya.agents.sdk.generated.model.AiChatInput
 import ai.lingya.agents.sdk.generated.model.AiChatStreamInput
 import ai.lingya.agents.sdk.generated.model.AiChatSubmission

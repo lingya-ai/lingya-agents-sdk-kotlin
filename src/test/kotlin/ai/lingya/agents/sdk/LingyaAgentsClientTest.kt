@@ -109,6 +109,20 @@ class LingyaAgentsClientTest {
     }
 
     @Test
+    fun `preserves unknown event JSON from polling endpoint`() = runTest {
+        server.enqueue(
+            MockResponse().setResponseCode(200).addHeader("Content-Type", "application/json")
+                .setBody("""{"records":[{"type":"future-event","payload":{"kept":true}}]}"""),
+        )
+        val user = newClient().forUser("user-1")
+
+        val result = user.apis.events.getChatEvents("channel", "conversation-1", "message-1").bodyOrThrow()
+
+        assertEquals("future-event", result.records.single().path("type").asText())
+        assertTrue(result.records.single().path("payload").path("kept").asBoolean())
+    }
+
+    @Test
     fun `downloads binary export without JSON conversion`() = runTest {
         val bytes = byteArrayOf(0, 1, 2, 127, -1)
         server.enqueue(MockResponse().setResponseCode(200).setBody(okio.Buffer().write(bytes)))

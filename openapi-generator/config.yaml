@@ -17,3 +17,7 @@ additionalProperties:
   useCoroutines: "true"
   enumUnknownDefaultCase: "true"
   hideGenerationTimestamp: "true"
+typeMappings:
+  AiChatBriefEvent: JsonNode
+importMappings:
+  JsonNode: com.fasterxml.jackson.databind.JsonNode
