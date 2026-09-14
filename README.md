@@ -93,7 +93,7 @@ Retries are off by default. When enabled, the SDK retries only `GET` and `HEAD`;
 
 ## Live API verification
 
-The opt-in integration suite verifies signed configuration and paging calls, the diagnostic SSE stream, and a real chat lifecycle. The chat test deletes its dedicated conversation in a `finally` block. Credentials are read only from the process environment and are never stored by the test.
+The opt-in integration suite invokes every one of the 46 published method/path pairs and compares the executed set with the bundled contract. Resource-backed endpoints exercise successful responses; endpoints that require unavailable SQL results, plan files, citations, queued tasks, or pending questions verify explicit domain-level 4xx responses. It also verifies the diagnostic SSE stream and a real chat lifecycle. Chat tests delete their dedicated conversations in `finally` blocks. Credentials are read only from the process environment and are never stored by the tests.
 
 ```powershell
 $env:LINGYA_LIVE_BASE_URL = "https://tenant.example.com/"
@@ -101,9 +101,9 @@ $env:LINGYA_LIVE_CHANNEL_ID = "your-channel-id"
 $env:OPENAPI_AK = "your-access-key"
 $env:OPENAPI_SK = "your-access-secret"
 $env:LINGYA_LIVE_EXTERNAL_USER_ID = "stable-test-user"
-./gradlew test --tests "ai.lingya.agents.sdk.LiveApiIntegrationTest"
+./gradlew liveTest
 ```
 
-Without these variables the live tests are skipped, so normal pull request CI never requires production credentials.
+Without these variables the live tests are skipped, so normal pull request CI never requires production credentials. The dedicated `liveTest` task always executes instead of reusing cached results when credentials or the target environment change.
 
 See [README.zh-CN.md](README.zh-CN.md) for Chinese documentation.

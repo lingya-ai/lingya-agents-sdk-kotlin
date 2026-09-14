@@ -10,10 +10,12 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Assumptions.assumeTrue
+import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import java.util.UUID
 import kotlin.time.Duration.Companion.seconds
 
+@Tag("live")
 class LiveApiIntegrationTest {
     @Test
     fun `真实服务接受签名并返回配置和分页响应`() = runBlocking {

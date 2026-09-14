@@ -85,6 +85,19 @@ tasks.withType<Test>().configureEach {
     useJUnitPlatform()
 }
 
+tasks.named<Test>("test") {
+    useJUnitPlatform { excludeTags("live") }
+}
+
+tasks.register<Test>("liveTest") {
+    group = "verification"
+    description = "Runs opt-in integration tests against a deployed Lingya Agents API."
+    testClassesDirs = sourceSets["test"].output.classesDirs
+    classpath = sourceSets["test"].runtimeClasspath
+    useJUnitPlatform { includeTags("live") }
+    outputs.upToDateWhen { false }
+}
+
 val signingKeyPresent = providers.gradleProperty("signingInMemoryKey").orNull != null
 tasks.withType<Sign>().configureEach {
     enabled = signingKeyPresent

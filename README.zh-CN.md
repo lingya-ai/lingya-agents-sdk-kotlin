@@ -40,7 +40,7 @@ user.streamChatEvents(submission.conversationId, submission.messageId).collect {
 
 ## 真实接口验证
 
-可选的集成测试会验证签名配置查询、分页查询、SSE 探针和一次完整聊天。聊天测试在 `finally` 中删除专用测试会话；凭证只从进程环境读取，不会写入测试或仓库。
+可选的集成测试会实际调用契约中的全部 46 个 method/path，并把执行集合与仓库内契约进行比对。有稳定前置资源的接口验证成功响应；依赖 SQL 结果、计划文件、知识引用、排队任务或待回答问题的接口验证明确的领域 4xx 响应。测试同时覆盖 SSE 探针和完整聊天生命周期，并在 `finally` 中删除专用测试会话；凭证只从进程环境读取，不会写入测试或仓库。
 
 ```powershell
 $env:LINGYA_LIVE_BASE_URL = "https://tenant.example.com/"
@@ -48,9 +48,9 @@ $env:LINGYA_LIVE_CHANNEL_ID = "your-channel-id"
 $env:OPENAPI_AK = "your-access-key"
 $env:OPENAPI_SK = "your-access-secret"
 $env:LINGYA_LIVE_EXTERNAL_USER_ID = "stable-test-user"
-./gradlew test --tests "ai.lingya.agents.sdk.LiveApiIntegrationTest"
+./gradlew liveTest
 ```
 
-未设置这些环境变量时真实接口测试会跳过，因此普通 pull request CI 不需要生产凭证。
+未设置这些环境变量时真实接口测试会跳过，因此普通 pull request CI 不需要生产凭证。专用 `liveTest` 任务始终重新执行，避免凭证或目标环境变化时复用旧缓存。
 
 完整 Kotlin、Java、SSE、文件上传和自定义 transport 示例见 [英文 README](README.md)。
