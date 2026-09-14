@@ -23,8 +23,7 @@
 
 package ai.lingya.agents.sdk.generated.model
 
-import ai.lingya.agents.sdk.generated.model.AttachmentExtension
-import ai.lingya.agents.sdk.generated.model.ModelConfig
+import ai.lingya.agents.sdk.generated.model.ChatModelConfig
 
 import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonProperty
@@ -32,25 +31,25 @@ import com.fasterxml.jackson.annotation.JsonProperty
 /**
  * 
  *
- * @param modelConfig 
- * @param supportAttachmentExt 
- * @param maxAttachmentCount 
+ * @param keyGroupId 
+ * @param keyGroupName 
+ * @param models 
  */
 
 
-data class AgentsConfig (
+data class ModelKeyGroup (
 
-    @param:JsonProperty("modelConfig")
-    @get:JsonProperty("modelConfig")
-    val modelConfig: ModelConfig,
+    @param:JsonProperty("keyGroupId")
+    @get:JsonProperty("keyGroupId")
+    val keyGroupId: kotlin.Long,
 
-    @param:JsonProperty("supportAttachmentExt")
-    @get:JsonProperty("supportAttachmentExt")
-    val supportAttachmentExt: kotlin.collections.List<AttachmentExtension>,
+    @param:JsonProperty("keyGroupName")
+    @get:JsonProperty("keyGroupName")
+    val keyGroupName: kotlin.String,
 
-    @param:JsonProperty("maxAttachmentCount")
-    @get:JsonProperty("maxAttachmentCount")
-    val maxAttachmentCount: kotlin.Int
+    @param:JsonProperty("models")
+    @get:JsonProperty("models")
+    val models: kotlin.collections.List<ChatModelConfig>
 
 ) {
 

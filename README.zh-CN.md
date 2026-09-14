@@ -38,4 +38,19 @@ user.streamChatEvents(submission.conversationId, submission.messageId).collect {
 
 默认不重试。配置 `RetryPolicy(maxAttempts = 3)` 后也只重试 `GET`/`HEAD`，写操作仍不重试；每次尝试都会重新生成 nonce 和签名。
 
+## 真实接口验证
+
+可选的集成测试会验证签名配置查询、分页查询、SSE 探针和一次完整聊天。聊天测试在 `finally` 中删除专用测试会话；凭证只从进程环境读取，不会写入测试或仓库。
+
+```powershell
+$env:LINGYA_LIVE_BASE_URL = "https://tenant.example.com/"
+$env:LINGYA_LIVE_CHANNEL_ID = "your-channel-id"
+$env:OPENAPI_AK = "your-access-key"
+$env:OPENAPI_SK = "your-access-secret"
+$env:LINGYA_LIVE_EXTERNAL_USER_ID = "stable-test-user"
+./gradlew test --tests "ai.lingya.agents.sdk.LiveApiIntegrationTest"
+```
+
+未设置这些环境变量时真实接口测试会跳过，因此普通 pull request CI 不需要生产凭证。
+
 完整 Kotlin、Java、SSE、文件上传和自定义 transport 示例见 [英文 README](README.md)。

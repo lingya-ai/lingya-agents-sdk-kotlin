@@ -23,8 +23,8 @@
 
 package ai.lingya.agents.sdk.generated.model
 
-import ai.lingya.agents.sdk.generated.model.AttachmentExtension
-import ai.lingya.agents.sdk.generated.model.ModelConfig
+import ai.lingya.agents.sdk.generated.model.DefaultModel
+import ai.lingya.agents.sdk.generated.model.ModelKeyGroup
 
 import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonProperty
@@ -32,25 +32,20 @@ import com.fasterxml.jackson.annotation.JsonProperty
 /**
  * 
  *
- * @param modelConfig 
- * @param supportAttachmentExt 
- * @param maxAttachmentCount 
+ * @param defaultModel 
+ * @param modelKeyGroups 
  */
 
 
-data class AgentsConfig (
+data class ModelConfig (
 
-    @param:JsonProperty("modelConfig")
-    @get:JsonProperty("modelConfig")
-    val modelConfig: ModelConfig,
+    @param:JsonProperty("defaultModel")
+    @get:JsonProperty("defaultModel")
+    val defaultModel: DefaultModel?,
 
-    @param:JsonProperty("supportAttachmentExt")
-    @get:JsonProperty("supportAttachmentExt")
-    val supportAttachmentExt: kotlin.collections.List<AttachmentExtension>,
-
-    @param:JsonProperty("maxAttachmentCount")
-    @get:JsonProperty("maxAttachmentCount")
-    val maxAttachmentCount: kotlin.Int
+    @param:JsonProperty("modelKeyGroups")
+    @get:JsonProperty("modelKeyGroups")
+    val modelKeyGroups: kotlin.collections.List<ModelKeyGroup>
 
 ) {
 

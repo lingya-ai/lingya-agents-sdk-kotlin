@@ -78,7 +78,13 @@ class LingyaAgentsClientTest {
     @Test
     fun `retries idempotent reads and never retries writes`() = runTest {
         server.enqueue(MockResponse().setResponseCode(503))
-        server.enqueue(MockResponse().setResponseCode(200).addHeader("Content-Type", "application/json").setBody("{}"))
+        server.enqueue(
+            MockResponse().setResponseCode(200).addHeader("Content-Type", "application/json")
+                .setBody(
+                    """{"modelConfig":{"defaultModel":null,"modelKeyGroups":[]},""" +
+                        """"supportAttachmentExt":[],"maxAttachmentCount":0}""",
+                ),
+        )
         val user = newClient(RetryPolicy(maxAttempts = 2)).forUser("user-1")
 
         user.apis.configuration.getAgentsConfig("channel").bodyOrThrow()

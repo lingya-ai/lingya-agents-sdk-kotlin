@@ -91,4 +91,19 @@ val client = LingyaAgentsClient(
 
 Retries are off by default. When enabled, the SDK retries only `GET` and `HEAD`; writes are never retried. Each attempt gets a new nonce and signature after OkHttp has fixed the final path, query, content type, and body bytes.
 
+## Live API verification
+
+The opt-in integration suite verifies signed configuration and paging calls, the diagnostic SSE stream, and a real chat lifecycle. The chat test deletes its dedicated conversation in a `finally` block. Credentials are read only from the process environment and are never stored by the test.
+
+```powershell
+$env:LINGYA_LIVE_BASE_URL = "https://tenant.example.com/"
+$env:LINGYA_LIVE_CHANNEL_ID = "your-channel-id"
+$env:OPENAPI_AK = "your-access-key"
+$env:OPENAPI_SK = "your-access-secret"
+$env:LINGYA_LIVE_EXTERNAL_USER_ID = "stable-test-user"
+./gradlew test --tests "ai.lingya.agents.sdk.LiveApiIntegrationTest"
+```
+
+Without these variables the live tests are skipped, so normal pull request CI never requires production credentials.
+
 See [README.zh-CN.md](README.zh-CN.md) for Chinese documentation.
