@@ -32,7 +32,7 @@ jobs:
           gh release download "$CONTRACT_TAG" --repo lingya-ai/lingya-agents-openapi --pattern lingya-agents-v1.yaml --output openapi/lingya-agents-v1.yaml --clobber
           gh release download "$CONTRACT_TAG" --repo lingya-ai/lingya-agents-openapi --pattern endpoints.json --output openapi/endpoints.json --clobber
       - run: ./gradlew clean check
-      - uses: peter-evans/create-pull-request@v7
+      - uses: peter-evans/create-pull-request@v8
         with:
           branch: automation/contract-${{ env.CONTRACT_TAG }}
           commit-message: "chore: update contract to ${{ env.CONTRACT_TAG }}"
