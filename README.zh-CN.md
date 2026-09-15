@@ -8,7 +8,7 @@
 
 ```kotlin
 dependencies {
-    implementation("ai.lingya:lingya-agents-sdk:0.1.0")
+    implementation("cloud.lingya:lingya-agents-sdk:0.1.0")
 }
 ```
 

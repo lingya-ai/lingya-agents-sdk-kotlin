@@ -106,7 +106,7 @@ tasks.withType<Sign>().configureEach {
 mavenPublishing {
     publishToMavenCentral()
     signAllPublications()
-    coordinates("ai.lingya", "lingya-agents-sdk", project.version.toString())
+    coordinates("cloud.lingya", "lingya-agents-sdk", project.version.toString())
     pom {
         name.set("Lingya Agents Kotlin SDK")
         description.set(project.description)
