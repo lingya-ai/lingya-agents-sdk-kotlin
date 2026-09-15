@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.0 - 2026-09-15
+
+- Move the public Kotlin package from `ai.lingya.agents.sdk` to `cloud.lingya.agents.sdk` so the source namespace matches the verified `lingya.cloud` Maven namespace.
+- Keep the Maven coordinates at `cloud.lingya:lingya-agents-sdk`.
+
 ## 0.1.0 - 2026-09-14
 
 - Add generated coroutine APIs and models for all 46 public Agent channel operations.

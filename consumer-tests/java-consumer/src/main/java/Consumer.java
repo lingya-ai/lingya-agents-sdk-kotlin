@@ -1,6 +1,6 @@
-import ai.lingya.agents.sdk.LingyaAgentsClient;
-import ai.lingya.agents.sdk.OpenApiCredentials;
-import ai.lingya.agents.sdk.generated.model.AiChatInput;
+import cloud.lingya.agents.sdk.LingyaAgentsClient;
+import cloud.lingya.agents.sdk.OpenApiCredentials;
+import cloud.lingya.agents.sdk.generated.model.AiChatInput;
 
 public final class Consumer {
     private Consumer() {

@@ -1,8 +1,8 @@
 generatorName: kotlin
 library: jvm-retrofit2
-apiPackage: ai.lingya.agents.sdk.generated.api
-modelPackage: ai.lingya.agents.sdk.generated.model
-packageName: ai.lingya.agents.sdk.generated
+apiPackage: cloud.lingya.agents.sdk.generated.api
+modelPackage: cloud.lingya.agents.sdk.generated.model
+packageName: cloud.lingya.agents.sdk.generated
 globalProperties:
   apiTests: "false"
   modelTests: "false"
@@ -10,7 +10,7 @@ globalProperties:
   modelDocs: "false"
   apis: ""
   models: ""
-  supportingFiles: CollectionFormats.kt,ResponseExt.kt,Serializer.kt
+  supportingFiles: CollectionFormats.kt,Serializer.kt
 additionalProperties:
   serializationLibrary: jackson
   dateLibrary: java8
@@ -23,7 +23,7 @@ typeMappings:
   ChatMessage: ChatMessage
   ChartColumnData: ChartColumnData
 importMappings:
-  AiChatBriefEvent: ai.lingya.agents.sdk.event.AiChatBriefEvent
-  ToolExtension: ai.lingya.agents.sdk.event.ToolExtension
-  ChatMessage: ai.lingya.agents.sdk.event.ChatMessage
-  ChartColumnData: ai.lingya.agents.sdk.event.ChartColumnData
+  AiChatBriefEvent: cloud.lingya.agents.sdk.event.AiChatBriefEvent
+  ToolExtension: cloud.lingya.agents.sdk.event.ToolExtension
+  ChatMessage: cloud.lingya.agents.sdk.event.ChatMessage
+  ChartColumnData: cloud.lingya.agents.sdk.event.ChartColumnData

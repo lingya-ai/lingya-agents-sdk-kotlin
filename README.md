@@ -12,7 +12,7 @@ Installation
 
 ```kotlin
 dependencies {
-    implementation("cloud.lingya:lingya-agents-sdk:0.1.0")
+    implementation("cloud.lingya:lingya-agents-sdk:0.2.0")
 }
 ```
 
@@ -26,9 +26,9 @@ If your network cannot reach the Tencent Cloud mirror, change `distributionUrl` 
 Kotlin usage
 
 ```kotlin
-import ai.lingya.agents.sdk.LingyaAgentsClient
-import ai.lingya.agents.sdk.OpenApiCredentials
-import ai.lingya.agents.sdk.generated.model.AiChatInput
+import cloud.lingya.agents.sdk.LingyaAgentsClient
+import cloud.lingya.agents.sdk.OpenApiCredentials
+import cloud.lingya.agents.sdk.generated.model.AiChatInput
 
 val client = LingyaAgentsClient(
     baseUrl = "https://tenant.example.com",
