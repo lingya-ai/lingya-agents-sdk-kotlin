@@ -4,6 +4,8 @@ import cloud.lingya.agents.sdk.event.AiChatBriefEvent
 import cloud.lingya.agents.sdk.generated.api.SQLApi
 import cloud.lingya.agents.sdk.generated.model.AiChatEventsBatchInput
 import cloud.lingya.agents.sdk.generated.model.AiChatInput
+import cloud.lingya.agents.sdk.generated.model.AiChatStreamInput
+import cloud.lingya.agents.sdk.generated.model.ChatStreamProbeInput
 import cloud.lingya.agents.sdk.generated.model.ConfirmUploadInput
 import cloud.lingya.agents.sdk.generated.model.ConversationActivityBatchInput
 import cloud.lingya.agents.sdk.generated.model.ConversationReadReceiptInput
@@ -23,7 +25,6 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Assumptions.assumeTrue
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
-import retrofit2.Response
 import java.nio.file.Files
 import java.nio.file.Path
 import java.util.UUID
@@ -36,106 +37,104 @@ class AllEndpointsLiveIntegrationTest {
         val fixture = liveFixture()
         val coverage = EndpointCoverage()
         val first = coverage.successful("POST", "") {
-            fixture.user.apis.chat.createChat(
-                fixture.channelId,
+            fixture.user.chat.createChat(
                 AiChatInput(query = "仅回复英文 OK"),
             )
         }
 
         try {
             coverage.successful("GET", "/config") {
-                fixture.user.apis.configuration.getAgentsConfig(fixture.channelId)
+                fixture.user.configuration.getAgentsConfig()
             }
             val firstEvents = withTimeout(120.seconds) {
-                fixture.user.streamChatEvents(first.conversationId, first.messageId).toList()
+                fixture.user.chat.streamChatEvents(
+                    first.conversationId,
+                    AiChatStreamInput(first.messageId),
+                ).toList()
             }
             assertTrue(firstEvents.any { it is AiChatBriefEvent.End })
             coverage.streamCompleted("POST", "/conversations/{conversationId}/stream")
 
             coverage.successful("GET", "/conversations/{conversationId}/config") {
-                fixture.user.apis.configuration.getConversationConfig(fixture.channelId, first.conversationId)
+                fixture.user.configuration.getConversationConfig(first.conversationId)
             }
             coverage.successful("GET", "/conversations/{conversationId}/context-usage") {
-                fixture.user.apis.conversations.getConversationContextUsage(fixture.channelId, first.conversationId)
+                fixture.user.conversations.getConversationContextUsage(first.conversationId)
             }
             coverage.successful("GET", "/conversations") {
-                fixture.user.apis.conversations.listConversations(fixture.channelId, current = 0, size = 5)
+                fixture.user.conversations.listConversations(current = 0, size = 5)
             }
             coverage.successful("GET", "/conversations/active") {
-                fixture.user.apis.conversations.listActiveConversations(fixture.channelId)
+                fixture.user.conversations.listActiveConversations()
             }
             coverage.successful("GET", "/conversations/unread") {
-                fixture.user.apis.conversations.listUnreadConversations(fixture.channelId)
+                fixture.user.conversations.listUnreadConversations()
             }
             coverage.successful("POST", "/conversations/activity/query") {
-                fixture.user.apis.conversations.queryConversationActivities(
-                    fixture.channelId,
+                fixture.user.conversations.queryConversationActivities(
                     ConversationActivityBatchInput(listOf(first.conversationId)),
                 )
             }
             coverage.successful("PUT", "/conversations/{conversationId}/read-receipt") {
-                fixture.user.apis.conversations.markConversationRead(
-                    fixture.channelId,
+                fixture.user.conversations.markConversationRead(
                     first.conversationId,
                     ConversationReadReceiptInput(first.messageId),
                 )
             }
             coverage.successful("GET", "/conversations/stats") {
-                fixture.user.apis.conversations.getConversationStats(fixture.channelId)
+                fixture.user.conversations.getConversationStats()
             }
             coverage.successfulStatus("PATCH", "/conversations/{conversationId}/title") {
-                fixture.user.apis.conversations.updateConversationTitle(
-                    fixture.channelId,
+                fixture.user.conversations.updateConversationTitle(
                     first.conversationId,
                     ConversationTitleInput("Kotlin SDK 全接口测试"),
                 )
             }
             coverage.successful("GET", "/conversations/{conversationId}/title") {
-                fixture.user.apis.conversations.getConversationTitle(fixture.channelId, first.conversationId)
+                fixture.user.conversations.getConversationTitle(first.conversationId)
             }
             coverage.successful("GET", "/conversations/{conversationId}/messages") {
-                fixture.user.apis.messages.listConversationMessages(fixture.channelId, first.conversationId)
+                fixture.user.messages.listConversationMessages(first.conversationId)
             }
             coverage.successful("GET", "/conversations/{conversationId}/messages/{messageId}") {
-                fixture.user.apis.messages.getConversationMessage(
-                    fixture.channelId,
+                fixture.user.messages.getConversationMessage(
                     first.conversationId,
                     first.messageId,
                 )
             }
             coverage.successful("GET", "/events") {
-                fixture.user.apis.events.getChatEvents(fixture.channelId, first.conversationId, first.messageId)
+                fixture.user.events.getChatEvents(first.conversationId, first.messageId)
             }
             coverage.successful("POST", "/events/batch") {
-                fixture.user.apis.events.getChatEventsBatch(
-                    fixture.channelId,
+                fixture.user.events.getChatEventsBatch(
                     AiChatEventsBatchInput(first.conversationId, listOf(first.messageId)),
                 )
             }
 
             val second = coverage.successful("POST", "/conversations/{conversationId}") {
-                fixture.user.apis.chat.continueChat(
-                    fixture.channelId,
+                fixture.user.chat.continueChat(
                     first.conversationId,
                     AiChatInput(query = "再次仅回复英文 OK"),
                 )
             }
             withTimeout(120.seconds) {
-                fixture.user.streamChatEvents(second.conversationId, second.messageId).toList()
+                fixture.user.chat.streamChatEvents(
+                    second.conversationId,
+                    AiChatStreamInput(second.messageId),
+                ).toList()
             }
             coverage.successfulStatus("DELETE", "/conversations/{conversationId}/interrupt") {
-                fixture.user.apis.chat.interruptConversation(fixture.channelId, first.conversationId)
+                fixture.user.chat.interruptConversation(first.conversationId)
             }
             coverage.successfulStatus("POST", "/conversations/{conversationId}/compact") {
-                fixture.user.apis.chat.compactConversation(fixture.channelId, first.conversationId)
+                fixture.user.chat.compactConversation(first.conversationId)
             }
 
             coverage.successful("GET", "/conversations/{conversationId}/async-tasks") {
-                fixture.user.apis.messages.listConversationAsyncTasks(fixture.channelId, first.conversationId)
+                fixture.user.messages.listConversationAsyncTasks(first.conversationId)
             }
             coverage.expectedDomainResult("GET", "/conversations/{conversationId}/async-tasks/{asyncTaskId}") {
-                fixture.user.apis.messages.getConversationAsyncTask(
-                    fixture.channelId,
+                fixture.user.messages.getConversationAsyncTask(
                     first.conversationId,
                     "missing-async-task",
                 )
@@ -144,51 +143,45 @@ class AllEndpointsLiveIntegrationTest {
                 "DELETE",
                 "/conversations/{conversationId}/messages/{messageId}/queue",
             ) {
-                fixture.user.apis.messages.cancelQueuedMessage(
-                    fixture.channelId,
+                fixture.user.messages.cancelQueuedMessage(
                     first.conversationId,
                     first.messageId,
                 )
             }
 
             val share = coverage.successful("POST", "/conversations/{conversationId}/shares") {
-                fixture.user.apis.conversations.createConversationShare(
-                    fixture.channelId,
+                fixture.user.conversations.createConversationShare(
                     first.conversationId,
                     ConversationShareInput(),
                 )
             }
             coverage.successful("GET", "/conversations/{conversationId}/shares") {
-                fixture.user.apis.conversations.listConversationShares(fixture.channelId, first.conversationId)
+                fixture.user.conversations.listConversationShares(first.conversationId)
             }
             coverage.successful("DELETE", "/conversations/{conversationId}/shares/{shareId}") {
-                fixture.user.apis.conversations.revokeConversationShare(
-                    fixture.channelId,
+                fixture.user.conversations.revokeConversationShare(
                     first.conversationId,
                     share.shareId,
                 )
             }
 
             coverage.successful("POST", "/plan/approve") {
-                fixture.user.apis.interactions.approvePlan(
-                    fixture.channelId,
+                fixture.user.interactions.approvePlan(
                     PlanApprovalInput(first.conversationId, first.messageId, approved = false),
                 )
             }
             coverage.successful("GET", "/plan/{planId}/status") {
-                fixture.user.apis.interactions.getPlanStatus(fixture.channelId, "missing-plan")
+                fixture.user.interactions.getPlanStatus("missing-plan")
             }
             coverage.successful("GET", "/user-input/{questionId}/status") {
-                fixture.user.apis.interactions.getUserInputStatus(
-                    fixture.channelId,
+                fixture.user.interactions.getUserInputStatus(
                     "missing-question",
                     first.conversationId,
                     first.messageId,
                 )
             }
             coverage.successful("POST", "/user-input/answer") {
-                fixture.user.apis.interactions.answerUserInput(
-                    fixture.channelId,
+                fixture.user.interactions.answerUserInput(
                     UserInputAnswerInput(
                         first.conversationId,
                         first.messageId,
@@ -205,14 +198,13 @@ class AllEndpointsLiveIntegrationTest {
 
             val probeId = "all-${UUID.randomUUID()}"
             val probeEvents = withTimeout(10.seconds) {
-                fixture.user.probeEventStream(probeId).toList()
+                fixture.user.chat.probeEventStream(ChatStreamProbeInput(probeId)).toList()
             }
             assertEquals(listOf(0, 1, 2, 3), probeEvents.map { it.sequence })
             coverage.streamCompleted("POST", "/stream-probe")
 
             coverage.successfulStatus("PATCH", "/conversations/{conversationId}/status") {
-                fixture.user.apis.conversations.updateConversationStatus(
-                    fixture.channelId,
+                fixture.user.conversations.updateConversationStatus(
                     first.conversationId,
                     ConversationStatusInput("ARCHIVED"),
                 )
@@ -220,7 +212,7 @@ class AllEndpointsLiveIntegrationTest {
         } finally {
             try {
                 coverage.successfulStatus("DELETE", "/conversations/{conversationId}") {
-                    fixture.user.apis.conversations.deleteConversation(fixture.channelId, first.conversationId)
+                    fixture.user.conversations.deleteConversation(first.conversationId)
                 }
             } finally {
                 coverage.writeReport()
@@ -236,20 +228,19 @@ class AllEndpointsLiveIntegrationTest {
         conversationId: String,
     ) {
         coverage.expectedDomainResult("GET", "/conversations/{conversationId}/sql-query-results/{resultId}") {
-            fixture.user.apis.sql.getSqlQueryResult(fixture.channelId, conversationId, "missing-result")
+            fixture.user.sql.getSqlQueryResult(conversationId, "missing-result")
         }
         coverage.expectedDomainResult(
             "GET",
             "/conversations/{conversationId}/sql-query-results/{resultId}/chart-data",
         ) {
-            fixture.user.apis.sql.getSqlQueryChartData(fixture.channelId, conversationId, "missing-result")
+            fixture.user.sql.getSqlQueryChartData(conversationId, "missing-result")
         }
         coverage.expectedDomainResult(
             "GET",
             "/conversations/{conversationId}/sql-query-results/{resultId}/export",
         ) {
-            fixture.user.apis.sql.exportSqlQueryResult(
-                fixture.channelId,
+            fixture.user.sql.exportSqlQueryResult(
                 conversationId,
                 "missing-result",
                 SQLApi.FormatExportSqlQueryResult.CSV,
@@ -265,11 +256,10 @@ class AllEndpointsLiveIntegrationTest {
     ) {
         val contentMd5 = "17/2WOZXDPjhZzwMQCHrDg=="
         coverage.successful("GET", "/files/meta/contentMd5") {
-            fixture.user.apis.files.fileExistsByContentMd5(fixture.channelId, contentMd5)
+            fixture.user.files.fileExistsByContentMd5(contentMd5)
         }
         val upload = coverage.successful("POST", "/files/pre-signed-url/write") {
-            fixture.user.apis.files.createPreSignedUpload(
-                fixture.channelId,
+            fixture.user.files.createPreSignedUpload(
                 GeneratePreSignedUrlInput(
                     "lingya-sdk-endpoint-test.txt",
                     GeneratePreSignedUrlInput.Module.aiMinusChatMinusAttachments,
@@ -278,26 +268,23 @@ class AllEndpointsLiveIntegrationTest {
             )
         }
         coverage.expectedDomainResult("POST", "/files/pre-signed-url/confirm") {
-            fixture.user.apis.files.confirmPreSignedUpload(
-                fixture.channelId,
+            fixture.user.files.confirmPreSignedUpload(
                 ConfirmUploadInput(requireNotNull(upload.fileUk), contentMd5),
             )
         }
         coverage.expectedDomainResult("POST", "/files/contentMd5") {
-            fixture.user.apis.files.createFileByContentMd5(
-                fixture.channelId,
+            fixture.user.files.createFileByContentMd5(
                 CreateFileInput("lingya-sdk-endpoint-test.txt", contentMd5),
             )
         }
         coverage.expectedDomainResult("GET", "/conversations/{conversationId}/files/{fileId}/preview") {
-            fixture.user.apis.files.getConversationFilePreview(fixture.channelId, conversationId, Long.MAX_VALUE)
+            fixture.user.files.getConversationFilePreview(conversationId, Long.MAX_VALUE)
         }
         coverage.expectedDomainResult(
             "GET",
             "/conversations/{conversationId}/messages/{messageId}/plan-intermediate-files/{fileId}/preview",
         ) {
-            fixture.user.apis.files.getPlanIntermediateFilePreview(
-                fixture.channelId,
+            fixture.user.files.getPlanIntermediateFilePreview(
                 conversationId,
                 messageId,
                 Long.MAX_VALUE,
@@ -311,24 +298,22 @@ class AllEndpointsLiveIntegrationTest {
         conversationId: String,
     ) {
         coverage.successful("POST", "/knowledge-bases/citations/metadata") {
-            fixture.user.apis.knowledge.getCitationMetadataBatch(fixture.channelId, emptyList())
+            fixture.user.knowledge.getCitationMetadataBatch(emptyList())
         }
         coverage.expectedDomainResult(
             "GET",
             "/knowledge-bases/citations/{citationType}/{referenceId}/metadata",
         ) {
-            fixture.user.apis.knowledge.getCitationMetadata(
-                fixture.channelId,
+            fixture.user.knowledge.getCitationMetadata(
                 "CHUNK",
                 Long.MAX_VALUE,
             )
         }
         coverage.successful("GET", "/conversations/{conversationId}/workspace/files") {
-            fixture.user.apis.workspace.listWorkspaceArtifacts(fixture.channelId, conversationId)
+            fixture.user.workspace.listWorkspaceArtifacts(conversationId)
         }
         coverage.expectedDomainResult("GET", "/conversations/{conversationId}/workspace/files/preview") {
-            fixture.user.apis.workspace.getWorkspaceFilePreview(
-                fixture.channelId,
+            fixture.user.workspace.getWorkspaceFilePreview(
                 conversationId,
                 "missing-file.txt",
             )
@@ -349,7 +334,7 @@ class AllEndpointsLiveIntegrationTest {
         val externalUserId = System.getenv("LINGYA_LIVE_EXTERNAL_USER_ID")
             ?.takeIf(String::isNotBlank)
             ?: "lingya-kotlin-sdk-all-endpoints"
-        return LiveFixture(channelId, client.forUser(externalUserId))
+        return LiveFixture(client.forUser(externalUserId))
     }
 
     private fun requiredEnvironment(name: String): String {
@@ -371,7 +356,6 @@ class AllEndpointsLiveIntegrationTest {
     }
 
     private data class LiveFixture(
-        val channelId: String,
         val user: LingyaAgentsUserClient,
     )
 
@@ -384,45 +368,40 @@ class AllEndpointsLiveIntegrationTest {
         suspend fun <T : Any> successful(
             method: String,
             suffix: String,
-            request: suspend () -> Response<T>,
+            request: suspend () -> T,
         ): T {
             val endpoint = register(method, suffix)
-            val response = request()
-            result(endpoint, response, if (response.isSuccessful) "通过" else "失败")
-            assertTrue(
-                response.isSuccessful,
-                "$method $suffix returned HTTP ${response.code()}: ${response.errorBody()?.string()?.take(500)}",
-            )
-            return requireNotNull(response.body()) { "$method $suffix returned an empty successful response" }
+            val value = request()
+            result(endpoint, 200, "通过")
+            return value
         }
 
         suspend fun successfulStatus(
             method: String,
             suffix: String,
-            request: suspend () -> Response<*>,
+            request: suspend () -> Any,
         ) {
             val endpoint = register(method, suffix)
-            val response = request()
-            result(endpoint, response, if (response.isSuccessful) "通过" else "失败")
-            assertTrue(response.isSuccessful, "$method $suffix returned HTTP ${response.code()}")
+            request()
+            result(endpoint, 200, "通过")
         }
 
         suspend fun expectedDomainResult(
             method: String,
             suffix: String,
-            request: suspend () -> Response<*>,
+            request: suspend () -> Any,
         ) {
             val endpoint = register(method, suffix)
-            val response = request()
-            result(
-                endpoint,
-                response,
-                if (response.code() in EXPECTED_DOMAIN_ERROR_CODES) "环境能力受限，参数与错误响应已验证" else "失败",
-            )
-            assertTrue(
-                response.code() in EXPECTED_DOMAIN_ERROR_CODES,
-                "$method $suffix returned unexpected HTTP ${response.code()}",
-            )
+            try {
+                request()
+                error("$method $suffix unexpectedly succeeded")
+            } catch (exception: LingyaApiException) {
+                result(endpoint, exception.statusCode, "环境能力受限，参数与错误响应已验证")
+                assertTrue(
+                    exception.statusCode in EXPECTED_DOMAIN_ERROR_CODES,
+                    "$method $suffix returned unexpected HTTP ${exception.statusCode}",
+                )
+            }
         }
 
         fun streamCompleted(method: String, suffix: String) {
@@ -459,9 +438,8 @@ class AllEndpointsLiveIntegrationTest {
             return endpoint
         }
 
-        private fun result(endpoint: Endpoint, response: Response<*>, outcome: String) {
-            val requestId = REQUEST_ID_HEADERS.firstNotNullOfOrNull(response.headers()::get) ?: localRequestId()
-            results += EndpointResult(endpoint, response.code(), requestId.take(64), outcome)
+        private fun result(endpoint: Endpoint, statusCode: Int, outcome: String) {
+            results += EndpointResult(endpoint, statusCode, localRequestId(), outcome)
         }
 
         private fun localRequestId(): String = "local-${(results.size + 1).toString().padStart(3, '0')}"
@@ -473,9 +451,6 @@ class AllEndpointsLiveIntegrationTest {
             val outcome: String,
         )
 
-        private companion object {
-            val REQUEST_ID_HEADERS = listOf("X-Request-Id", "Trace-Id", "X-B3-TraceId")
-        }
     }
 
     private companion object {

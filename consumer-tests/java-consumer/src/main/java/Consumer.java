@@ -14,7 +14,7 @@ public final class Consumer {
         );
         var user = client.blockingForUser("external-user");
         var input = new AiChatInput("hello", null, null, null);
-        user.getApis();
+        user.getChat().createChat(input);
         input.getQuery();
     }
 }

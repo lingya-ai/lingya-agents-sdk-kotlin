@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.0 - 2026-09-15
+
+- Bind `channelId` once and expose all 46 operations through grouped coroutine and Java blocking facades.
+- Retain generated Retrofit APIs as a deprecated low-level migration path until 1.0.
+- Generate the public facades from the contract operation manifest.
+
 ## 0.2.0 - 2026-09-15
 
 - Move the public Kotlin package from `ai.lingya.agents.sdk` to `cloud.lingya.agents.sdk` so the source namespace matches the verified `lingya.cloud` Maven namespace.

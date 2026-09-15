@@ -39,7 +39,7 @@ class LingyaAgentsClientTest {
         )
         val client = newClient().forUser("外部用户-1")
 
-        val result = client.createChat(AiChatInput("你好"))
+        val result = client.chat.createChat(AiChatInput("你好"))
 
         assertEquals("message-1", result.messageId)
         val request = server.takeRequest()
@@ -57,7 +57,7 @@ class LingyaAgentsClientTest {
     fun `maps HTTP errors without exposing the secret`() {
         server.enqueue(MockResponse().setResponseCode(401).setBody("""{"code":"UNAUTHORIZED"}"""))
         val exception = assertThrows(LingyaApiException::class.java) {
-            newClient().blockingForUser("user-1").createChat(AiChatInput("hello"))
+            newClient().blockingForUser("user-1").chat.createChat(AiChatInput("hello"))
         }
         assertEquals(401, exception.statusCode)
         assertFalse(exception.toString().contains(SECRET))
@@ -69,7 +69,7 @@ class LingyaAgentsClientTest {
         server.enqueue(MockResponse().setResponseCode(status).setBody("failure-$status"))
 
         val exception = assertThrows(LingyaApiException::class.java) {
-            newClient().blockingForUser("user-1").createChat(AiChatInput("hello"))
+            newClient().blockingForUser("user-1").chat.createChat(AiChatInput("hello"))
         }
 
         assertEquals(status, exception.statusCode)
@@ -88,7 +88,7 @@ class LingyaAgentsClientTest {
         )
         val user = newClient(RetryPolicy(maxAttempts = 2)).forUser("user-1")
 
-        user.apis.configuration.getAgentsConfig("channel").bodyOrThrow()
+        user.configuration.getAgentsConfig()
 
         assertEquals(2, server.requestCount)
         val firstNonce = server.takeRequest().headers["X-OpenAPI-Nonce"]
@@ -108,8 +108,8 @@ class LingyaAgentsClientTest {
         )
         val user = newClient().forUser("user-1")
 
-        val conversations = user.apis.conversations.listConversations("channel").bodyOrThrow()
-        val messages = user.apis.messages.listConversationMessages("channel", "conversation-1").bodyOrThrow()
+        val conversations = user.conversations.listConversations()
+        val messages = user.messages.listConversationMessages("conversation-1")
 
         assertEquals(0, conversations.records.size)
         assertEquals(30, messages.page.propertySize)
@@ -123,7 +123,7 @@ class LingyaAgentsClientTest {
         )
         val user = newClient().forUser("user-1")
 
-        val result = user.apis.events.getChatEvents("channel", "conversation-1", "message-1").bodyOrThrow()
+        val result = user.events.getChatEvents("conversation-1", "message-1")
 
         val event = assertInstanceOf(cloud.lingya.agents.sdk.event.AiChatBriefEvent.Unknown::class.java, result.records.single())
         assertEquals("future-event", event.type)
@@ -136,14 +136,13 @@ class LingyaAgentsClientTest {
         server.enqueue(MockResponse().setResponseCode(200).setBody(okio.Buffer().write(bytes)))
         val user = newClient().forUser("user-1")
 
-        val body = user.apis.sql.exportSqlQueryResult(
-            "channel",
+        val body = user.sql.exportSqlQueryResult(
             "conversation-1",
             "result-1",
             cloud.lingya.agents.sdk.generated.api.SQLApi.FormatExportSqlQueryResult.CSV,
-        ).bodyOrThrow()
+        )
 
-        assertTrue(bytes.contentEquals(body.bytes()))
+        assertTrue(bytes.contentEquals(body))
     }
 
     @Test
@@ -161,7 +160,7 @@ class LingyaAgentsClientTest {
         )
 
         assertThrows(SocketTimeoutException::class.java) {
-            client.blockingForUser("user-1").createChat(AiChatInput("hello"))
+            client.blockingForUser("user-1").chat.createChat(AiChatInput("hello"))
         }
     }
 

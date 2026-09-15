@@ -73,12 +73,22 @@ val generateSdk = tasks.register<Sync>("generateSdk") {
     into(layout.projectDirectory.dir("generated/src/main/kotlin"))
 }
 
-tasks.named("compileKotlin") {
+val generateBoundApi = tasks.register<Exec>("generateBoundApi") {
+    group = "openapi tools"
+    description = "Generates channel-bound public facades from the pinned operation manifest."
     dependsOn(generateSdk)
+    commandLine("node", "scripts/generate-bound-api.mjs")
+    inputs.file(layout.projectDirectory.file("openapi/endpoints.json"))
+    inputs.dir(layout.projectDirectory.dir("generated/src/main/kotlin/cloud/lingya/agents/sdk/generated/api"))
+    outputs.dir(layout.projectDirectory.dir("src/main/kotlin/cloud/lingya/agents/sdk/api"))
+}
+
+tasks.named("compileKotlin") {
+    dependsOn(generateBoundApi)
 }
 
 tasks.matching { it.name == "sourcesJar" || it.name.startsWith("dokkaGenerate") }.configureEach {
-    dependsOn(generateSdk)
+    dependsOn(generateBoundApi)
 }
 
 tasks.withType<Test>().configureEach {

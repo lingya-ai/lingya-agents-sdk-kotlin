@@ -12,7 +12,7 @@ Installation
 
 ```kotlin
 dependencies {
-    implementation("cloud.lingya:lingya-agents-sdk:0.2.0")
+    implementation("cloud.lingya:lingya-agents-sdk:0.3.0")
 }
 ```
 
@@ -29,6 +29,7 @@ Kotlin usage
 import cloud.lingya.agents.sdk.LingyaAgentsClient
 import cloud.lingya.agents.sdk.OpenApiCredentials
 import cloud.lingya.agents.sdk.generated.model.AiChatInput
+import cloud.lingya.agents.sdk.generated.model.AiChatStreamInput
 
 val client = LingyaAgentsClient(
     baseUrl = "https://tenant.example.com",
@@ -39,20 +40,23 @@ val client = LingyaAgentsClient(
     ),
 )
 val user = client.forUser("your-stable-external-user-id")
-val submission = user.createChat(AiChatInput(query = "你好"))
+val submission = user.chat.createChat(AiChatInput(query = "你好"))
 ```
 
-全部生成的 API 分组都可通过 `user.apis` 访问，例如 `user.apis.conversations.listConversations(...)`。
-All generated API groups are available through `user.apis`, for example `user.apis.conversations.listConversations(...)`.
+全部 46 个接口都通过绑定分组访问，例如 `user.conversations.listConversations()`；业务方法不再接收 `channelId`。
+All 46 operations are available through bound groups such as `user.conversations.listConversations()`; business methods no longer accept `channelId`.
 
-生成方法返回 Retrofit `Response<T>`；调用 `bodyOrThrow()` 可把非 2xx 响应转换为 `LingyaApiException`。
-Generated methods return Retrofit `Response<T>`; call `bodyOrThrow()` to convert non-2xx responses into `LingyaApiException`.
+`user.lowLevel` 保留原始 Retrofit API 作为迁移入口并将在 1.0 移除，正常调用直接返回模型或抛出 `LingyaApiException`。
+`user.lowLevel` retains the raw Retrofit APIs for migration until 1.0; normal calls return models directly or throw `LingyaApiException`.
 
 ## 服务端推送事件（SSE）
 Server-sent events (SSE)
 
 ```kotlin
-user.streamChatEvents(submission.conversationId, submission.messageId).collect { event ->
+user.chat.streamChatEvents(
+    submission.conversationId,
+    AiChatStreamInput(submission.messageId),
+).collect { event ->
     when (event) {
         is AiChatBriefEvent.Message -> println(event.value.message)
         is AiChatBriefEvent.Unknown -> println("Unknown ${event.type}: ${event.rawJson}")
@@ -76,26 +80,26 @@ var client = new LingyaAgentsClient(
     new OpenApiCredentials(accessKey, secret)
 );
 var user = client.blockingForUser("external-user-id");
-var result = user.createChat(new AiChatInput("Hello", null, null, null));
-var events = user.collectChatEvents(result.getConversationId(), result.getMessageId());
+var result = user.getChat().createChat(new AiChatInput("Hello", null, null, null));
+var events = user.getChat().streamChatEvents(
+    result.getConversationId(), new AiChatStreamInput(result.getMessageId()), null
+);
 ```
 
 ## 文件上传
 File upload
 
 ```kotlin
-val upload = user.apis.files.createPreSignedUpload(
-    channelId,
+val upload = user.files.createPreSignedUpload(
     GeneratePreSignedUrlInput("report.pdf", "ai-chat-attachments", md5),
-).bodyOrThrow()
+)
 
 // 使用无签名 HTTP 客户端，按照返回的 headers 把文件字节直接上传到 upload.url。
 // Use an unsigned HTTP client to upload the file bytes directly to upload.url with the returned headers.
 
-val file = user.apis.files.confirmPreSignedUpload(
-    channelId,
+val file = user.files.confirmPreSignedUpload(
     ConfirmUploadInput(requireNotNull(upload.fileUk), md5),
-).bodyOrThrow()
+)
 ```
 
 ## 自定义传输与重试
