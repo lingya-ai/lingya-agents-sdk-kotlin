@@ -1,7 +1,12 @@
 package cloud.lingya.agents.sdk
 
-/** HTTP error returned by the Lingya Agents API. */
+/**
+ * 旧版带品牌前缀的异常名称。 / Legacy brand-prefixed exception name.
+ *
+ * @author 思追(shaco)
+ */
+@Deprecated("Use ApiException", ReplaceWith("ApiException(statusCode, responseBody)"))
 public class LingyaApiException(
-    public val statusCode: Int,
-    public val responseBody: String?,
-) : RuntimeException("Lingya Agents API returned HTTP $statusCode")
+    statusCode: Int,
+    responseBody: String?,
+) : ApiException(statusCode, responseBody)

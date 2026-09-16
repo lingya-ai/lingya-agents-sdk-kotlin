@@ -1,23 +1,17 @@
 package cloud.lingya.agents.sdk.api
 
-import cloud.lingya.agents.sdk.LingyaAgentsUserClient
-import cloud.lingya.agents.sdk.bodyOrThrow
-import cloud.lingya.agents.sdk.generated.api.SQLApi
+import cloud.lingya.agents.sdk.generated.api.SQLApi as GeneratedSQLApi
 import cloud.lingya.agents.sdk.generated.model.*
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.runBlocking
 
 /**
- * sql 分组的 channel 绑定异步接口。 / Channel-bound asynchronous sql operations.
- *
- * `channelId` 来自根客户端，避免调用方法时传入与签名目标不一致的 channel。
- * / `channelId` comes from the root client so method calls cannot diverge from the signed channel.
+ * sql 分组的 Java 友好阻塞接口。 / Java-friendly blocking sql operations.
  *
  * @author 思追(shaco)
  */
-public class LingyaSqlApi internal constructor(
-    private val channelId: String,
-    private val delegate: SQLApi,
-    private val userClient: LingyaAgentsUserClient,
+public class BlockingSqlApi internal constructor(
+    private val delegate: SqlApi,
 ) {
     /**
      * 分页读取 SQL 结果 / Get paged SQL results
@@ -28,13 +22,14 @@ public class LingyaSqlApi internal constructor(
      * @param size 单页记录数。 / Number of records per page.
      * @return 契约定义的强类型响应。 / The typed response defined by the contract.
      */
-    public suspend fun getSqlQueryResult(
+    public fun getSqlQueryResult(
         conversationId: kotlin.String,
         resultId: kotlin.String,
         current: kotlin.Int? = 0,
         size: kotlin.Int? = 100,
-    ): SqlQueryResultPage =
-        delegate.getSqlQueryResult(channelId, conversationId, resultId, current, size).bodyOrThrow()
+    ): SqlQueryResultPage = runBlocking {
+        delegate.getSqlQueryResult(conversationId, resultId, current, size)
+    }
 
     /**
      * 读取 SQL 图表数据 / Get SQL chart data
@@ -43,11 +38,12 @@ public class LingyaSqlApi internal constructor(
      * @param resultId SQL 查询结果 ID。 / SQL query-result ID.
      * @return 契约定义的强类型响应。 / The typed response defined by the contract.
      */
-    public suspend fun getSqlQueryChartData(
+    public fun getSqlQueryChartData(
         conversationId: kotlin.String,
         resultId: kotlin.String,
-    ): SqlChartDataset =
-        delegate.getSqlQueryChartData(channelId, conversationId, resultId).bodyOrThrow()
+    ): SqlChartDataset = runBlocking {
+        delegate.getSqlQueryChartData(conversationId, resultId)
+    }
 
     /**
      * 导出 SQL 结果 / Export SQL results
@@ -58,12 +54,13 @@ public class LingyaSqlApi internal constructor(
      * @param accept 期望的导出媒体类型。 / Requested export media type.
      * @return 契约定义的强类型响应。 / The typed response defined by the contract.
      */
-    public suspend fun exportSqlQueryResult(
+    public fun exportSqlQueryResult(
         conversationId: kotlin.String,
         resultId: kotlin.String,
-        format: SQLApi.FormatExportSqlQueryResult,
+        format: GeneratedSQLApi.FormatExportSqlQueryResult,
         accept: kotlin.String? = null,
-    ): ByteArray =
-        delegate.exportSqlQueryResult(channelId, conversationId, resultId, format, accept).bodyOrThrow().bytes()
+    ): ByteArray = runBlocking {
+        delegate.exportSqlQueryResult(conversationId, resultId, format, accept)
+    }
 
 }

@@ -3,16 +3,16 @@ package cloud.lingya.agents.sdk
 import cloud.lingya.agents.sdk.event.AiChatBriefEvent
 import cloud.lingya.agents.sdk.event.AiChatEventDecoder
 import cloud.lingya.agents.sdk.event.SseEventParser
-import cloud.lingya.agents.sdk.api.LingyaChatApi
-import cloud.lingya.agents.sdk.api.LingyaConfigurationApi
-import cloud.lingya.agents.sdk.api.LingyaConversationsApi
-import cloud.lingya.agents.sdk.api.LingyaEventsApi
-import cloud.lingya.agents.sdk.api.LingyaFilesApi
-import cloud.lingya.agents.sdk.api.LingyaInteractionsApi
-import cloud.lingya.agents.sdk.api.LingyaKnowledgeApi
-import cloud.lingya.agents.sdk.api.LingyaMessagesApi
-import cloud.lingya.agents.sdk.api.LingyaSqlApi
-import cloud.lingya.agents.sdk.api.LingyaWorkspaceApi
+import cloud.lingya.agents.sdk.api.ChatApi
+import cloud.lingya.agents.sdk.api.ConfigurationApi
+import cloud.lingya.agents.sdk.api.ConversationsApi
+import cloud.lingya.agents.sdk.api.EventsApi
+import cloud.lingya.agents.sdk.api.FilesApi
+import cloud.lingya.agents.sdk.api.InteractionsApi
+import cloud.lingya.agents.sdk.api.KnowledgeApi
+import cloud.lingya.agents.sdk.api.MessagesApi
+import cloud.lingya.agents.sdk.api.SqlApi
+import cloud.lingya.agents.sdk.api.WorkspaceApi
 import cloud.lingya.agents.sdk.generated.model.AiChatInput
 import cloud.lingya.agents.sdk.generated.model.AiChatStreamInput
 import cloud.lingya.agents.sdk.generated.model.AiChatSubmission
@@ -44,14 +44,14 @@ import java.io.IOException
  *
  * @author 思追(shaco)
  */
-public class LingyaAgentsUserClient internal constructor(
+public class AgentsUserClient internal constructor(
     private val baseUrl: HttpUrl,
     public val channelId: String,
     private val transport: OkHttpClient,
     private val objectMapper: ObjectMapper,
 ) {
     /** 供迁移和高级协议调试使用的生成 API。 / Generated APIs for migration and protocol-level debugging. */
-    public val lowLevel: LingyaAgentsApis = LingyaAgentsApis(
+    public val lowLevel: AgentsApis = AgentsApis(
         Retrofit.Builder()
             .baseUrl(baseUrl)
             .client(transport)
@@ -61,38 +61,38 @@ public class LingyaAgentsUserClient internal constructor(
 
     /** @suppress */
     @Deprecated("Use lowLevel only for compatibility; prefer the channel-bound groups")
-    public val apis: LingyaAgentsApis
+    public val apis: AgentsApis
         get() = lowLevel
 
     /** 创建聊天和消费实时事件。 / Creates chats and consumes live events. */
-    public val chat: LingyaChatApi = LingyaChatApi(channelId, lowLevel.chat, this)
+    public val chat: ChatApi = ChatApi(channelId, lowLevel.chat, this)
 
     /** 读取 Agent 和会话配置。 / Reads Agent and conversation configuration. */
-    public val configuration: LingyaConfigurationApi = LingyaConfigurationApi(channelId, lowLevel.configuration, this)
+    public val configuration: ConfigurationApi = ConfigurationApi(channelId, lowLevel.configuration, this)
 
     /** 管理会话、状态和分享。 / Manages conversations, state, and sharing. */
-    public val conversations: LingyaConversationsApi = LingyaConversationsApi(channelId, lowLevel.conversations, this)
+    public val conversations: ConversationsApi = ConversationsApi(channelId, lowLevel.conversations, this)
 
     /** 读取持久化聊天事件。 / Reads persisted chat events. */
-    public val events: LingyaEventsApi = LingyaEventsApi(channelId, lowLevel.events, this)
+    public val events: EventsApi = EventsApi(channelId, lowLevel.events, this)
 
     /** 管理文件和预签名地址。 / Manages files and presigned URLs. */
-    public val files: LingyaFilesApi = LingyaFilesApi(channelId, lowLevel.files, this)
+    public val files: FilesApi = FilesApi(channelId, lowLevel.files, this)
 
     /** 处理计划审批和用户回答。 / Handles plan approvals and user answers. */
-    public val interactions: LingyaInteractionsApi = LingyaInteractionsApi(channelId, lowLevel.interactions, this)
+    public val interactions: InteractionsApi = InteractionsApi(channelId, lowLevel.interactions, this)
 
     /** 读取知识引用元数据。 / Reads knowledge citation metadata. */
-    public val knowledge: LingyaKnowledgeApi = LingyaKnowledgeApi(channelId, lowLevel.knowledge, this)
+    public val knowledge: KnowledgeApi = KnowledgeApi(channelId, lowLevel.knowledge, this)
 
     /** 读取消息和异步任务。 / Reads messages and asynchronous tasks. */
-    public val messages: LingyaMessagesApi = LingyaMessagesApi(channelId, lowLevel.messages, this)
+    public val messages: MessagesApi = MessagesApi(channelId, lowLevel.messages, this)
 
     /** 查询和导出 SQL 结果。 / Reads and exports SQL results. */
-    public val sql: LingyaSqlApi = LingyaSqlApi(channelId, lowLevel.sql, this)
+    public val sql: SqlApi = SqlApi(channelId, lowLevel.sql, this)
 
     /** 浏览会话工作区制品。 / Browses conversation workspace artifacts. */
-    public val workspace: LingyaWorkspaceApi = LingyaWorkspaceApi(channelId, lowLevel.workspace, this)
+    public val workspace: WorkspaceApi = WorkspaceApi(channelId, lowLevel.workspace, this)
 
     /** @suppress */
     @Deprecated("Use chat.createChat(input)", ReplaceWith("chat.createChat(input)"))
@@ -173,7 +173,7 @@ public class LingyaAgentsUserClient internal constructor(
             override fun onResponse(call: Call, response: Response) {
                 response.use {
                     if (!response.isSuccessful) {
-                        close(LingyaApiException(response.code, response.body.string()))
+                        close(ApiException(response.code, response.body.string()))
                         return
                     }
                     try {

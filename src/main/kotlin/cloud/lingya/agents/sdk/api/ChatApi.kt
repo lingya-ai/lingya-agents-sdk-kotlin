@@ -1,17 +1,23 @@
 package cloud.lingya.agents.sdk.api
 
-import cloud.lingya.agents.sdk.generated.api.ChatApi
+import cloud.lingya.agents.sdk.AgentsUserClient
+import cloud.lingya.agents.sdk.bodyOrThrow
+import cloud.lingya.agents.sdk.generated.api.ChatApi as GeneratedChatApi
 import cloud.lingya.agents.sdk.generated.model.*
-import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.flow.Flow
 
 /**
- * chat 分组的 Java 友好阻塞接口。 / Java-friendly blocking chat operations.
+ * chat 分组的 channel 绑定异步接口。 / Channel-bound asynchronous chat operations.
+ *
+ * `channelId` 来自根客户端，避免调用方法时传入与签名目标不一致的 channel。
+ * / `channelId` comes from the root client so method calls cannot diverge from the signed channel.
  *
  * @author 思追(shaco)
  */
-public class BlockingLingyaChatApi internal constructor(
-    private val delegate: LingyaChatApi,
+public class ChatApi internal constructor(
+    private val channelId: String,
+    private val delegate: GeneratedChatApi,
+    private val userClient: AgentsUserClient,
 ) {
     /**
      * 创建会话并提交消息 / Create a conversation and submit a message
@@ -19,11 +25,10 @@ public class BlockingLingyaChatApi internal constructor(
      * @param input 创建会话并提交消息 / Create a conversation and submit a message 的强类型请求体。 / Typed request body for createChat.
      * @return 契约定义的强类型响应。 / The typed response defined by the contract.
      */
-    public fun createChat(
+    public suspend fun createChat(
         input: AiChatInput,
-    ): AiChatSubmission = runBlocking {
-        delegate.createChat(input)
-    }
+    ): AiChatSubmission =
+        delegate.createChat(channelId, input).bodyOrThrow()
 
     /**
      * 向已有会话提交消息 / Submit a message to an existing conversation
@@ -32,12 +37,11 @@ public class BlockingLingyaChatApi internal constructor(
      * @param input 向已有会话提交消息 / Submit a message to an existing conversation 的强类型请求体。 / Typed request body for continueChat.
      * @return 契约定义的强类型响应。 / The typed response defined by the contract.
      */
-    public fun continueChat(
+    public suspend fun continueChat(
         conversationId: kotlin.String,
         input: AiChatInput,
-    ): AiChatSubmission = runBlocking {
-        delegate.continueChat(conversationId, input)
-    }
+    ): AiChatSubmission =
+        delegate.continueChat(channelId, conversationId, input).bodyOrThrow()
 
     /**
      * 订阅消息事件流 / Stream message events
@@ -51,9 +55,8 @@ public class BlockingLingyaChatApi internal constructor(
         conversationId: kotlin.String,
         input: AiChatStreamInput,
         xRequestID: kotlin.String? = null,
-    ): List<cloud.lingya.agents.sdk.event.AiChatBriefEvent> = runBlocking {
-        delegate.streamChatEvents(conversationId, input, xRequestID).toList()
-    }
+    ): Flow<cloud.lingya.agents.sdk.event.AiChatBriefEvent> =
+        userClient.streamChatEventsInternal(conversationId, input, xRequestID)
 
     /**
      * 探测 SSE 连接 / Probe the SSE connection
@@ -65,9 +68,8 @@ public class BlockingLingyaChatApi internal constructor(
     public fun probeEventStream(
         input: ChatStreamProbeInput,
         xRequestID: kotlin.String? = null,
-    ): List<ChatStreamProbeEvent> = runBlocking {
-        delegate.probeEventStream(input, xRequestID).toList()
-    }
+    ): Flow<ChatStreamProbeEvent> =
+        userClient.probeEventStreamInternal(input, xRequestID)
 
     /**
      * 中断会话执行 / Interrupt conversation execution
@@ -75,11 +77,10 @@ public class BlockingLingyaChatApi internal constructor(
      * @param conversationId 会话 ID；必须属于当前外部用户。 / Conversation ID owned by the current external user.
      * @return 契约定义的强类型响应。 / The typed response defined by the contract.
      */
-    public fun interruptConversation(
+    public suspend fun interruptConversation(
         conversationId: kotlin.String,
-    ): Unit = runBlocking {
-        delegate.interruptConversation(conversationId)
-    }
+    ): Unit =
+        delegate.interruptConversation(channelId, conversationId).bodyOrThrow()
 
     /**
      * 压缩会话上下文 / Compact conversation context
@@ -88,11 +89,10 @@ public class BlockingLingyaChatApi internal constructor(
      * @param force 是否忽略当前阈值并强制压缩。 / Whether to compact regardless of the current threshold.
      * @return 契约定义的强类型响应。 / The typed response defined by the contract.
      */
-    public fun compactConversation(
+    public suspend fun compactConversation(
         conversationId: kotlin.String,
         force: kotlin.Boolean? = true,
-    ): Unit = runBlocking {
-        delegate.compactConversation(conversationId, force)
-    }
+    ): Unit =
+        delegate.compactConversation(channelId, conversationId, force).bodyOrThrow()
 
 }

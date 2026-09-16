@@ -1,8 +1,8 @@
 package cloud.lingya.agents.sdk.api
 
-import cloud.lingya.agents.sdk.LingyaAgentsUserClient
+import cloud.lingya.agents.sdk.AgentsUserClient
 import cloud.lingya.agents.sdk.bodyOrThrow
-import cloud.lingya.agents.sdk.generated.api.EventsApi
+import cloud.lingya.agents.sdk.generated.api.EventsApi as GeneratedEventsApi
 import cloud.lingya.agents.sdk.generated.model.*
 import kotlinx.coroutines.flow.Flow
 
@@ -14,10 +14,10 @@ import kotlinx.coroutines.flow.Flow
  *
  * @author 思追(shaco)
  */
-public class LingyaEventsApi internal constructor(
+public class EventsApi internal constructor(
     private val channelId: String,
-    private val delegate: EventsApi,
-    private val userClient: LingyaAgentsUserClient,
+    private val delegate: GeneratedEventsApi,
+    private val userClient: AgentsUserClient,
 ) {
     /**
      * 读取消息事件 / Get message events

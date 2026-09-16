@@ -3,7 +3,7 @@ plugins {
 }
 
 dependencies {
-    implementation("cloud.lingya:lingya-agents-sdk:0.3.0")
+    implementation("cloud.lingya:lingya-agents-sdk:0.4.0")
 }
 
 kotlin {

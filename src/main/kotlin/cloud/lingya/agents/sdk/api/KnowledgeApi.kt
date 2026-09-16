@@ -1,8 +1,8 @@
 package cloud.lingya.agents.sdk.api
 
-import cloud.lingya.agents.sdk.LingyaAgentsUserClient
+import cloud.lingya.agents.sdk.AgentsUserClient
 import cloud.lingya.agents.sdk.bodyOrThrow
-import cloud.lingya.agents.sdk.generated.api.KnowledgeApi
+import cloud.lingya.agents.sdk.generated.api.KnowledgeApi as GeneratedKnowledgeApi
 import cloud.lingya.agents.sdk.generated.model.*
 import kotlinx.coroutines.flow.Flow
 
@@ -14,10 +14,10 @@ import kotlinx.coroutines.flow.Flow
  *
  * @author 思追(shaco)
  */
-public class LingyaKnowledgeApi internal constructor(
+public class KnowledgeApi internal constructor(
     private val channelId: String,
-    private val delegate: KnowledgeApi,
-    private val userClient: LingyaAgentsUserClient,
+    private val delegate: GeneratedKnowledgeApi,
+    private val userClient: AgentsUserClient,
 ) {
     /**
      * 批量读取引用元数据 / Get citation metadata in batch

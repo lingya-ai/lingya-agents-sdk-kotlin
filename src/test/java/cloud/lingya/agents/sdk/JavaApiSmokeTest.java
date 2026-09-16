@@ -12,7 +12,7 @@ class JavaApiSmokeTest {
         AiChatInput input = new AiChatInput("hello", null, null, null);
         assertNotNull(input.getQuery());
         assertNotNull(RetryPolicy.NONE);
-        for (var method : cloud.lingya.agents.sdk.api.BlockingLingyaChatApi.class.getDeclaredMethods()) {
+        for (var method : cloud.lingya.agents.sdk.api.BlockingChatApi.class.getDeclaredMethods()) {
             for (var parameter : method.getParameters()) {
                 assertFalse(parameter.getName().equals("channelId"));
             }

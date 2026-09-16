@@ -1,6 +1,6 @@
 package cloud.lingya.agents.sdk.api
 
-import cloud.lingya.agents.sdk.generated.api.ConfigurationApi
+import cloud.lingya.agents.sdk.generated.api.ConfigurationApi as GeneratedConfigurationApi
 import cloud.lingya.agents.sdk.generated.model.*
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
@@ -10,8 +10,8 @@ import kotlinx.coroutines.runBlocking
  *
  * @author 思追(shaco)
  */
-public class BlockingLingyaConfigurationApi internal constructor(
-    private val delegate: LingyaConfigurationApi,
+public class BlockingConfigurationApi internal constructor(
+    private val delegate: ConfigurationApi,
 ) {
     /**
      * 读取 Agent 配置 / Get Agent configuration

@@ -21,7 +21,7 @@ import java.time.ZoneOffset
 import java.time.Duration
 import java.util.Base64
 
-class LingyaAgentsClientTest {
+class AgentsClientTest {
     private val server = MockWebServer()
 
     @AfterEach
@@ -56,7 +56,7 @@ class LingyaAgentsClientTest {
     @Test
     fun `maps HTTP errors without exposing the secret`() {
         server.enqueue(MockResponse().setResponseCode(401).setBody("""{"code":"UNAUTHORIZED"}"""))
-        val exception = assertThrows(LingyaApiException::class.java) {
+        val exception = assertThrows(ApiException::class.java) {
             newClient().blockingForUser("user-1").chat.createChat(AiChatInput("hello"))
         }
         assertEquals(401, exception.statusCode)
@@ -68,7 +68,7 @@ class LingyaAgentsClientTest {
     fun `maps documented HTTP failure statuses`(status: Int) {
         server.enqueue(MockResponse().setResponseCode(status).setBody("failure-$status"))
 
-        val exception = assertThrows(LingyaApiException::class.java) {
+        val exception = assertThrows(ApiException::class.java) {
             newClient().blockingForUser("user-1").chat.createChat(AiChatInput("hello"))
         }
 
@@ -152,7 +152,7 @@ class LingyaAgentsClientTest {
                 .setBody("{}"),
         )
         val transport = OkHttpClient.Builder().readTimeout(Duration.ofMillis(50)).build()
-        val client = LingyaAgentsClient(
+        val client = AgentsClient(
             server.url("/").toString(),
             "channel",
             OpenApiCredentials(ACCESS_KEY, SECRET),
@@ -164,9 +164,9 @@ class LingyaAgentsClientTest {
         }
     }
 
-    private fun newClient(retryPolicy: RetryPolicy = RetryPolicy.NONE): LingyaAgentsClient {
+    private fun newClient(retryPolicy: RetryPolicy = RetryPolicy.NONE): AgentsClient {
         var nonceIndex = 0
-        return LingyaAgentsClient(
+        return AgentsClient(
             baseUrl = server.url("/").toString(),
             channelId = "channel",
             credentials = OpenApiCredentials(ACCESS_KEY, SECRET),

@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.4.0 - 2026-09-16
+
+- Rename the primary API to `AgentsClient`, `AgentsUserClient`, `ApiException`, and unprefixed group facades.
+- Keep the 0.3.x `Lingya*` names as deprecated compatibility aliases.
+- Rewrite the README as a usage-only bilingual guide.
+
 ## 0.3.0 - 2026-09-15
 
 - Bind `channelId` once and expose all 46 operations through grouped coroutine and Java blocking facades.

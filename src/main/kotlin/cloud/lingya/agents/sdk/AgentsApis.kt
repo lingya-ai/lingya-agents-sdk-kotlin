@@ -13,7 +13,7 @@ import cloud.lingya.agents.sdk.generated.api.WorkspaceApi
 import retrofit2.Retrofit
 
 /** Typed generated API groups bound to one external user. */
-public class LingyaAgentsApis internal constructor(retrofit: Retrofit) {
+public class AgentsApis internal constructor(retrofit: Retrofit) {
     public val chat: ChatApi = retrofit.create(ChatApi::class.java)
     public val configuration: ConfigurationApi = retrofit.create(ConfigurationApi::class.java)
     public val conversations: ConversationsApi = retrofit.create(ConversationsApi::class.java)

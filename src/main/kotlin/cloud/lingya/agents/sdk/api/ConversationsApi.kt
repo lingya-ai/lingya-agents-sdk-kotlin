@@ -1,17 +1,23 @@
 package cloud.lingya.agents.sdk.api
 
-import cloud.lingya.agents.sdk.generated.api.ConversationsApi
+import cloud.lingya.agents.sdk.AgentsUserClient
+import cloud.lingya.agents.sdk.bodyOrThrow
+import cloud.lingya.agents.sdk.generated.api.ConversationsApi as GeneratedConversationsApi
 import cloud.lingya.agents.sdk.generated.model.*
-import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.flow.Flow
 
 /**
- * conversations 分组的 Java 友好阻塞接口。 / Java-friendly blocking conversations operations.
+ * conversations 分组的 channel 绑定异步接口。 / Channel-bound asynchronous conversations operations.
+ *
+ * `channelId` 来自根客户端，避免调用方法时传入与签名目标不一致的 channel。
+ * / `channelId` comes from the root client so method calls cannot diverge from the signed channel.
  *
  * @author 思追(shaco)
  */
-public class BlockingLingyaConversationsApi internal constructor(
-    private val delegate: LingyaConversationsApi,
+public class ConversationsApi internal constructor(
+    private val channelId: String,
+    private val delegate: GeneratedConversationsApi,
+    private val userClient: AgentsUserClient,
 ) {
     /**
      * 删除会话 / Delete a conversation
@@ -19,11 +25,10 @@ public class BlockingLingyaConversationsApi internal constructor(
      * @param conversationId 会话 ID；必须属于当前外部用户。 / Conversation ID owned by the current external user.
      * @return 契约定义的强类型响应。 / The typed response defined by the contract.
      */
-    public fun deleteConversation(
+    public suspend fun deleteConversation(
         conversationId: kotlin.String,
-    ): Unit = runBlocking {
-        delegate.deleteConversation(conversationId)
-    }
+    ): Unit =
+        delegate.deleteConversation(channelId, conversationId).bodyOrThrow()
 
     /**
      * 读取上下文占用 / Get context usage
@@ -31,11 +36,10 @@ public class BlockingLingyaConversationsApi internal constructor(
      * @param conversationId 会话 ID；必须属于当前外部用户。 / Conversation ID owned by the current external user.
      * @return 契约定义的强类型响应。 / The typed response defined by the contract.
      */
-    public fun getConversationContextUsage(
+    public suspend fun getConversationContextUsage(
         conversationId: kotlin.String,
-    ): ConversationContextUsage = runBlocking {
-        delegate.getConversationContextUsage(conversationId)
-    }
+    ): ConversationContextUsage =
+        delegate.getConversationContextUsage(channelId, conversationId).bodyOrThrow()
 
     /**
      * 分页查询会话 / List conversations
@@ -49,37 +53,34 @@ public class BlockingLingyaConversationsApi internal constructor(
      * @param status 状态过滤条件。 / Status filter.
      * @return 契约定义的强类型响应。 / The typed response defined by the contract.
      */
-    public fun listConversations(
+    public suspend fun listConversations(
         current: kotlin.Int? = null,
         size: kotlin.Int? = 30,
         orderBy: kotlin.collections.List<kotlin.String>? = null,
-        orderDirection: ConversationsApi.OrderDirectionListConversations? = ConversationsApi.OrderDirectionListConversations.ASC,
-        orderNullHandling: ConversationsApi.OrderNullHandlingListConversations? = ConversationsApi.OrderNullHandlingListConversations.NATIVE,
+        orderDirection: GeneratedConversationsApi.OrderDirectionListConversations? = GeneratedConversationsApi.OrderDirectionListConversations.ASC,
+        orderNullHandling: GeneratedConversationsApi.OrderNullHandlingListConversations? = GeneratedConversationsApi.OrderNullHandlingListConversations.NATIVE,
         keyword: kotlin.String? = null,
         status: kotlin.String? = null,
-    ): ConversationSummaryList = runBlocking {
-        delegate.listConversations(current, size, orderBy, orderDirection, orderNullHandling, keyword, status)
-    }
+    ): ConversationSummaryList =
+        delegate.listConversations(channelId, current, size, orderBy, orderDirection, orderNullHandling, keyword, status).bodyOrThrow()
 
     /**
      * 查询活动会话 / List active conversations
      *
      * @return 契约定义的强类型响应。 / The typed response defined by the contract.
      */
-    public fun listActiveConversations(
-    ): ConversationIds = runBlocking {
-        delegate.listActiveConversations()
-    }
+    public suspend fun listActiveConversations(
+    ): ConversationIds =
+        delegate.listActiveConversations(channelId).bodyOrThrow()
 
     /**
      * 查询未读会话 / List unread conversations
      *
      * @return 契约定义的强类型响应。 / The typed response defined by the contract.
      */
-    public fun listUnreadConversations(
-    ): ConversationIds = runBlocking {
-        delegate.listUnreadConversations()
-    }
+    public suspend fun listUnreadConversations(
+    ): ConversationIds =
+        delegate.listUnreadConversations(channelId).bodyOrThrow()
 
     /**
      * 批量查询会话活动 / Query conversation activities
@@ -87,11 +88,10 @@ public class BlockingLingyaConversationsApi internal constructor(
      * @param input 批量查询会话活动 / Query conversation activities 的强类型请求体。 / Typed request body for queryConversationActivities.
      * @return 契约定义的强类型响应。 / The typed response defined by the contract.
      */
-    public fun queryConversationActivities(
+    public suspend fun queryConversationActivities(
         input: ConversationActivityBatchInput,
-    ): ConversationActivityList = runBlocking {
-        delegate.queryConversationActivities(input)
-    }
+    ): ConversationActivityList =
+        delegate.queryConversationActivities(channelId, input).bodyOrThrow()
 
     /**
      * 推进会话已读游标 / Mark a conversation as read
@@ -100,22 +100,20 @@ public class BlockingLingyaConversationsApi internal constructor(
      * @param input 推进会话已读游标 / Mark a conversation as read 的强类型请求体。 / Typed request body for markConversationRead.
      * @return 契约定义的强类型响应。 / The typed response defined by the contract.
      */
-    public fun markConversationRead(
+    public suspend fun markConversationRead(
         conversationId: kotlin.String,
         input: ConversationReadReceiptInput,
-    ): ConversationReadReceipt = runBlocking {
-        delegate.markConversationRead(conversationId, input)
-    }
+    ): ConversationReadReceipt =
+        delegate.markConversationRead(channelId, conversationId, input).bodyOrThrow()
 
     /**
      * 读取会话统计 / Get conversation statistics
      *
      * @return 契约定义的强类型响应。 / The typed response defined by the contract.
      */
-    public fun getConversationStats(
-    ): ConversationStats = runBlocking {
-        delegate.getConversationStats()
-    }
+    public suspend fun getConversationStats(
+    ): ConversationStats =
+        delegate.getConversationStats(channelId).bodyOrThrow()
 
     /**
      * 读取会话标题 / Get conversation title
@@ -123,11 +121,10 @@ public class BlockingLingyaConversationsApi internal constructor(
      * @param conversationId 会话 ID；必须属于当前外部用户。 / Conversation ID owned by the current external user.
      * @return 契约定义的强类型响应。 / The typed response defined by the contract.
      */
-    public fun getConversationTitle(
+    public suspend fun getConversationTitle(
         conversationId: kotlin.String,
-    ): ConversationTitle = runBlocking {
-        delegate.getConversationTitle(conversationId)
-    }
+    ): ConversationTitle =
+        delegate.getConversationTitle(channelId, conversationId).bodyOrThrow()
 
     /**
      * 更新会话标题 / Update conversation title
@@ -136,12 +133,11 @@ public class BlockingLingyaConversationsApi internal constructor(
      * @param input 更新会话标题 / Update conversation title 的强类型请求体。 / Typed request body for updateConversationTitle.
      * @return 契约定义的强类型响应。 / The typed response defined by the contract.
      */
-    public fun updateConversationTitle(
+    public suspend fun updateConversationTitle(
         conversationId: kotlin.String,
         input: ConversationTitleInput,
-    ): Unit = runBlocking {
-        delegate.updateConversationTitle(conversationId, input)
-    }
+    ): Unit =
+        delegate.updateConversationTitle(channelId, conversationId, input).bodyOrThrow()
 
     /**
      * 更新会话状态 / Update conversation status
@@ -150,12 +146,11 @@ public class BlockingLingyaConversationsApi internal constructor(
      * @param input 更新会话状态 / Update conversation status 的强类型请求体。 / Typed request body for updateConversationStatus.
      * @return 契约定义的强类型响应。 / The typed response defined by the contract.
      */
-    public fun updateConversationStatus(
+    public suspend fun updateConversationStatus(
         conversationId: kotlin.String,
         input: ConversationStatusInput,
-    ): Unit = runBlocking {
-        delegate.updateConversationStatus(conversationId, input)
-    }
+    ): Unit =
+        delegate.updateConversationStatus(channelId, conversationId, input).bodyOrThrow()
 
     /**
      * 查询会话分享 / List conversation shares
@@ -163,11 +158,10 @@ public class BlockingLingyaConversationsApi internal constructor(
      * @param conversationId 会话 ID；必须属于当前外部用户。 / Conversation ID owned by the current external user.
      * @return 契约定义的强类型响应。 / The typed response defined by the contract.
      */
-    public fun listConversationShares(
+    public suspend fun listConversationShares(
         conversationId: kotlin.String,
-    ): ConversationShareList = runBlocking {
-        delegate.listConversationShares(conversationId)
-    }
+    ): ConversationShareList =
+        delegate.listConversationShares(channelId, conversationId).bodyOrThrow()
 
     /**
      * 创建会话分享 / Create a conversation share
@@ -176,12 +170,11 @@ public class BlockingLingyaConversationsApi internal constructor(
      * @param input 创建会话分享 / Create a conversation share 的强类型请求体。 / Typed request body for createConversationShare.
      * @return 契约定义的强类型响应。 / The typed response defined by the contract.
      */
-    public fun createConversationShare(
+    public suspend fun createConversationShare(
         conversationId: kotlin.String,
         input: ConversationShareInput,
-    ): ConversationShareCreated = runBlocking {
-        delegate.createConversationShare(conversationId, input)
-    }
+    ): ConversationShareCreated =
+        delegate.createConversationShare(channelId, conversationId, input).bodyOrThrow()
 
     /**
      * 撤销会话分享 / Revoke a conversation share
@@ -190,11 +183,10 @@ public class BlockingLingyaConversationsApi internal constructor(
      * @param shareId 会话分享记录 ID。 / Conversation-share record ID.
      * @return 契约定义的强类型响应。 / The typed response defined by the contract.
      */
-    public fun revokeConversationShare(
+    public suspend fun revokeConversationShare(
         conversationId: kotlin.String,
         shareId: kotlin.Long,
-    ): ConversationShareRevoked = runBlocking {
-        delegate.revokeConversationShare(conversationId, shareId)
-    }
+    ): ConversationShareRevoked =
+        delegate.revokeConversationShare(channelId, conversationId, shareId).bodyOrThrow()
 
 }

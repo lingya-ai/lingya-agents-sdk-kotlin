@@ -78,6 +78,7 @@ val generateBoundApi = tasks.register<Exec>("generateBoundApi") {
     description = "Generates channel-bound public facades from the pinned operation manifest."
     dependsOn(generateSdk)
     commandLine("node", "scripts/generate-bound-api.mjs")
+    inputs.file(layout.projectDirectory.file("scripts/generate-bound-api.mjs"))
     inputs.file(layout.projectDirectory.file("openapi/endpoints.json"))
     inputs.dir(layout.projectDirectory.dir("generated/src/main/kotlin/cloud/lingya/agents/sdk/generated/api"))
     outputs.dir(layout.projectDirectory.dir("src/main/kotlin/cloud/lingya/agents/sdk/api"))

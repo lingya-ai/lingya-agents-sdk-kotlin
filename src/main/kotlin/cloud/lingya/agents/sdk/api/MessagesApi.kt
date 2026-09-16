@@ -1,17 +1,23 @@
 package cloud.lingya.agents.sdk.api
 
-import cloud.lingya.agents.sdk.generated.api.MessagesApi
+import cloud.lingya.agents.sdk.AgentsUserClient
+import cloud.lingya.agents.sdk.bodyOrThrow
+import cloud.lingya.agents.sdk.generated.api.MessagesApi as GeneratedMessagesApi
 import cloud.lingya.agents.sdk.generated.model.*
-import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.flow.Flow
 
 /**
- * messages 分组的 Java 友好阻塞接口。 / Java-friendly blocking messages operations.
+ * messages 分组的 channel 绑定异步接口。 / Channel-bound asynchronous messages operations.
+ *
+ * `channelId` 来自根客户端，避免调用方法时传入与签名目标不一致的 channel。
+ * / `channelId` comes from the root client so method calls cannot diverge from the signed channel.
  *
  * @author 思追(shaco)
  */
-public class BlockingLingyaMessagesApi internal constructor(
-    private val delegate: LingyaMessagesApi,
+public class MessagesApi internal constructor(
+    private val channelId: String,
+    private val delegate: GeneratedMessagesApi,
+    private val userClient: AgentsUserClient,
 ) {
     /**
      * 分页查询会话消息 / List conversation messages
@@ -25,17 +31,16 @@ public class BlockingLingyaMessagesApi internal constructor(
      * @param keyword 标题或正文检索关键字。 / Title or content search keyword.
      * @return 契约定义的强类型响应。 / The typed response defined by the contract.
      */
-    public fun listConversationMessages(
+    public suspend fun listConversationMessages(
         conversationId: kotlin.String,
         current: kotlin.Int? = null,
         size: kotlin.Int? = 30,
         orderBy: kotlin.collections.List<kotlin.String>? = null,
-        orderDirection: MessagesApi.OrderDirectionListConversationMessages? = MessagesApi.OrderDirectionListConversationMessages.ASC,
-        orderNullHandling: MessagesApi.OrderNullHandlingListConversationMessages? = MessagesApi.OrderNullHandlingListConversationMessages.NATIVE,
+        orderDirection: GeneratedMessagesApi.OrderDirectionListConversationMessages? = GeneratedMessagesApi.OrderDirectionListConversationMessages.ASC,
+        orderNullHandling: GeneratedMessagesApi.OrderNullHandlingListConversationMessages? = GeneratedMessagesApi.OrderNullHandlingListConversationMessages.NATIVE,
         keyword: kotlin.String? = null,
-    ): ConversationMessagePage = runBlocking {
-        delegate.listConversationMessages(conversationId, current, size, orderBy, orderDirection, orderNullHandling, keyword)
-    }
+    ): ConversationMessagePage =
+        delegate.listConversationMessages(channelId, conversationId, current, size, orderBy, orderDirection, orderNullHandling, keyword).bodyOrThrow()
 
     /**
      * 读取单条会话消息 / Get a conversation message
@@ -44,12 +49,11 @@ public class BlockingLingyaMessagesApi internal constructor(
      * @param messageId 用户消息 ID；必须属于指定会话。 / User-message ID owned by the specified conversation.
      * @return 契约定义的强类型响应。 / The typed response defined by the contract.
      */
-    public fun getConversationMessage(
+    public suspend fun getConversationMessage(
         conversationId: kotlin.String,
         messageId: kotlin.String,
-    ): ConversationMessage = runBlocking {
-        delegate.getConversationMessage(conversationId, messageId)
-    }
+    ): ConversationMessage =
+        delegate.getConversationMessage(channelId, conversationId, messageId).bodyOrThrow()
 
     /**
      * 分页查询异步任务 / List asynchronous tasks
@@ -64,18 +68,17 @@ public class BlockingLingyaMessagesApi internal constructor(
      * @param status 状态过滤条件。 / Status filter.
      * @return 契约定义的强类型响应。 / The typed response defined by the contract.
      */
-    public fun listConversationAsyncTasks(
+    public suspend fun listConversationAsyncTasks(
         conversationId: kotlin.String,
         current: kotlin.Int? = null,
         size: kotlin.Int? = 30,
         orderBy: kotlin.collections.List<kotlin.String>? = null,
-        orderDirection: MessagesApi.OrderDirectionListConversationAsyncTasks? = MessagesApi.OrderDirectionListConversationAsyncTasks.ASC,
-        orderNullHandling: MessagesApi.OrderNullHandlingListConversationAsyncTasks? = MessagesApi.OrderNullHandlingListConversationAsyncTasks.NATIVE,
+        orderDirection: GeneratedMessagesApi.OrderDirectionListConversationAsyncTasks? = GeneratedMessagesApi.OrderDirectionListConversationAsyncTasks.ASC,
+        orderNullHandling: GeneratedMessagesApi.OrderNullHandlingListConversationAsyncTasks? = GeneratedMessagesApi.OrderNullHandlingListConversationAsyncTasks.NATIVE,
         keyword: kotlin.String? = null,
         status: kotlin.collections.List<kotlin.String>? = null,
-    ): AsyncTaskPage = runBlocking {
-        delegate.listConversationAsyncTasks(conversationId, current, size, orderBy, orderDirection, orderNullHandling, keyword, status)
-    }
+    ): AsyncTaskPage =
+        delegate.listConversationAsyncTasks(channelId, conversationId, current, size, orderBy, orderDirection, orderNullHandling, keyword, status).bodyOrThrow()
 
     /**
      * 读取异步任务 / Get an asynchronous task
@@ -84,12 +87,11 @@ public class BlockingLingyaMessagesApi internal constructor(
      * @param asyncTaskId 异步任务 ID。 / Asynchronous task ID.
      * @return 契约定义的强类型响应。 / The typed response defined by the contract.
      */
-    public fun getConversationAsyncTask(
+    public suspend fun getConversationAsyncTask(
         conversationId: kotlin.String,
         asyncTaskId: kotlin.String,
-    ): AsyncTask = runBlocking {
-        delegate.getConversationAsyncTask(conversationId, asyncTaskId)
-    }
+    ): AsyncTask =
+        delegate.getConversationAsyncTask(channelId, conversationId, asyncTaskId).bodyOrThrow()
 
     /**
      * 取消排队消息 / Cancel a queued message
@@ -98,11 +100,10 @@ public class BlockingLingyaMessagesApi internal constructor(
      * @param messageId 用户消息 ID；必须属于指定会话。 / User-message ID owned by the specified conversation.
      * @return 契约定义的强类型响应。 / The typed response defined by the contract.
      */
-    public fun cancelQueuedMessage(
+    public suspend fun cancelQueuedMessage(
         conversationId: kotlin.String,
         messageId: kotlin.String,
-    ): ConversationMessage = runBlocking {
-        delegate.cancelQueuedMessage(conversationId, messageId)
-    }
+    ): ConversationMessage =
+        delegate.cancelQueuedMessage(channelId, conversationId, messageId).bodyOrThrow()
 
 }

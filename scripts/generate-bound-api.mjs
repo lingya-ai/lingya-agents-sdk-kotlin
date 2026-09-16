@@ -3,7 +3,7 @@
 // Retrofit keeps channelId in its wire-level signatures. These wrappers remove the
 // client-bound parameter and inject it immediately before delegating the request.
 
-import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 
 const root = new URL('../', import.meta.url);
 const manifest = JSON.parse(await readFile(new URL('openapi/endpoints.json', root), 'utf8'));
@@ -12,9 +12,14 @@ await mkdir(outputDir, { recursive: true });
 
 const upperFirst = (value) => `${value[0].toUpperCase()}${value.slice(1)}`;
 const apiClass = (group) => group === 'sql' ? 'SQLApi' : `${upperFirst(group)}Api`;
-const facadeClass = (group) => `Lingya${upperFirst(group)}Api`;
-const blockingClass = (group) => `BlockingLingya${upperFirst(group)}Api`;
+const facadeClass = (group) => `${upperFirst(group)}Api`;
+const blockingClass = (group) => `Blocking${upperFirst(group)}Api`;
 const groups = [...new Set(manifest.map((operation) => operation.group))];
+
+for (const group of groups) {
+    await rm(new URL(`Lingya${upperFirst(group)}Api.kt`, outputDir), { force: true });
+    await rm(new URL(`BlockingLingya${upperFirst(group)}Api.kt`, outputDir), { force: true });
+}
 
 function methodSignature(source, operationId) {
     const match = new RegExp(`suspend fun ${operationId}\\((.*)\\): Response<([^>]+)>`).exec(source);
@@ -64,6 +69,7 @@ function qualifyNestedEnums(parameter, source, generatedApi) {
 
 for (const group of groups) {
     const generatedApi = apiClass(group);
+    const generatedAlias = `Generated${generatedApi}`;
     const className = facadeClass(group);
     const blockingName = blockingClass(group);
     const source = await readFile(new URL(`generated/src/main/kotlin/cloud/lingya/agents/sdk/generated/api/${generatedApi}.kt`, root), 'utf8');
@@ -71,9 +77,9 @@ for (const group of groups) {
     const asyncLines = [
         'package cloud.lingya.agents.sdk.api',
         '',
-        'import cloud.lingya.agents.sdk.LingyaAgentsUserClient',
+        'import cloud.lingya.agents.sdk.AgentsUserClient',
         'import cloud.lingya.agents.sdk.bodyOrThrow',
-        `import cloud.lingya.agents.sdk.generated.api.${generatedApi}`,
+        `import cloud.lingya.agents.sdk.generated.api.${generatedApi} as ${generatedAlias}`,
         'import cloud.lingya.agents.sdk.generated.model.*',
         'import kotlinx.coroutines.flow.Flow',
         '',
@@ -87,14 +93,14 @@ for (const group of groups) {
         ' */',
         `public class ${className} internal constructor(`,
         '    private val channelId: String,',
-        `    private val delegate: ${generatedApi},`,
-        '    private val userClient: LingyaAgentsUserClient,',
+        `    private val delegate: ${generatedAlias},`,
+        '    private val userClient: AgentsUserClient,',
         ') {',
     ];
     const blockingLines = [
         'package cloud.lingya.agents.sdk.api',
         '',
-        `import cloud.lingya.agents.sdk.generated.api.${generatedApi}`,
+        `import cloud.lingya.agents.sdk.generated.api.${generatedApi} as ${generatedAlias}`,
         'import cloud.lingya.agents.sdk.generated.model.*',
         'import kotlinx.coroutines.flow.toList',
         'import kotlinx.coroutines.runBlocking',
@@ -114,7 +120,7 @@ for (const group of groups) {
         const nonChannel = generated.parameters.slice(1);
         const bodyIndex = nonChannel.findIndex((parameter) => parameter.includes('@Body'));
         const parameters = nonChannel.map((parameter, index) => {
-            const qualified = qualifyNestedEnums(parameter, source, generatedApi);
+            const qualified = qualifyNestedEnums(parameter, source, generatedAlias);
             return index === bodyIndex ? qualified.replace(/^\w+:/, 'input:') : qualified;
         });
         const argumentNames = nonChannel.map((parameter, index) => index === bodyIndex ? 'input' : parameterName(parameter));

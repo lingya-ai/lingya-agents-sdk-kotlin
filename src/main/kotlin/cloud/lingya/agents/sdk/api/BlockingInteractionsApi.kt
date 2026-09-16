@@ -1,6 +1,6 @@
 package cloud.lingya.agents.sdk.api
 
-import cloud.lingya.agents.sdk.generated.api.InteractionsApi
+import cloud.lingya.agents.sdk.generated.api.InteractionsApi as GeneratedInteractionsApi
 import cloud.lingya.agents.sdk.generated.model.*
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
@@ -10,8 +10,8 @@ import kotlinx.coroutines.runBlocking
  *
  * @author 思追(shaco)
  */
-public class BlockingLingyaInteractionsApi internal constructor(
-    private val delegate: LingyaInteractionsApi,
+public class BlockingInteractionsApi internal constructor(
+    private val delegate: InteractionsApi,
 ) {
     /**
      * 提交计划审批 / Submit plan approval

@@ -1,6 +1,6 @@
 package cloud.lingya.agents.sdk.api
 
-import cloud.lingya.agents.sdk.generated.api.EventsApi
+import cloud.lingya.agents.sdk.generated.api.EventsApi as GeneratedEventsApi
 import cloud.lingya.agents.sdk.generated.model.*
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
@@ -10,8 +10,8 @@ import kotlinx.coroutines.runBlocking
  *
  * @author 思追(shaco)
  */
-public class BlockingLingyaEventsApi internal constructor(
-    private val delegate: LingyaEventsApi,
+public class BlockingEventsApi internal constructor(
+    private val delegate: EventsApi,
 ) {
     /**
      * 读取消息事件 / Get message events

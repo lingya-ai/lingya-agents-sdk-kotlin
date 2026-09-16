@@ -1,15 +1,15 @@
 package cloud.lingya.agents.sdk
 
-import cloud.lingya.agents.sdk.api.LingyaChatApi
-import cloud.lingya.agents.sdk.api.LingyaConfigurationApi
-import cloud.lingya.agents.sdk.api.LingyaConversationsApi
-import cloud.lingya.agents.sdk.api.LingyaEventsApi
-import cloud.lingya.agents.sdk.api.LingyaFilesApi
-import cloud.lingya.agents.sdk.api.LingyaInteractionsApi
-import cloud.lingya.agents.sdk.api.LingyaKnowledgeApi
-import cloud.lingya.agents.sdk.api.LingyaMessagesApi
-import cloud.lingya.agents.sdk.api.LingyaSqlApi
-import cloud.lingya.agents.sdk.api.LingyaWorkspaceApi
+import cloud.lingya.agents.sdk.api.ChatApi
+import cloud.lingya.agents.sdk.api.ConfigurationApi
+import cloud.lingya.agents.sdk.api.ConversationsApi
+import cloud.lingya.agents.sdk.api.EventsApi
+import cloud.lingya.agents.sdk.api.FilesApi
+import cloud.lingya.agents.sdk.api.InteractionsApi
+import cloud.lingya.agents.sdk.api.KnowledgeApi
+import cloud.lingya.agents.sdk.api.MessagesApi
+import cloud.lingya.agents.sdk.api.SqlApi
+import cloud.lingya.agents.sdk.api.WorkspaceApi
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
@@ -29,16 +29,16 @@ class BoundFacadeCoverageTest {
                     .readValue(input)
             }
         val groups = mapOf(
-            "chat" to LingyaChatApi::class,
-            "configuration" to LingyaConfigurationApi::class,
-            "conversations" to LingyaConversationsApi::class,
-            "events" to LingyaEventsApi::class,
-            "files" to LingyaFilesApi::class,
-            "interactions" to LingyaInteractionsApi::class,
-            "knowledge" to LingyaKnowledgeApi::class,
-            "messages" to LingyaMessagesApi::class,
-            "sql" to LingyaSqlApi::class,
-            "workspace" to LingyaWorkspaceApi::class,
+            "chat" to ChatApi::class,
+            "configuration" to ConfigurationApi::class,
+            "conversations" to ConversationsApi::class,
+            "events" to EventsApi::class,
+            "files" to FilesApi::class,
+            "interactions" to InteractionsApi::class,
+            "knowledge" to KnowledgeApi::class,
+            "messages" to MessagesApi::class,
+            "sql" to SqlApi::class,
+            "workspace" to WorkspaceApi::class,
         )
 
         assertEquals(46, manifest.size)

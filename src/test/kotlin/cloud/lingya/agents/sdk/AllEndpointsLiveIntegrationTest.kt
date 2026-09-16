@@ -323,7 +323,7 @@ class AllEndpointsLiveIntegrationTest {
     private fun liveFixture(): LiveFixture {
         val baseUrl = requiredEnvironment("LINGYA_LIVE_BASE_URL")
         val channelId = requiredEnvironment("LINGYA_LIVE_CHANNEL_ID")
-        val client = LingyaAgentsClient(
+        val client = AgentsClient(
             baseUrl = baseUrl,
             channelId = channelId,
             credentials = OpenApiCredentials(
@@ -356,7 +356,7 @@ class AllEndpointsLiveIntegrationTest {
     }
 
     private data class LiveFixture(
-        val user: LingyaAgentsUserClient,
+        val user: AgentsUserClient,
     )
 
     private data class Endpoint(val method: String, val path: String)
@@ -395,7 +395,7 @@ class AllEndpointsLiveIntegrationTest {
             try {
                 request()
                 error("$method $suffix unexpectedly succeeded")
-            } catch (exception: LingyaApiException) {
+            } catch (exception: ApiException) {
                 result(endpoint, exception.statusCode, "环境能力受限，参数与错误响应已验证")
                 assertTrue(
                     exception.statusCode in EXPECTED_DOMAIN_ERROR_CODES,

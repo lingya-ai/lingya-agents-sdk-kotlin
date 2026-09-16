@@ -85,7 +85,7 @@ class LiveApiIntegrationTest {
         val externalUserId = System.getenv("LINGYA_LIVE_EXTERNAL_USER_ID")
             ?.takeIf(String::isNotBlank)
             ?: "lingya-kotlin-sdk-live-smoke"
-        val client = LingyaAgentsClient(
+        val client = AgentsClient(
             baseUrl = baseUrl,
             channelId = channelId,
             credentials = OpenApiCredentials(accessKey, secret),
@@ -101,6 +101,6 @@ class LiveApiIntegrationTest {
 
     private data class LiveFixture(
         val channelId: String,
-        val user: LingyaAgentsUserClient,
+        val user: AgentsUserClient,
     )
 }

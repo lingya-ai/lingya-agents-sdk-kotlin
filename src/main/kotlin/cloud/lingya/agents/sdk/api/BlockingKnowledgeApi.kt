@@ -1,6 +1,6 @@
 package cloud.lingya.agents.sdk.api
 
-import cloud.lingya.agents.sdk.generated.api.KnowledgeApi
+import cloud.lingya.agents.sdk.generated.api.KnowledgeApi as GeneratedKnowledgeApi
 import cloud.lingya.agents.sdk.generated.model.*
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
@@ -10,8 +10,8 @@ import kotlinx.coroutines.runBlocking
  *
  * @author 思追(shaco)
  */
-public class BlockingLingyaKnowledgeApi internal constructor(
-    private val delegate: LingyaKnowledgeApi,
+public class BlockingKnowledgeApi internal constructor(
+    private val delegate: KnowledgeApi,
 ) {
     /**
      * 批量读取引用元数据 / Get citation metadata in batch

@@ -1,4 +1,4 @@
-import cloud.lingya.agents.sdk.LingyaAgentsClient;
+import cloud.lingya.agents.sdk.AgentsClient;
 import cloud.lingya.agents.sdk.OpenApiCredentials;
 import cloud.lingya.agents.sdk.generated.model.AiChatInput;
 
@@ -7,7 +7,7 @@ public final class Consumer {
     }
 
     public static void compileJavaConsumer() {
-        var client = new LingyaAgentsClient(
+        var client = new AgentsClient(
             "https://tenant.example.com",
             "channel",
             new OpenApiCredentials("abcdefghijklmnopqrstuvwxyzABCDEF", "secret")

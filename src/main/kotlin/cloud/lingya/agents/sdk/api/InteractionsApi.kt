@@ -1,8 +1,8 @@
 package cloud.lingya.agents.sdk.api
 
-import cloud.lingya.agents.sdk.LingyaAgentsUserClient
+import cloud.lingya.agents.sdk.AgentsUserClient
 import cloud.lingya.agents.sdk.bodyOrThrow
-import cloud.lingya.agents.sdk.generated.api.InteractionsApi
+import cloud.lingya.agents.sdk.generated.api.InteractionsApi as GeneratedInteractionsApi
 import cloud.lingya.agents.sdk.generated.model.*
 import kotlinx.coroutines.flow.Flow
 
@@ -14,10 +14,10 @@ import kotlinx.coroutines.flow.Flow
  *
  * @author 思追(shaco)
  */
-public class LingyaInteractionsApi internal constructor(
+public class InteractionsApi internal constructor(
     private val channelId: String,
-    private val delegate: InteractionsApi,
-    private val userClient: LingyaAgentsUserClient,
+    private val delegate: GeneratedInteractionsApi,
+    private val userClient: AgentsUserClient,
 ) {
     /**
      * 提交计划审批 / Submit plan approval

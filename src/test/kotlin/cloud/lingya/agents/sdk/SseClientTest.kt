@@ -55,7 +55,7 @@ class SseClientTest {
     @Test
     fun `reports HTTP stream failures`() {
         server.enqueue(MockResponse().setResponseCode(429).setBody("rate limited"))
-        val exception = assertThrows(LingyaApiException::class.java) {
+        val exception = assertThrows(ApiException::class.java) {
             newClient().blockingForUser("user-1").collectChatEvents("conversation-1", "message-1")
         }
         assertEquals(429, exception.statusCode)
@@ -83,7 +83,7 @@ class SseClientTest {
         assertEquals(1, events.size)
     }
 
-    private fun newClient(): LingyaAgentsClient = LingyaAgentsClient(
+    private fun newClient(): AgentsClient = AgentsClient(
         server.url("/").toString(),
         "channel",
         OpenApiCredentials("abcdefghijklmnopqrstuvwxyzABCDEF", "test-secret"),
