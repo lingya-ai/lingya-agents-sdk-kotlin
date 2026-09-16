@@ -17,16 +17,16 @@ interface MessagesApi {
     /**
      * DELETE api/agents/channel/openapi/v1/{channelId}/chat/conversations/{conversationId}/messages/{messageId}/queue
      * 取消排队消息 / Cancel a queued message
-     * 取消排队消息 / Cancel a queued message 请求会在身份验签和资源归属校验后执行；响应字段以本契约为准。 / The request runs after signature and resource-ownership validation; this contract defines the response fields.
+     * ### 使用场景 在消息尚未开始执行时取消排队。  ### Use case Cancel a message before execution begins.  ### 前置条件 渠道凭证和外部用户已配置，目标资源属于当前用户。  ### Prerequisites Channel credentials and the external user are configured, and the target resource belongs to that user.  ### 行为与副作用 尝试把排队消息置为取消状态。  ### Behavior and side effects Attempts to move a queued message to cancelled state.  ### 后续调用 读取消息确认结果；执行中的消息改用 interrupt。  ### Next step Read the message to confirm; use interrupt for active execution.  ### 接口摘要 取消排队消息 / Cancel a queued message  ### Operation summary 取消排队消息 / Cancel a queued message
      * Responses:
      *  - 200: 取消排队消息 / Cancel a queued message 的成功响应。 / Successful response for cancelQueuedMessage.
-     *  - 401: API error
-     *  - 403: API error
-     *  - 413: API error
-     *  - 422: Validation error
-     *  - 429: API error
-     *  - 500: API error
-     *  - 503: API error
+     *  - 401: 接口错误。 / API error.
+     *  - 403: 接口错误。 / API error.
+     *  - 413: 接口错误。 / API error.
+     *  - 422: 参数校验错误。 / Validation error.
+     *  - 429: 接口错误。 / API error.
+     *  - 500: 接口错误。 / API error.
+     *  - 503: 接口错误。 / API error.
      *
      * @param channelId Agent OpenAPI 渠道 UUID。 / Agent OpenAPI channel UUID.
      * @param conversationId 会话 ID；必须属于当前外部用户。 / Conversation ID owned by the current external user.
@@ -39,16 +39,16 @@ interface MessagesApi {
     /**
      * GET api/agents/channel/openapi/v1/{channelId}/chat/conversations/{conversationId}/async-tasks/{asyncTaskId}
      * 读取异步任务 / Get an asynchronous task
-     * 读取异步任务 / Get an asynchronous task 请求会在身份验签和资源归属校验后执行；响应字段以本契约为准。 / The request runs after signature and resource-ownership validation; this contract defines the response fields.
+     * ### 使用场景 查看单个异步任务的进度与输出。  ### Use case Inspect progress and output for one asynchronous task.  ### 前置条件 渠道凭证和外部用户已配置，目标资源属于当前用户。  ### Prerequisites Channel credentials and the external user are configured, and the target resource belongs to that user.  ### 行为与副作用 只读。  ### Behavior and side effects Read-only.  ### 后续调用 完成后消费输出，失败时展示明确错误。  ### Next step Consume output on completion and show explicit errors on failure.  ### 接口摘要 读取异步任务 / Get an asynchronous task  ### Operation summary 读取异步任务 / Get an asynchronous task
      * Responses:
      *  - 200: 读取异步任务 / Get an asynchronous task 的成功响应。 / Successful response for getConversationAsyncTask.
-     *  - 401: API error
-     *  - 403: API error
-     *  - 413: API error
-     *  - 422: Validation error
-     *  - 429: API error
-     *  - 500: API error
-     *  - 503: API error
+     *  - 401: 接口错误。 / API error.
+     *  - 403: 接口错误。 / API error.
+     *  - 413: 接口错误。 / API error.
+     *  - 422: 参数校验错误。 / Validation error.
+     *  - 429: 接口错误。 / API error.
+     *  - 500: 接口错误。 / API error.
+     *  - 503: 接口错误。 / API error.
      *
      * @param channelId Agent OpenAPI 渠道 UUID。 / Agent OpenAPI channel UUID.
      * @param conversationId 会话 ID；必须属于当前外部用户。 / Conversation ID owned by the current external user.
@@ -61,16 +61,16 @@ interface MessagesApi {
     /**
      * GET api/agents/channel/openapi/v1/{channelId}/chat/conversations/{conversationId}/messages/{messageId}
      * 读取单条会话消息 / Get a conversation message
-     * 读取单条会话消息 / Get a conversation message 请求会在身份验签和资源归属校验后执行；响应字段以本契约为准。 / The request runs after signature and resource-ownership validation; this contract defines the response fields.
+     * ### 使用场景 恢复或审计单条消息的完整状态。  ### Use case Recover or audit the complete state of one message.  ### 前置条件 渠道凭证和外部用户已配置，目标资源属于当前用户。  ### Prerequisites Channel credentials and the external user are configured, and the target resource belongs to that user.  ### 行为与副作用 只读。  ### Behavior and side effects Read-only.  ### 后续调用 根据状态读取事件、异步任务或工具结果。  ### Next step Read events, asynchronous tasks, or tool results according to status.  ### 接口摘要 读取单条会话消息 / Get a conversation message  ### Operation summary 读取单条会话消息 / Get a conversation message
      * Responses:
      *  - 200: 读取单条会话消息 / Get a conversation message 的成功响应。 / Successful response for getConversationMessage.
-     *  - 401: API error
-     *  - 403: API error
-     *  - 413: API error
-     *  - 422: Validation error
-     *  - 429: API error
-     *  - 500: API error
-     *  - 503: API error
+     *  - 401: 接口错误。 / API error.
+     *  - 403: 接口错误。 / API error.
+     *  - 413: 接口错误。 / API error.
+     *  - 422: 参数校验错误。 / Validation error.
+     *  - 429: 接口错误。 / API error.
+     *  - 500: 接口错误。 / API error.
+     *  - 503: 接口错误。 / API error.
      *
      * @param channelId Agent OpenAPI 渠道 UUID。 / Agent OpenAPI channel UUID.
      * @param conversationId 会话 ID；必须属于当前外部用户。 / Conversation ID owned by the current external user.
@@ -102,16 +102,16 @@ interface MessagesApi {
     /**
      * GET api/agents/channel/openapi/v1/{channelId}/chat/conversations/{conversationId}/async-tasks
      * 分页查询异步任务 / List asynchronous tasks
-     * 分页查询异步任务 / List asynchronous tasks 请求会在身份验签和资源归属校验后执行；响应字段以本契约为准。 / The request runs after signature and resource-ownership validation; this contract defines the response fields.
+     * ### 使用场景 分页查看会话产生的长任务。  ### Use case List long-running tasks produced by a conversation.  ### 前置条件 渠道凭证和外部用户已配置，目标资源属于当前用户。  ### Prerequisites Channel credentials and the external user are configured, and the target resource belongs to that user.  ### 行为与副作用 只读。  ### Behavior and side effects Read-only.  ### 后续调用 对未完成任务读取详情并轮询。  ### Next step Read and poll details for unfinished tasks.  ### 接口摘要 分页查询异步任务 / List asynchronous tasks  ### Operation summary 分页查询异步任务 / List asynchronous tasks
      * Responses:
      *  - 200: 分页查询异步任务 / List asynchronous tasks 的成功响应。 / Successful response for listConversationAsyncTasks.
-     *  - 401: API error
-     *  - 403: API error
-     *  - 413: API error
-     *  - 422: Validation error
-     *  - 429: API error
-     *  - 500: API error
-     *  - 503: API error
+     *  - 401: 接口错误。 / API error.
+     *  - 403: 接口错误。 / API error.
+     *  - 413: 接口错误。 / API error.
+     *  - 422: 参数校验错误。 / Validation error.
+     *  - 429: 接口错误。 / API error.
+     *  - 500: 接口错误。 / API error.
+     *  - 503: 接口错误。 / API error.
      *
      * @param channelId Agent OpenAPI 渠道 UUID。 / Agent OpenAPI channel UUID.
      * @param conversationId 会话 ID；必须属于当前外部用户。 / Conversation ID owned by the current external user.
@@ -149,16 +149,16 @@ interface MessagesApi {
     /**
      * GET api/agents/channel/openapi/v1/{channelId}/chat/conversations/{conversationId}/messages
      * 分页查询会话消息 / List conversation messages
-     * 分页查询会话消息 / List conversation messages 请求会在身份验签和资源归属校验后执行；响应字段以本契约为准。 / The request runs after signature and resource-ownership validation; this contract defines the response fields.
+     * ### 使用场景 分页加载会话历史记录。  ### Use case Load conversation history page by page.  ### 前置条件 渠道凭证和外部用户已配置，目标资源属于当前用户。  ### Prerequisites Channel credentials and the external user are configured, and the target resource belongs to that user.  ### 行为与副作用 只读，返回消息分页。  ### Behavior and side effects Read-only and returns a message page.  ### 后续调用 选择消息后读取详情或事件。  ### Next step Read message detail or events after selection.  ### 接口摘要 分页查询会话消息 / List conversation messages  ### Operation summary 分页查询会话消息 / List conversation messages
      * Responses:
      *  - 200: 分页查询会话消息 / List conversation messages 的成功响应。 / Successful response for listConversationMessages.
-     *  - 401: API error
-     *  - 403: API error
-     *  - 413: API error
-     *  - 422: Validation error
-     *  - 429: API error
-     *  - 500: API error
-     *  - 503: API error
+     *  - 401: 接口错误。 / API error.
+     *  - 403: 接口错误。 / API error.
+     *  - 413: 接口错误。 / API error.
+     *  - 422: 参数校验错误。 / Validation error.
+     *  - 429: 接口错误。 / API error.
+     *  - 500: 接口错误。 / API error.
+     *  - 503: 接口错误。 / API error.
      *
      * @param channelId Agent OpenAPI 渠道 UUID。 / Agent OpenAPI channel UUID.
      * @param conversationId 会话 ID；必须属于当前外部用户。 / Conversation ID owned by the current external user.

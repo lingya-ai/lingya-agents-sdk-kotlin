@@ -16,16 +16,16 @@ interface EventsApi {
     /**
      * GET api/agents/channel/openapi/v1/{channelId}/chat/events
      * 读取消息事件 / Get message events
-     * 读取消息事件 / Get message events 请求会在身份验签和资源归属校验后执行；响应字段以本契约为准。 / The request runs after signature and resource-ownership validation; this contract defines the response fields.
+     * ### 使用场景 恢复单条消息已经持久化的事件。  ### Use case Recover persisted events for one message.  ### 前置条件 conversationId 与 messageId 匹配。  ### Prerequisites conversationId and messageId match.  ### 行为与副作用 只读，不重新执行 Agent。  ### Behavior and side effects Read-only and does not re-run the Agent.  ### 后续调用 重建 UI 状态或与 SSE 后续事件合并。  ### Next step Rebuild UI state or merge with later SSE events.  ### 接口摘要 读取消息事件 / Get message events  ### Operation summary 读取消息事件 / Get message events
      * Responses:
      *  - 200: 读取消息事件 / Get message events 的成功响应。 / Successful response for getChatEvents.
-     *  - 401: API error
-     *  - 403: API error
-     *  - 413: API error
-     *  - 422: Validation error
-     *  - 429: API error
-     *  - 500: API error
-     *  - 503: API error
+     *  - 401: 接口错误。 / API error.
+     *  - 403: 接口错误。 / API error.
+     *  - 413: 接口错误。 / API error.
+     *  - 422: 参数校验错误。 / Validation error.
+     *  - 429: 接口错误。 / API error.
+     *  - 500: 接口错误。 / API error.
+     *  - 503: 接口错误。 / API error.
      *
      * @param channelId Agent OpenAPI 渠道 UUID。 / Agent OpenAPI channel UUID.
      * @param conversationId 会话 ID；必须属于当前外部用户。 / Conversation ID owned by the current external user.
@@ -38,16 +38,16 @@ interface EventsApi {
     /**
      * POST api/agents/channel/openapi/v1/{channelId}/chat/events/batch
      * 批量读取消息事件 / Get message events in batch
-     * 批量读取消息事件 / Get message events in batch 请求会在身份验签和资源归属校验后执行；响应字段以本契约为准。 / The request runs after signature and resource-ownership validation; this contract defines the response fields.
+     * ### 使用场景 客户端重启后一次恢复多条消息事件。  ### Use case Recover events for multiple messages after a client restart.  ### 前置条件 请求包含一个会话和最多 50 个消息 ID。  ### Prerequisites The request contains one conversation and up to 50 message IDs.  ### 行为与副作用 只读，并明确返回跳过项。  ### Behavior and side effects Read-only and explicitly reports skipped items.  ### 后续调用 按 messageId 合并记录并处理 skipped。  ### Next step Merge records by messageId and handle skipped entries.  ### 接口摘要 批量读取消息事件 / Get message events in batch  ### Operation summary 批量读取消息事件 / Get message events in batch
      * Responses:
      *  - 201: 批量读取消息事件 / Get message events in batch 的成功响应。 / Successful response for getChatEventsBatch.
-     *  - 401: API error
-     *  - 403: API error
-     *  - 413: API error
-     *  - 422: Validation error
-     *  - 429: API error
-     *  - 500: API error
-     *  - 503: API error
+     *  - 401: 接口错误。 / API error.
+     *  - 403: 接口错误。 / API error.
+     *  - 413: 接口错误。 / API error.
+     *  - 422: 参数校验错误。 / Validation error.
+     *  - 429: 接口错误。 / API error.
+     *  - 500: 接口错误。 / API error.
+     *  - 503: 接口错误。 / API error.
      *
      * @param channelId Agent OpenAPI 渠道 UUID。 / Agent OpenAPI channel UUID.
      * @param aiChatEventsBatchInput 批量读取消息事件 / Get message events in batch 的 JSON 请求参数。 / JSON request parameters for getChatEventsBatch.
