@@ -16,16 +16,16 @@ interface KnowledgeApi {
     /**
      * GET api/agents/channel/openapi/v1/{channelId}/chat/knowledge-bases/citations/{citationType}/{referenceId}/metadata
      * 读取引用元数据 / Get citation metadata
-     * 读取引用元数据 / Get citation metadata 请求会在身份验签和资源归属校验后执行；响应字段以本契约为准。 / The request runs after signature and resource-ownership validation; this contract defines the response fields.
+     * ### 使用场景 用户展开单条引用时读取来源详情。  ### Use case Read source detail when a user expands one citation.  ### 前置条件 citationType 与 referenceId 来自服务端。  ### Prerequisites citationType and referenceId come from the server.  ### 行为与副作用 只读。  ### Behavior and side effects Read-only.  ### 后续调用 展示标题、位置和其他元数据。  ### Next step Display title, location, and other metadata.  ### 接口摘要 读取引用元数据 / Get citation metadata  ### Operation summary 读取引用元数据 / Get citation metadata
      * Responses:
      *  - 200: 读取引用元数据 / Get citation metadata 的成功响应。 / Successful response for getCitationMetadata.
-     *  - 401: API error
-     *  - 403: API error
-     *  - 413: API error
-     *  - 422: Validation error
-     *  - 429: API error
-     *  - 500: API error
-     *  - 503: API error
+     *  - 401: 接口错误。 / API error.
+     *  - 403: 接口错误。 / API error.
+     *  - 413: 接口错误。 / API error.
+     *  - 422: 参数校验错误。 / Validation error.
+     *  - 429: 接口错误。 / API error.
+     *  - 500: 接口错误。 / API error.
+     *  - 503: 接口错误。 / API error.
      *
      * @param channelId Agent OpenAPI 渠道 UUID。 / Agent OpenAPI channel UUID.
      * @param citationType 知识引用类型。 / Knowledge citation type.
@@ -38,16 +38,16 @@ interface KnowledgeApi {
     /**
      * POST api/agents/channel/openapi/v1/{channelId}/chat/knowledge-bases/citations/metadata
      * 批量读取引用元数据 / Get citation metadata in batch
-     * 批量读取引用元数据 / Get citation metadata in batch 请求会在身份验签和资源归属校验后执行；响应字段以本契约为准。 / The request runs after signature and resource-ownership validation; this contract defines the response fields.
+     * ### 使用场景 一次解析回答中的多条知识引用。  ### Use case Resolve multiple knowledge citations from an answer in one request.  ### 前置条件 引用列表来自服务端消息或事件。  ### Prerequisites The reference list comes from a server message or event.  ### 行为与副作用 只读，返回可展示元数据。  ### Behavior and side effects Read-only and returns display metadata.  ### 后续调用 按原引用顺序渲染来源。  ### Next step Render sources in the original reference order.  ### 接口摘要 批量读取引用元数据 / Get citation metadata in batch  ### Operation summary 批量读取引用元数据 / Get citation metadata in batch
      * Responses:
      *  - 201: 批量读取引用元数据 / Get citation metadata in batch 的成功响应。 / Successful response for getCitationMetadataBatch.
-     *  - 401: API error
-     *  - 403: API error
-     *  - 413: API error
-     *  - 422: Validation error
-     *  - 429: API error
-     *  - 500: API error
-     *  - 503: API error
+     *  - 401: 接口错误。 / API error.
+     *  - 403: 接口错误。 / API error.
+     *  - 413: 接口错误。 / API error.
+     *  - 422: 参数校验错误。 / Validation error.
+     *  - 429: 接口错误。 / API error.
+     *  - 500: 接口错误。 / API error.
+     *  - 503: 接口错误。 / API error.
      *
      * @param channelId Agent OpenAPI 渠道 UUID。 / Agent OpenAPI channel UUID.
      * @param returnedReference 批量读取引用元数据 / Get citation metadata in batch 的 JSON 请求参数。 / JSON request parameters for getCitationMetadataBatch.
