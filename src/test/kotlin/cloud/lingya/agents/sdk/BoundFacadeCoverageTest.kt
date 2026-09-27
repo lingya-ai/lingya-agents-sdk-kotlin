@@ -41,7 +41,7 @@ class BoundFacadeCoverageTest {
             "workspace" to WorkspaceApi::class,
         )
 
-        assertEquals(46, manifest.size)
+        assertEquals(52, manifest.size)
         for ((group, type) in groups) {
             val expected = manifest.filter { it.group == group }.map { it.operationId }.toSet()
             val methods = publicBusinessMethods(type)

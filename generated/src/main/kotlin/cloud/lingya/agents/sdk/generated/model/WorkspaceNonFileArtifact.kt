@@ -33,8 +33,8 @@ import com.fasterxml.jackson.annotation.JsonProperty
  * @param artifactId 字段 artifactId / artifact id field。
  * @param kind 字段 kind / kind field。
  * @param title 标题 / title。
- * @param lastUpdateTime 最后更新时间 / last update time。
  * @param description 可读说明 / human-readable description。
+ * @param lastUpdateTime 最后更新时间 / last update time。
  * @param previewUrl 字段 previewUrl / preview url field。
  */
 
@@ -44,7 +44,7 @@ data class WorkspaceNonFileArtifact (
     /* 字段 artifactId / artifact id field。 */
     @param:JsonProperty("artifactId")
     @get:JsonProperty("artifactId")
-    val artifactId: kotlin.String,
+    val artifactId: kotlin.Long,
 
     /* 字段 kind / kind field。 */
     @param:JsonProperty("kind")
@@ -56,15 +56,15 @@ data class WorkspaceNonFileArtifact (
     @get:JsonProperty("title")
     val title: kotlin.String,
 
+    /* 可读说明 / human-readable description。 */
+    @param:JsonProperty("description")
+    @get:JsonProperty("description")
+    val description: kotlin.String,
+
     /* 最后更新时间 / last update time。 */
     @param:JsonProperty("lastUpdateTime")
     @get:JsonProperty("lastUpdateTime")
     val lastUpdateTime: java.time.OffsetDateTime,
-
-    /* 可读说明 / human-readable description。 */
-    @param:JsonProperty("description")
-    @get:JsonProperty("description")
-    val description: kotlin.String? = null,
 
     /* 字段 previewUrl / preview url field。 */
     @param:JsonProperty("previewUrl")

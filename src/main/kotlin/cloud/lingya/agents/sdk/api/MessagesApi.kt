@@ -81,6 +81,21 @@ public class MessagesApi internal constructor(
         delegate.listConversationAsyncTasks(channelId, conversationId, current, size, orderBy, orderDirection, orderNullHandling, keyword, status).bodyOrThrow()
 
     /**
+     * 增量同步异步任务 / Sync asynchronous task updates
+     *
+     * @param conversationId 会话 ID；必须属于当前外部用户。 / Conversation ID owned by the current external user.
+     * @param afterMessageId 通知消息同步游标。 / Notification-message sync cursor.
+     * @param size 单页记录数。 / Number of records per page.
+     * @return 契约定义的强类型响应。 / The typed response defined by the contract.
+     */
+    public suspend fun syncConversationAsyncTasks(
+        conversationId: kotlin.String,
+        afterMessageId: kotlin.String? = null,
+        size: kotlin.Int? = 50,
+    ): AgentAsyncTaskSync =
+        delegate.syncConversationAsyncTasks(channelId, conversationId, afterMessageId, size).bodyOrThrow()
+
+    /**
      * 读取异步任务 / Get an asynchronous task
      *
      * @param conversationId 会话 ID；必须属于当前外部用户。 / Conversation ID owned by the current external user.
@@ -92,6 +107,85 @@ public class MessagesApi internal constructor(
         asyncTaskId: kotlin.String,
     ): AsyncTask =
         delegate.getConversationAsyncTask(channelId, conversationId, asyncTaskId).bodyOrThrow()
+
+    /**
+     * 分页查询子 Agent 任务 / List subagent tasks
+     *
+     * @param conversationId 会话 ID；必须属于当前外部用户。 / Conversation ID owned by the current external user.
+     * @param current 从 0 开始的页码。 / Zero-based page index.
+     * @param size 单页记录数。 / Number of records per page.
+     * @param orderBy 排序字段列表。 / Ordered list of sort fields.
+     * @param orderDirection 排序方向。 / Sort direction.
+     * @param orderNullHandling 空值排序策略。 / Null ordering strategy.
+     * @param keyword 标题或正文检索关键字。 / Title or content search keyword.
+     * @param status 状态过滤条件。 / Status filter.
+     * @return 契约定义的强类型响应。 / The typed response defined by the contract.
+     */
+    public suspend fun listConversationSubagents(
+        conversationId: kotlin.String,
+        current: kotlin.Int? = null,
+        size: kotlin.Int? = 30,
+        orderBy: kotlin.collections.List<kotlin.String>? = null,
+        orderDirection: GeneratedMessagesApi.OrderDirectionListConversationSubagents? = GeneratedMessagesApi.OrderDirectionListConversationSubagents.ASC,
+        orderNullHandling: GeneratedMessagesApi.OrderNullHandlingListConversationSubagents? = GeneratedMessagesApi.OrderNullHandlingListConversationSubagents.NATIVE,
+        keyword: kotlin.String? = null,
+        status: kotlin.collections.List<kotlin.String>? = null,
+    ): SubagentTaskPage =
+        delegate.listConversationSubagents(channelId, conversationId, current, size, orderBy, orderDirection, orderNullHandling, keyword, status).bodyOrThrow()
+
+    /**
+     * 增量同步子 Agent 状态 / Sync subagent task updates
+     *
+     * @param conversationId 会话 ID；必须属于当前外部用户。 / Conversation ID owned by the current external user.
+     * @param cursor 子 Agent 状态同步游标。 / Subagent-state sync cursor.
+     * @param size 单页记录数。 / Number of records per page.
+     * @return 契约定义的强类型响应。 / The typed response defined by the contract.
+     */
+    public suspend fun syncConversationSubagents(
+        conversationId: kotlin.String,
+        cursor: kotlin.String? = null,
+        size: kotlin.Int? = 50,
+    ): SubagentTaskSync =
+        delegate.syncConversationSubagents(channelId, conversationId, cursor, size).bodyOrThrow()
+
+    /**
+     * 读取子 Agent 状态 / Get a subagent task
+     *
+     * @param conversationId 会话 ID；必须属于当前外部用户。 / Conversation ID owned by the current external user.
+     * @param subagentTaskId 子 Agent 任务 ID。 / Subagent task ID.
+     * @return 契约定义的强类型响应。 / The typed response defined by the contract.
+     */
+    public suspend fun getConversationSubagent(
+        conversationId: kotlin.String,
+        subagentTaskId: kotlin.String,
+    ): SubagentTask =
+        delegate.getConversationSubagent(channelId, conversationId, subagentTaskId).bodyOrThrow()
+
+    /**
+     * 取消子 Agent 任务 / Cancel a subagent task
+     *
+     * @param conversationId 会话 ID；必须属于当前外部用户。 / Conversation ID owned by the current external user.
+     * @param subagentTaskId 子 Agent 任务 ID。 / Subagent task ID.
+     * @return 契约定义的强类型响应。 / The typed response defined by the contract.
+     */
+    public suspend fun cancelConversationSubagent(
+        conversationId: kotlin.String,
+        subagentTaskId: kotlin.String,
+    ): SubagentTask =
+        delegate.cancelConversationSubagent(channelId, conversationId, subagentTaskId).bodyOrThrow()
+
+    /**
+     * 读取子 Agent 结果 / Get a subagent result
+     *
+     * @param conversationId 会话 ID；必须属于当前外部用户。 / Conversation ID owned by the current external user.
+     * @param subagentTaskId 子 Agent 任务 ID。 / Subagent task ID.
+     * @return 契约定义的强类型响应。 / The typed response defined by the contract.
+     */
+    public suspend fun getConversationSubagentResult(
+        conversationId: kotlin.String,
+        subagentTaskId: kotlin.String,
+    ): SubagentTaskResult =
+        delegate.getConversationSubagentResult(channelId, conversationId, subagentTaskId).bodyOrThrow()
 
     /**
      * 取消排队消息 / Cancel a queued message

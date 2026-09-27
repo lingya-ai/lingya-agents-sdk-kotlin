@@ -133,11 +133,29 @@ class AllEndpointsLiveIntegrationTest {
             coverage.successful("GET", "/conversations/{conversationId}/async-tasks") {
                 fixture.user.messages.listConversationAsyncTasks(first.conversationId)
             }
+            coverage.successful("GET", "/conversations/{conversationId}/async-tasks/sync") {
+                fixture.user.messages.syncConversationAsyncTasks(first.conversationId)
+            }
             coverage.expectedDomainResult("GET", "/conversations/{conversationId}/async-tasks/{asyncTaskId}") {
                 fixture.user.messages.getConversationAsyncTask(
                     first.conversationId,
                     "missing-async-task",
                 )
+            }
+            coverage.successful("GET", "/conversations/{conversationId}/subagents") {
+                fixture.user.messages.listConversationSubagents(first.conversationId)
+            }
+            coverage.successful("GET", "/conversations/{conversationId}/subagents/sync") {
+                fixture.user.messages.syncConversationSubagents(first.conversationId)
+            }
+            coverage.expectedDomainResult("GET", "/conversations/{conversationId}/subagents/{subagentTaskId}") {
+                fixture.user.messages.getConversationSubagent(first.conversationId, "missing-subagent")
+            }
+            coverage.expectedDomainResult("GET", "/conversations/{conversationId}/subagents/{subagentTaskId}/result") {
+                fixture.user.messages.getConversationSubagentResult(first.conversationId, "missing-subagent")
+            }
+            coverage.expectedDomainResult("DELETE", "/conversations/{conversationId}/subagents/{subagentTaskId}") {
+                fixture.user.messages.cancelConversationSubagent(first.conversationId, "missing-subagent")
             }
             coverage.expectedDomainResult(
                 "DELETE",
