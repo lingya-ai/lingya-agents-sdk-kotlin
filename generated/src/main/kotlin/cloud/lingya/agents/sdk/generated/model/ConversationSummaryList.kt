@@ -24,6 +24,7 @@
 package cloud.lingya.agents.sdk.generated.model
 
 import cloud.lingya.agents.sdk.generated.model.ConversationSummary
+import cloud.lingya.agents.sdk.generated.model.PageInfo
 
 import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonProperty
@@ -32,6 +33,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
  * ConversationSummaryList 的公开协议结构。 / Public contract for conversation summary list.
  *
  * @param records 记录列表 / records。
+ * @param page 分页信息 / page metadata。
  */
 
 
@@ -40,7 +42,12 @@ data class ConversationSummaryList (
     /* 记录列表 / records。 */
     @param:JsonProperty("records")
     @get:JsonProperty("records")
-    val records: kotlin.collections.List<ConversationSummary>
+    val records: kotlin.collections.List<ConversationSummary>,
+
+    /* 分页信息 / page metadata。 */
+    @param:JsonProperty("page")
+    @get:JsonProperty("page")
+    val page: PageInfo
 
 ) {
 

@@ -43,6 +43,8 @@ import com.fasterxml.jackson.annotation.JsonProperty
  * @param createdTime 创建时间 / creation time。
  * @param lastUpdateTime 最后更新时间 / last update time。
  * @param title 标题 / title。
+ * @param groupId 字段 groupId / group id field。
+ * @param groupName 字段 groupName / group name field。
  */
 
 
@@ -106,7 +108,17 @@ data class ConversationSummary (
     /* 标题 / title。 */
     @param:JsonProperty("title")
     @get:JsonProperty("title")
-    val title: kotlin.String? = null
+    val title: kotlin.String? = null,
+
+    /* 字段 groupId / group id field。 */
+    @param:JsonProperty("groupId")
+    @get:JsonProperty("groupId")
+    val groupId: kotlin.Long? = null,
+
+    /* 字段 groupName / group name field。 */
+    @param:JsonProperty("groupName")
+    @get:JsonProperty("groupName")
+    val groupName: kotlin.String? = null
 
 ) {
 

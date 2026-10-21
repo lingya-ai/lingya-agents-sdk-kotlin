@@ -4,6 +4,8 @@ import cloud.lingya.agents.sdk.generated.api.WorkspaceApi as GeneratedWorkspaceA
 import cloud.lingya.agents.sdk.generated.model.*
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
+import cloud.lingya.agents.sdk.RequestOptions
+import cloud.lingya.agents.sdk.DownloadResponse
 
 /**
  * workspace 分组的 Java 友好阻塞接口。 / Java-friendly blocking workspace operations.
@@ -39,6 +41,17 @@ public class BlockingWorkspaceApi internal constructor(
         delegate.listWorkspaceArtifacts(conversationId, current, size, orderBy, orderDirection, orderNullHandling, keyword, prefix)
     }
 
+    public fun listWorkspaceArtifacts(
+        conversationId: kotlin.String,
+        current: kotlin.Int? = null,
+        size: kotlin.Int? = 30,
+        orderBy: kotlin.collections.List<kotlin.String>? = null,
+        orderDirection: GeneratedWorkspaceApi.OrderDirectionListWorkspaceArtifacts? = GeneratedWorkspaceApi.OrderDirectionListWorkspaceArtifacts.ASC,
+        orderNullHandling: GeneratedWorkspaceApi.OrderNullHandlingListWorkspaceArtifacts? = GeneratedWorkspaceApi.OrderNullHandlingListWorkspaceArtifacts.NATIVE,
+        keyword: kotlin.String? = null,
+        prefix: kotlin.String? = null,
+        requestOptions: RequestOptions,
+    ): WorkspaceArtifactList = runBlocking { delegate.listWorkspaceArtifacts(conversationId, current, size, orderBy, orderDirection, orderNullHandling, keyword, prefix, requestOptions) }
     /**
      * 创建工作区文件预览地址 / Create a workspace file preview URL
      *
@@ -53,4 +66,9 @@ public class BlockingWorkspaceApi internal constructor(
         delegate.getWorkspaceFilePreview(conversationId, path)
     }
 
+    public fun getWorkspaceFilePreview(
+        conversationId: kotlin.String,
+        path: kotlin.String,
+        requestOptions: RequestOptions,
+    ): PreSignedReadUrl = runBlocking { delegate.getWorkspaceFilePreview(conversationId, path, requestOptions) }
 }

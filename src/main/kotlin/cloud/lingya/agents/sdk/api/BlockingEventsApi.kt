@@ -4,6 +4,8 @@ import cloud.lingya.agents.sdk.generated.api.EventsApi as GeneratedEventsApi
 import cloud.lingya.agents.sdk.generated.model.*
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
+import cloud.lingya.agents.sdk.RequestOptions
+import cloud.lingya.agents.sdk.DownloadResponse
 
 /**
  * events 分组的 Java 友好阻塞接口。 / Java-friendly blocking events operations.
@@ -27,6 +29,11 @@ public class BlockingEventsApi internal constructor(
         delegate.getChatEvents(conversationId, messageId)
     }
 
+    public fun getChatEvents(
+        conversationId: kotlin.String,
+        messageId: kotlin.String,
+        requestOptions: RequestOptions,
+    ): AiChatBriefEventList = runBlocking { delegate.getChatEvents(conversationId, messageId, requestOptions) }
     /**
      * 批量读取消息事件 / Get message events in batch
      *
@@ -39,4 +46,8 @@ public class BlockingEventsApi internal constructor(
         delegate.getChatEventsBatch(input)
     }
 
+    public fun getChatEventsBatch(
+        input: AiChatEventsBatchInput,
+        requestOptions: RequestOptions,
+    ): AiChatEventsBatch = runBlocking { delegate.getChatEventsBatch(input, requestOptions) }
 }

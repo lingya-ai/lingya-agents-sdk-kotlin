@@ -4,6 +4,8 @@ import cloud.lingya.agents.sdk.generated.api.ConversationsApi as GeneratedConver
 import cloud.lingya.agents.sdk.generated.model.*
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
+import cloud.lingya.agents.sdk.RequestOptions
+import cloud.lingya.agents.sdk.DownloadResponse
 
 /**
  * conversations 分组的 Java 友好阻塞接口。 / Java-friendly blocking conversations operations.
@@ -25,6 +27,26 @@ public class BlockingConversationsApi internal constructor(
         delegate.deleteConversation(conversationId)
     }
 
+    public fun deleteConversation(
+        conversationId: kotlin.String,
+        requestOptions: RequestOptions,
+    ): Unit = runBlocking { delegate.deleteConversation(conversationId, requestOptions) }
+    /**
+     * 读取会话摘要 / Get conversation summary
+     *
+     * @param conversationId 会话 ID；必须属于当前外部用户。 / Conversation ID owned by the current external user.
+     * @return 契约定义的强类型响应。 / The typed response defined by the contract.
+     */
+    public fun getConversationSummary(
+        conversationId: kotlin.String,
+    ): ConversationSummary = runBlocking {
+        delegate.getConversationSummary(conversationId)
+    }
+
+    public fun getConversationSummary(
+        conversationId: kotlin.String,
+        requestOptions: RequestOptions,
+    ): ConversationSummary = runBlocking { delegate.getConversationSummary(conversationId, requestOptions) }
     /**
      * 读取上下文占用 / Get context usage
      *
@@ -37,30 +59,41 @@ public class BlockingConversationsApi internal constructor(
         delegate.getConversationContextUsage(conversationId)
     }
 
+    public fun getConversationContextUsage(
+        conversationId: kotlin.String,
+        requestOptions: RequestOptions,
+    ): ConversationContextUsage = runBlocking { delegate.getConversationContextUsage(conversationId, requestOptions) }
     /**
      * 分页查询会话 / List conversations
      *
      * @param current 从 0 开始的页码。 / Zero-based page index.
      * @param size 单页记录数。 / Number of records per page.
-     * @param orderBy 排序字段列表。 / Ordered list of sort fields.
-     * @param orderDirection 排序方向。 / Sort direction.
-     * @param orderNullHandling 空值排序策略。 / Null ordering strategy.
-     * @param keyword 标题或正文检索关键字。 / Title or content search keyword.
      * @param status 状态过滤条件。 / Status filter.
+     * @param keyword 标题或正文检索关键字。 / Title or content search keyword.
+     * @param groupFilter 字段 groupFilter / group filter field。
+     * @param groupId groupFilter 为 GROUP 时必填。 / Required when groupFilter is GROUP.
      * @return 契约定义的强类型响应。 / The typed response defined by the contract.
      */
     public fun listConversations(
-        current: kotlin.Int? = null,
+        current: kotlin.Int? = 0,
         size: kotlin.Int? = 30,
-        orderBy: kotlin.collections.List<kotlin.String>? = null,
-        orderDirection: GeneratedConversationsApi.OrderDirectionListConversations? = GeneratedConversationsApi.OrderDirectionListConversations.ASC,
-        orderNullHandling: GeneratedConversationsApi.OrderNullHandlingListConversations? = GeneratedConversationsApi.OrderNullHandlingListConversations.NATIVE,
+        status: GeneratedConversationsApi.StatusListConversations? = GeneratedConversationsApi.StatusListConversations.ACTIVE,
         keyword: kotlin.String? = null,
-        status: kotlin.String? = null,
+        groupFilter: GeneratedConversationsApi.GroupFilterListConversations? = GeneratedConversationsApi.GroupFilterListConversations.ALL,
+        groupId: kotlin.Long? = null,
     ): ConversationSummaryList = runBlocking {
-        delegate.listConversations(current, size, orderBy, orderDirection, orderNullHandling, keyword, status)
+        delegate.listConversations(current, size, status, keyword, groupFilter, groupId)
     }
 
+    public fun listConversations(
+        current: kotlin.Int? = 0,
+        size: kotlin.Int? = 30,
+        status: GeneratedConversationsApi.StatusListConversations? = GeneratedConversationsApi.StatusListConversations.ACTIVE,
+        keyword: kotlin.String? = null,
+        groupFilter: GeneratedConversationsApi.GroupFilterListConversations? = GeneratedConversationsApi.GroupFilterListConversations.ALL,
+        groupId: kotlin.Long? = null,
+        requestOptions: RequestOptions,
+    ): ConversationSummaryList = runBlocking { delegate.listConversations(current, size, status, keyword, groupFilter, groupId, requestOptions) }
     /**
      * 查询活动会话 / List active conversations
      *
@@ -71,6 +104,9 @@ public class BlockingConversationsApi internal constructor(
         delegate.listActiveConversations()
     }
 
+    public fun listActiveConversations(
+        requestOptions: RequestOptions,
+    ): ConversationIds = runBlocking { delegate.listActiveConversations(requestOptions) }
     /**
      * 查询未读会话 / List unread conversations
      *
@@ -81,6 +117,9 @@ public class BlockingConversationsApi internal constructor(
         delegate.listUnreadConversations()
     }
 
+    public fun listUnreadConversations(
+        requestOptions: RequestOptions,
+    ): ConversationIds = runBlocking { delegate.listUnreadConversations(requestOptions) }
     /**
      * 批量查询会话活动 / Query conversation activities
      *
@@ -93,6 +132,10 @@ public class BlockingConversationsApi internal constructor(
         delegate.queryConversationActivities(input)
     }
 
+    public fun queryConversationActivities(
+        input: ConversationActivityBatchInput,
+        requestOptions: RequestOptions,
+    ): ConversationActivityList = runBlocking { delegate.queryConversationActivities(input, requestOptions) }
     /**
      * 推进会话已读游标 / Mark a conversation as read
      *
@@ -107,6 +150,11 @@ public class BlockingConversationsApi internal constructor(
         delegate.markConversationRead(conversationId, input)
     }
 
+    public fun markConversationRead(
+        conversationId: kotlin.String,
+        input: ConversationReadReceiptInput,
+        requestOptions: RequestOptions,
+    ): ConversationReadReceipt = runBlocking { delegate.markConversationRead(conversationId, input, requestOptions) }
     /**
      * 读取会话统计 / Get conversation statistics
      *
@@ -117,6 +165,9 @@ public class BlockingConversationsApi internal constructor(
         delegate.getConversationStats()
     }
 
+    public fun getConversationStats(
+        requestOptions: RequestOptions,
+    ): ConversationStats = runBlocking { delegate.getConversationStats(requestOptions) }
     /**
      * 读取会话标题 / Get conversation title
      *
@@ -129,6 +180,10 @@ public class BlockingConversationsApi internal constructor(
         delegate.getConversationTitle(conversationId)
     }
 
+    public fun getConversationTitle(
+        conversationId: kotlin.String,
+        requestOptions: RequestOptions,
+    ): ConversationTitle = runBlocking { delegate.getConversationTitle(conversationId, requestOptions) }
     /**
      * 更新会话标题 / Update conversation title
      *
@@ -139,10 +194,15 @@ public class BlockingConversationsApi internal constructor(
     public fun updateConversationTitle(
         conversationId: kotlin.String,
         input: ConversationTitleInput,
-    ): Unit = runBlocking {
+    ): ConversationMetadata = runBlocking {
         delegate.updateConversationTitle(conversationId, input)
     }
 
+    public fun updateConversationTitle(
+        conversationId: kotlin.String,
+        input: ConversationTitleInput,
+        requestOptions: RequestOptions,
+    ): ConversationMetadata = runBlocking { delegate.updateConversationTitle(conversationId, input, requestOptions) }
     /**
      * 更新会话状态 / Update conversation status
      *
@@ -157,44 +217,92 @@ public class BlockingConversationsApi internal constructor(
         delegate.updateConversationStatus(conversationId, input)
     }
 
+    public fun updateConversationStatus(
+        conversationId: kotlin.String,
+        input: ConversationStatusInput,
+        requestOptions: RequestOptions,
+    ): Unit = runBlocking { delegate.updateConversationStatus(conversationId, input, requestOptions) }
     /**
-     * 查询会话分享 / List conversation shares
+     * 查询会话分组 / List conversation groups
      *
-     * @param conversationId 会话 ID；必须属于当前外部用户。 / Conversation ID owned by the current external user.
      * @return 契约定义的强类型响应。 / The typed response defined by the contract.
      */
-    public fun listConversationShares(
-        conversationId: kotlin.String,
-    ): ConversationShareList = runBlocking {
-        delegate.listConversationShares(conversationId)
+    public fun listConversationGroups(
+    ): ConversationGroupList = runBlocking {
+        delegate.listConversationGroups()
     }
 
+    public fun listConversationGroups(
+        requestOptions: RequestOptions,
+    ): ConversationGroupList = runBlocking { delegate.listConversationGroups(requestOptions) }
     /**
-     * 创建会话分享 / Create a conversation share
+     * 创建会话分组 / Create conversation group
      *
-     * @param conversationId 会话 ID；必须属于当前外部用户。 / Conversation ID owned by the current external user.
-     * @param input 创建会话分享 / Create a conversation share 的强类型请求体。 / Typed request body for createConversationShare.
+     * @param input 创建会话分组 / Create conversation group 的强类型请求体。 / Typed request body for createConversationGroup.
      * @return 契约定义的强类型响应。 / The typed response defined by the contract.
      */
-    public fun createConversationShare(
-        conversationId: kotlin.String,
-        input: ConversationShareInput,
-    ): ConversationShareCreated = runBlocking {
-        delegate.createConversationShare(conversationId, input)
+    public fun createConversationGroup(
+        input: ConversationGroupNameInput,
+    ): ConversationGroup = runBlocking {
+        delegate.createConversationGroup(input)
     }
 
+    public fun createConversationGroup(
+        input: ConversationGroupNameInput,
+        requestOptions: RequestOptions,
+    ): ConversationGroup = runBlocking { delegate.createConversationGroup(input, requestOptions) }
     /**
-     * 撤销会话分享 / Revoke a conversation share
+     * 重命名会话分组 / Rename conversation group
      *
-     * @param conversationId 会话 ID；必须属于当前外部用户。 / Conversation ID owned by the current external user.
-     * @param shareId 会话分享记录 ID。 / Conversation-share record ID.
+     * @param groupId 字段 groupId / group id field。
+     * @param input 重命名会话分组 / Rename conversation group 的强类型请求体。 / Typed request body for renameConversationGroup.
      * @return 契约定义的强类型响应。 / The typed response defined by the contract.
      */
-    public fun revokeConversationShare(
-        conversationId: kotlin.String,
-        shareId: kotlin.Long,
-    ): ConversationShareRevoked = runBlocking {
-        delegate.revokeConversationShare(conversationId, shareId)
+    public fun renameConversationGroup(
+        groupId: kotlin.Long,
+        input: ConversationGroupNameInput,
+    ): ConversationGroup = runBlocking {
+        delegate.renameConversationGroup(groupId, input)
     }
 
+    public fun renameConversationGroup(
+        groupId: kotlin.Long,
+        input: ConversationGroupNameInput,
+        requestOptions: RequestOptions,
+    ): ConversationGroup = runBlocking { delegate.renameConversationGroup(groupId, input, requestOptions) }
+    /**
+     * 删除会话分组 / Delete conversation group
+     *
+     * @param groupId 字段 groupId / group id field。
+     * @return 契约定义的强类型响应。 / The typed response defined by the contract.
+     */
+    public fun deleteConversationGroup(
+        groupId: kotlin.Long,
+    ): ConversationGroupDeleted = runBlocking {
+        delegate.deleteConversationGroup(groupId)
+    }
+
+    public fun deleteConversationGroup(
+        groupId: kotlin.Long,
+        requestOptions: RequestOptions,
+    ): ConversationGroupDeleted = runBlocking { delegate.deleteConversationGroup(groupId, requestOptions) }
+    /**
+     * 移动会话分组 / Move conversation to group
+     *
+     * @param conversationId 会话 ID；必须属于当前外部用户。 / Conversation ID owned by the current external user.
+     * @param input 移动会话分组 / Move conversation to group 的强类型请求体。 / Typed request body for moveConversationToGroup.
+     * @return 契约定义的强类型响应。 / The typed response defined by the contract.
+     */
+    public fun moveConversationToGroup(
+        conversationId: kotlin.String,
+        input: UpdateConversationGroupInput,
+    ): ConversationMetadata = runBlocking {
+        delegate.moveConversationToGroup(conversationId, input)
+    }
+
+    public fun moveConversationToGroup(
+        conversationId: kotlin.String,
+        input: UpdateConversationGroupInput,
+        requestOptions: RequestOptions,
+    ): ConversationMetadata = runBlocking { delegate.moveConversationToGroup(conversationId, input, requestOptions) }
 }

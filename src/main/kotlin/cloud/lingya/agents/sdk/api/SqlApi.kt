@@ -2,6 +2,9 @@ package cloud.lingya.agents.sdk.api
 
 import cloud.lingya.agents.sdk.AgentsUserClient
 import cloud.lingya.agents.sdk.bodyOrThrow
+import cloud.lingya.agents.sdk.RequestOptions
+import cloud.lingya.agents.sdk.DownloadResponse
+import cloud.lingya.agents.sdk.filename
 import cloud.lingya.agents.sdk.generated.api.SQLApi as GeneratedSQLApi
 import cloud.lingya.agents.sdk.generated.model.*
 import kotlinx.coroutines.flow.Flow
@@ -33,8 +36,15 @@ public class SqlApi internal constructor(
         resultId: kotlin.String,
         current: kotlin.Int? = 0,
         size: kotlin.Int? = 100,
+    ): SqlQueryResultPage = getSqlQueryResult(conversationId, resultId, current, size, RequestOptions())
+    public suspend fun getSqlQueryResult(
+        conversationId: kotlin.String,
+        resultId: kotlin.String,
+        current: kotlin.Int? = 0,
+        size: kotlin.Int? = 100,
+        requestOptions: RequestOptions,
     ): SqlQueryResultPage =
-        delegate.getSqlQueryResult(channelId, conversationId, resultId, current, size).bodyOrThrow()
+        userClient.execute(requestOptions) { api -> api.sql.getSqlQueryResult(channelId, conversationId, resultId, current, size).bodyOrThrow() }
 
     /**
      * 读取 SQL 图表数据 / Get SQL chart data
@@ -46,8 +56,13 @@ public class SqlApi internal constructor(
     public suspend fun getSqlQueryChartData(
         conversationId: kotlin.String,
         resultId: kotlin.String,
+    ): SqlChartDataset = getSqlQueryChartData(conversationId, resultId, RequestOptions())
+    public suspend fun getSqlQueryChartData(
+        conversationId: kotlin.String,
+        resultId: kotlin.String,
+        requestOptions: RequestOptions,
     ): SqlChartDataset =
-        delegate.getSqlQueryChartData(channelId, conversationId, resultId).bodyOrThrow()
+        userClient.execute(requestOptions) { api -> api.sql.getSqlQueryChartData(channelId, conversationId, resultId).bodyOrThrow() }
 
     /**
      * 导出 SQL 结果 / Export SQL results
@@ -63,7 +78,24 @@ public class SqlApi internal constructor(
         resultId: kotlin.String,
         format: GeneratedSQLApi.FormatExportSqlQueryResult,
         accept: kotlin.String? = null,
+    ): ByteArray = exportSqlQueryResult(conversationId, resultId, format, accept, RequestOptions())
+    public suspend fun exportSqlQueryResult(
+        conversationId: kotlin.String,
+        resultId: kotlin.String,
+        format: GeneratedSQLApi.FormatExportSqlQueryResult,
+        accept: kotlin.String? = null,
+        requestOptions: RequestOptions,
     ): ByteArray =
-        delegate.exportSqlQueryResult(channelId, conversationId, resultId, format, accept).bodyOrThrow().bytes()
+        userClient.execute(requestOptions) { api -> api.sql.exportSqlQueryResult(channelId, conversationId, resultId, format, accept).bodyOrThrow().use { it.bytes() } }
 
+    public suspend fun exportSqlQueryResultWithMetadata(
+        conversationId: kotlin.String,
+        resultId: kotlin.String,
+        format: GeneratedSQLApi.FormatExportSqlQueryResult,
+        accept: kotlin.String? = null,
+        requestOptions: RequestOptions = RequestOptions(),
+    ): DownloadResponse = userClient.execute(requestOptions) { api ->
+        val response = api.sql.exportSqlQueryResult(channelId, conversationId, resultId, format, accept)
+        response.bodyOrThrow().use { body -> DownloadResponse(body.bytes(), filename(response.headers()), response.headers()["Content-Type"], response.headers(), response.code(), response.headers()["X-Request-ID"]) }
+    }
 }

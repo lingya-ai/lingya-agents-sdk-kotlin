@@ -41,7 +41,7 @@ class BoundFacadeCoverageTest {
             "workspace" to WorkspaceApi::class,
         )
 
-        assertEquals(52, manifest.size)
+        assertEquals(64, manifest.size)
         for ((group, type) in groups) {
             val expected = manifest.filter { it.group == group }.map { it.operationId }.toSet()
             val methods = publicBusinessMethods(type)
@@ -54,7 +54,7 @@ class BoundFacadeCoverageTest {
 
     private fun publicBusinessMethods(type: KClass<*>): List<java.lang.reflect.Method> =
         type.java.declaredMethods.filter { method ->
-            Modifier.isPublic(method.modifiers) && !method.isSynthetic && '$' !in method.name
+            method.name != "subscribeChatEvents" && !method.name.endsWith("WithMetadata") && Modifier.isPublic(method.modifiers) && !method.isSynthetic && '$' !in method.name
         }
 
     private data class OperationManifest(

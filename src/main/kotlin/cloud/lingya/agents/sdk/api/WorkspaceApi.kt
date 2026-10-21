@@ -2,6 +2,9 @@ package cloud.lingya.agents.sdk.api
 
 import cloud.lingya.agents.sdk.AgentsUserClient
 import cloud.lingya.agents.sdk.bodyOrThrow
+import cloud.lingya.agents.sdk.RequestOptions
+import cloud.lingya.agents.sdk.DownloadResponse
+import cloud.lingya.agents.sdk.filename
 import cloud.lingya.agents.sdk.generated.api.WorkspaceApi as GeneratedWorkspaceApi
 import cloud.lingya.agents.sdk.generated.model.*
 import kotlinx.coroutines.flow.Flow
@@ -41,8 +44,19 @@ public class WorkspaceApi internal constructor(
         orderNullHandling: GeneratedWorkspaceApi.OrderNullHandlingListWorkspaceArtifacts? = GeneratedWorkspaceApi.OrderNullHandlingListWorkspaceArtifacts.NATIVE,
         keyword: kotlin.String? = null,
         prefix: kotlin.String? = null,
+    ): WorkspaceArtifactList = listWorkspaceArtifacts(conversationId, current, size, orderBy, orderDirection, orderNullHandling, keyword, prefix, RequestOptions())
+    public suspend fun listWorkspaceArtifacts(
+        conversationId: kotlin.String,
+        current: kotlin.Int? = null,
+        size: kotlin.Int? = 30,
+        orderBy: kotlin.collections.List<kotlin.String>? = null,
+        orderDirection: GeneratedWorkspaceApi.OrderDirectionListWorkspaceArtifacts? = GeneratedWorkspaceApi.OrderDirectionListWorkspaceArtifacts.ASC,
+        orderNullHandling: GeneratedWorkspaceApi.OrderNullHandlingListWorkspaceArtifacts? = GeneratedWorkspaceApi.OrderNullHandlingListWorkspaceArtifacts.NATIVE,
+        keyword: kotlin.String? = null,
+        prefix: kotlin.String? = null,
+        requestOptions: RequestOptions,
     ): WorkspaceArtifactList =
-        delegate.listWorkspaceArtifacts(channelId, conversationId, current, size, orderBy, orderDirection, orderNullHandling, keyword, prefix).bodyOrThrow()
+        userClient.execute(requestOptions) { api -> api.workspace.listWorkspaceArtifacts(channelId, conversationId, current, size, orderBy, orderDirection, orderNullHandling, keyword, prefix).bodyOrThrow() }
 
     /**
      * 创建工作区文件预览地址 / Create a workspace file preview URL
@@ -54,7 +68,12 @@ public class WorkspaceApi internal constructor(
     public suspend fun getWorkspaceFilePreview(
         conversationId: kotlin.String,
         path: kotlin.String,
+    ): PreSignedReadUrl = getWorkspaceFilePreview(conversationId, path, RequestOptions())
+    public suspend fun getWorkspaceFilePreview(
+        conversationId: kotlin.String,
+        path: kotlin.String,
+        requestOptions: RequestOptions,
     ): PreSignedReadUrl =
-        delegate.getWorkspaceFilePreview(channelId, conversationId, path).bodyOrThrow()
+        userClient.execute(requestOptions) { api -> api.workspace.getWorkspaceFilePreview(channelId, conversationId, path).bodyOrThrow() }
 
 }

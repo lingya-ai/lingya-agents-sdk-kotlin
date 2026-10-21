@@ -8,8 +8,6 @@ import cloud.lingya.agents.sdk.generated.model.AiChatEndBriefEvent
 import cloud.lingya.agents.sdk.generated.model.AiChatErrorBriefEvent
 import cloud.lingya.agents.sdk.generated.model.AiChatManualInterruptBriefEvent
 import cloud.lingya.agents.sdk.generated.model.AiChatMessageBriefEvent
-import cloud.lingya.agents.sdk.generated.model.AiChatRequestBriefEvent
-import cloud.lingya.agents.sdk.generated.model.AiChatResponseBriefEvent
 import cloud.lingya.agents.sdk.generated.model.AiChatStartBriefEvent
 import cloud.lingya.agents.sdk.generated.model.AiChatSubAgentCallBriefEvent
 import cloud.lingya.agents.sdk.generated.model.AiChatThinkBriefEvent
@@ -34,8 +32,6 @@ public class AiChatEventDecoder(public val objectMapper: ObjectMapper) {
             "error" -> AiChatBriefEvent.Error(read(data))
             "start" -> AiChatBriefEvent.Start(read(data))
             "think" -> AiChatBriefEvent.Think(read(data))
-            "chat-client-request" -> AiChatBriefEvent.ChatClientRequest(read(data))
-            "chat-client-response" -> AiChatBriefEvent.ChatClientResponse(read(data))
             "message" -> AiChatBriefEvent.Message(read(data))
             "tool-execution" -> AiChatBriefEvent.ToolExecution(read(data))
             "tool-execution-sub-agent-call" -> AiChatBriefEvent.SubAgentCall(read(data))

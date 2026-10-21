@@ -4,6 +4,8 @@ import cloud.lingya.agents.sdk.generated.api.FilesApi as GeneratedFilesApi
 import cloud.lingya.agents.sdk.generated.model.*
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
+import cloud.lingya.agents.sdk.RequestOptions
+import cloud.lingya.agents.sdk.DownloadResponse
 
 /**
  * files 分组的 Java 友好阻塞接口。 / Java-friendly blocking files operations.
@@ -25,6 +27,10 @@ public class BlockingFilesApi internal constructor(
         delegate.createPreSignedUpload(input)
     }
 
+    public fun createPreSignedUpload(
+        input: GeneratePreSignedUrlInput,
+        requestOptions: RequestOptions,
+    ): GeneratePreSignedUrlOutput = runBlocking { delegate.createPreSignedUpload(input, requestOptions) }
     /**
      * 确认预签名上传 / Confirm a presigned upload
      *
@@ -37,6 +43,10 @@ public class BlockingFilesApi internal constructor(
         delegate.confirmPreSignedUpload(input)
     }
 
+    public fun confirmPreSignedUpload(
+        input: ConfirmUploadInput,
+        requestOptions: RequestOptions,
+    ): AgentFile = runBlocking { delegate.confirmPreSignedUpload(input, requestOptions) }
     /**
      * 按 MD5 复用文件 / Reuse a file by MD5
      *
@@ -49,6 +59,10 @@ public class BlockingFilesApi internal constructor(
         delegate.createFileByContentMd5(input)
     }
 
+    public fun createFileByContentMd5(
+        input: CreateFileInput,
+        requestOptions: RequestOptions,
+    ): AgentFile = runBlocking { delegate.createFileByContentMd5(input, requestOptions) }
     /**
      * 检查 MD5 文件是否存在 / Check file existence by MD5
      *
@@ -61,6 +75,10 @@ public class BlockingFilesApi internal constructor(
         delegate.fileExistsByContentMd5(contentMd5)
     }
 
+    public fun fileExistsByContentMd5(
+        contentMd5: kotlin.String,
+        requestOptions: RequestOptions,
+    ): FileExists = runBlocking { delegate.fileExistsByContentMd5(contentMd5, requestOptions) }
     /**
      * 创建会话文件预览地址 / Create a conversation file preview URL
      *
@@ -75,6 +93,11 @@ public class BlockingFilesApi internal constructor(
         delegate.getConversationFilePreview(conversationId, fileId)
     }
 
+    public fun getConversationFilePreview(
+        conversationId: kotlin.String,
+        fileId: kotlin.Long,
+        requestOptions: RequestOptions,
+    ): PreSignedReadUrl = runBlocking { delegate.getConversationFilePreview(conversationId, fileId, requestOptions) }
     /**
      * 创建计划快照预览地址 / Create a plan snapshot preview URL
      *
@@ -91,4 +114,10 @@ public class BlockingFilesApi internal constructor(
         delegate.getPlanIntermediateFilePreview(conversationId, messageId, fileId)
     }
 
+    public fun getPlanIntermediateFilePreview(
+        conversationId: kotlin.String,
+        messageId: kotlin.String,
+        fileId: kotlin.Long,
+        requestOptions: RequestOptions,
+    ): PreSignedReadUrl = runBlocking { delegate.getPlanIntermediateFilePreview(conversationId, messageId, fileId, requestOptions) }
 }

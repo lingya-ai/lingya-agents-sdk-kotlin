@@ -2,6 +2,9 @@ package cloud.lingya.agents.sdk.api
 
 import cloud.lingya.agents.sdk.AgentsUserClient
 import cloud.lingya.agents.sdk.bodyOrThrow
+import cloud.lingya.agents.sdk.RequestOptions
+import cloud.lingya.agents.sdk.DownloadResponse
+import cloud.lingya.agents.sdk.filename
 import cloud.lingya.agents.sdk.generated.api.FilesApi as GeneratedFilesApi
 import cloud.lingya.agents.sdk.generated.model.*
 import kotlinx.coroutines.flow.Flow
@@ -27,8 +30,12 @@ public class FilesApi internal constructor(
      */
     public suspend fun createPreSignedUpload(
         input: GeneratePreSignedUrlInput,
+    ): GeneratePreSignedUrlOutput = createPreSignedUpload(input, RequestOptions())
+    public suspend fun createPreSignedUpload(
+        input: GeneratePreSignedUrlInput,
+        requestOptions: RequestOptions,
     ): GeneratePreSignedUrlOutput =
-        delegate.createPreSignedUpload(channelId, input).bodyOrThrow()
+        userClient.execute(requestOptions) { api -> api.files.createPreSignedUpload(channelId, input).bodyOrThrow() }
 
     /**
      * 确认预签名上传 / Confirm a presigned upload
@@ -38,8 +45,12 @@ public class FilesApi internal constructor(
      */
     public suspend fun confirmPreSignedUpload(
         input: ConfirmUploadInput,
+    ): AgentFile = confirmPreSignedUpload(input, RequestOptions())
+    public suspend fun confirmPreSignedUpload(
+        input: ConfirmUploadInput,
+        requestOptions: RequestOptions,
     ): AgentFile =
-        delegate.confirmPreSignedUpload(channelId, input).bodyOrThrow()
+        userClient.execute(requestOptions) { api -> api.files.confirmPreSignedUpload(channelId, input).bodyOrThrow() }
 
     /**
      * 按 MD5 复用文件 / Reuse a file by MD5
@@ -49,8 +60,12 @@ public class FilesApi internal constructor(
      */
     public suspend fun createFileByContentMd5(
         input: CreateFileInput,
+    ): AgentFile = createFileByContentMd5(input, RequestOptions())
+    public suspend fun createFileByContentMd5(
+        input: CreateFileInput,
+        requestOptions: RequestOptions,
     ): AgentFile =
-        delegate.createFileByContentMd5(channelId, input).bodyOrThrow()
+        userClient.execute(requestOptions) { api -> api.files.createFileByContentMd5(channelId, input).bodyOrThrow() }
 
     /**
      * 检查 MD5 文件是否存在 / Check file existence by MD5
@@ -60,8 +75,12 @@ public class FilesApi internal constructor(
      */
     public suspend fun fileExistsByContentMd5(
         contentMd5: kotlin.String,
+    ): FileExists = fileExistsByContentMd5(contentMd5, RequestOptions())
+    public suspend fun fileExistsByContentMd5(
+        contentMd5: kotlin.String,
+        requestOptions: RequestOptions,
     ): FileExists =
-        delegate.fileExistsByContentMd5(channelId, contentMd5).bodyOrThrow()
+        userClient.execute(requestOptions) { api -> api.files.fileExistsByContentMd5(channelId, contentMd5).bodyOrThrow() }
 
     /**
      * 创建会话文件预览地址 / Create a conversation file preview URL
@@ -73,8 +92,13 @@ public class FilesApi internal constructor(
     public suspend fun getConversationFilePreview(
         conversationId: kotlin.String,
         fileId: kotlin.Long,
+    ): PreSignedReadUrl = getConversationFilePreview(conversationId, fileId, RequestOptions())
+    public suspend fun getConversationFilePreview(
+        conversationId: kotlin.String,
+        fileId: kotlin.Long,
+        requestOptions: RequestOptions,
     ): PreSignedReadUrl =
-        delegate.getConversationFilePreview(channelId, conversationId, fileId).bodyOrThrow()
+        userClient.execute(requestOptions) { api -> api.files.getConversationFilePreview(channelId, conversationId, fileId).bodyOrThrow() }
 
     /**
      * 创建计划快照预览地址 / Create a plan snapshot preview URL
@@ -88,7 +112,13 @@ public class FilesApi internal constructor(
         conversationId: kotlin.String,
         messageId: kotlin.String,
         fileId: kotlin.Long,
+    ): PreSignedReadUrl = getPlanIntermediateFilePreview(conversationId, messageId, fileId, RequestOptions())
+    public suspend fun getPlanIntermediateFilePreview(
+        conversationId: kotlin.String,
+        messageId: kotlin.String,
+        fileId: kotlin.Long,
+        requestOptions: RequestOptions,
     ): PreSignedReadUrl =
-        delegate.getPlanIntermediateFilePreview(channelId, conversationId, messageId, fileId).bodyOrThrow()
+        userClient.execute(requestOptions) { api -> api.files.getPlanIntermediateFilePreview(channelId, conversationId, messageId, fileId).bodyOrThrow() }
 
 }

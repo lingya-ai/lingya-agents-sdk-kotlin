@@ -58,6 +58,28 @@ interface InteractionsApi {
     suspend fun approvePlan(@Path("channelId") channelId: kotlin.String, @Body planApprovalInput: PlanApprovalInput): Response<OperationResult>
 
     /**
+     * GET api/agents/channel/openapi/v1/{channelId}/chat/conversations/{conversationId}/messages/{messageId}/plan/status
+     * 查询消息计划审批状态 / Get message plan status
+     * ### 使用场景 使用 conversationId 和 messageId 检查计划审批是否仍在等待。  ### Use case Check whether plan approval is pending using conversationId and messageId.  ### 前置条件 有效渠道身份；会话资源必须属于当前用户。  ### Prerequisites Valid channel identity; conversation resources must belong to the current user.  ### 行为与副作用 使用 conversationId 和 messageId 检查计划审批是否仍在等待。  ### Behavior and side effects Check whether plan approval is pending using conversationId and messageId.  ### 后续调用 根据返回的权威状态更新客户端。  ### Next step Update the client using the returned authoritative state.  ### 接口摘要 查询消息计划审批状态 / Get message plan status  ### Operation summary 查询消息计划审批状态 / Get message plan status
+     * Responses:
+     *  - 200: 查询消息计划审批状态 / Get message plan status 的成功响应。 / Successful response for getMessagePlanStatus.
+     *  - 401: 接口错误。 / API error.
+     *  - 403: 接口错误。 / API error.
+     *  - 413: 接口错误。 / API error.
+     *  - 422: 参数校验错误。 / Validation error.
+     *  - 429: 接口错误。 / API error.
+     *  - 500: 接口错误。 / API error.
+     *  - 503: 接口错误。 / API error.
+     *
+     * @param channelId Agent OpenAPI 渠道 UUID。 / Agent OpenAPI channel UUID.
+     * @param conversationId 会话 ID；必须属于当前外部用户。 / Conversation ID owned by the current external user.
+     * @param messageId 用户消息 ID；必须属于指定会话。 / User-message ID owned by the specified conversation.
+     * @return [PlanStatus]
+     */
+    @GET("api/agents/channel/openapi/v1/{channelId}/chat/conversations/{conversationId}/messages/{messageId}/plan/status")
+    suspend fun getMessagePlanStatus(@Path("channelId") channelId: kotlin.String, @Path("conversationId") conversationId: kotlin.String, @Path("messageId") messageId: kotlin.String): Response<PlanStatus>
+
+    /**
      * GET api/agents/channel/openapi/v1/{channelId}/chat/plan/{planId}/status
      * 查询计划审批状态 / Get plan approval status
      * ### 使用场景 确认计划是否仍在等待或已经处理。  ### Use case Check whether a plan is still pending or has been handled.  ### 前置条件 持有事件返回的 planId。  ### Prerequisites A planId returned by an event is available.  ### 行为与副作用 只读。  ### Behavior and side effects Read-only.  ### 后续调用 pending 时等待用户操作，否则刷新执行状态。  ### Next step Wait for user action while pending; otherwise refresh execution state.  ### 接口摘要 查询计划审批状态 / Get plan approval status  ### Operation summary 查询计划审批状态 / Get plan approval status

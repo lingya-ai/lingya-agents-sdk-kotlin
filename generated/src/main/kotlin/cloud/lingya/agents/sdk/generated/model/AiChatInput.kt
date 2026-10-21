@@ -36,6 +36,8 @@ import com.fasterxml.jackson.annotation.JsonProperty
  * @param conversationId 会话 ID / conversation ID。
  * @param chatModelSpec 字段 chatModelSpec / chat model spec field。
  * @param files 字段 files / files field。
+ * @param planMode 计划模式；省略时沿用会话设置。 / Plan mode; omitted values preserve the conversation setting.
+ * @param goalMode 创建新目标；不能与计划模式同时开启，目标正文最多 4000 字符。 / Create a goal; cannot be enabled together with plan mode, and the objective is limited to 4000 characters.
  */
 
 
@@ -59,7 +61,17 @@ data class AiChatInput (
     /* 字段 files / files field。 */
     @param:JsonProperty("files")
     @get:JsonProperty("files")
-    val files: kotlin.collections.List<AiChatFileRef>? = null
+    val files: kotlin.collections.List<AiChatFileRef>? = null,
+
+    /* 计划模式；省略时沿用会话设置。 / Plan mode; omitted values preserve the conversation setting. */
+    @param:JsonProperty("planMode")
+    @get:JsonProperty("planMode")
+    val planMode: kotlin.Boolean? = null,
+
+    /* 创建新目标；不能与计划模式同时开启，目标正文最多 4000 字符。 / Create a goal; cannot be enabled together with plan mode, and the objective is limited to 4000 characters. */
+    @param:JsonProperty("goalMode")
+    @get:JsonProperty("goalMode")
+    val goalMode: kotlin.Boolean? = null
 
 ) {
 

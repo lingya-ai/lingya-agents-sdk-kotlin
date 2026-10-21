@@ -4,6 +4,8 @@ import cloud.lingya.agents.sdk.generated.api.KnowledgeApi as GeneratedKnowledgeA
 import cloud.lingya.agents.sdk.generated.model.*
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
+import cloud.lingya.agents.sdk.RequestOptions
+import cloud.lingya.agents.sdk.DownloadResponse
 
 /**
  * knowledge 分组的 Java 友好阻塞接口。 / Java-friendly blocking knowledge operations.
@@ -25,6 +27,10 @@ public class BlockingKnowledgeApi internal constructor(
         delegate.getCitationMetadataBatch(input)
     }
 
+    public fun getCitationMetadataBatch(
+        input: kotlin.collections.List<ReturnedReference>,
+        requestOptions: RequestOptions,
+    ): CitationMetadataList = runBlocking { delegate.getCitationMetadataBatch(input, requestOptions) }
     /**
      * 读取引用元数据 / Get citation metadata
      *
@@ -39,4 +45,9 @@ public class BlockingKnowledgeApi internal constructor(
         delegate.getCitationMetadata(citationType, referenceId)
     }
 
+    public fun getCitationMetadata(
+        citationType: kotlin.String,
+        referenceId: kotlin.Long,
+        requestOptions: RequestOptions,
+    ): CitationMetadata = runBlocking { delegate.getCitationMetadata(citationType, referenceId, requestOptions) }
 }

@@ -6,15 +6,44 @@ import retrofit2.Response
 import okhttp3.RequestBody
 import com.fasterxml.jackson.annotation.JsonProperty
 
+import cloud.lingya.agents.sdk.generated.model.AgentGoal
+import cloud.lingya.agents.sdk.generated.model.AgentGoalHistory
+import cloud.lingya.agents.sdk.generated.model.AgentGoalRefInput
+import cloud.lingya.agents.sdk.generated.model.AgentGoalView
 import cloud.lingya.agents.sdk.generated.model.AiChatInput
 import cloud.lingya.agents.sdk.generated.model.AiChatStreamInput
 import cloud.lingya.agents.sdk.generated.model.AiChatSubmission
 import cloud.lingya.agents.sdk.generated.model.ChatStreamProbeEvent
 import cloud.lingya.agents.sdk.generated.model.ChatStreamProbeInput
 import cloud.lingya.agents.sdk.generated.model.CodeMessage
+import cloud.lingya.agents.sdk.generated.model.EditAgentGoalInput
 import cloud.lingya.agents.sdk.generated.model.ValidationError
 
 interface ChatApi {
+    /**
+     * POST api/agents/channel/openapi/v1/{channelId}/chat/conversations/{conversationId}/goal/clear
+     * 清除目标 / Clear goal
+     * ### 使用场景 携带目标标识与版本，清除目标并保留墓碑。  ### Use case Clear the identified goal at the expected revision and preserve its tombstone.  ### 前置条件 有效渠道身份；会话资源必须属于当前用户。  ### Prerequisites Valid channel identity; conversation resources must belong to the current user.  ### 行为与副作用 携带目标标识与版本，清除目标并保留墓碑。  ### Behavior and side effects Clear the identified goal at the expected revision and preserve its tombstone.  ### 后续调用 根据返回的权威状态更新客户端。  ### Next step Update the client using the returned authoritative state.  ### 接口摘要 清除目标 / Clear goal  ### Operation summary 清除目标 / Clear goal
+     * Responses:
+     *  - 201: 清除目标 / Clear goal 的成功响应。 / Successful response for clearGoal.
+     *  - 401: 接口错误。 / API error.
+     *  - 403: 接口错误。 / API error.
+     *  - 409: 接口错误。 / API error.
+     *  - 410: 接口错误。 / API error.
+     *  - 413: 接口错误。 / API error.
+     *  - 422: 参数校验错误。 / Validation error.
+     *  - 429: 接口错误。 / API error.
+     *  - 500: 接口错误。 / API error.
+     *  - 503: 接口错误。 / API error.
+     *
+     * @param channelId Agent OpenAPI 渠道 UUID。 / Agent OpenAPI channel UUID.
+     * @param conversationId 会话 ID；必须属于当前外部用户。 / Conversation ID owned by the current external user.
+     * @param agentGoalRefInput 清除目标 / Clear goal 的 JSON 请求参数。 / JSON request parameters for clearGoal.
+     * @return [AgentGoal]
+     */
+    @POST("api/agents/channel/openapi/v1/{channelId}/chat/conversations/{conversationId}/goal/clear")
+    suspend fun clearGoal(@Path("channelId") channelId: kotlin.String, @Path("conversationId") conversationId: kotlin.String, @Body agentGoalRefInput: AgentGoalRefInput): Response<AgentGoal>
+
     /**
      * POST api/agents/channel/openapi/v1/{channelId}/chat/conversations/{conversationId}/compact
      * 压缩会话上下文 / Compact conversation context
@@ -81,6 +110,74 @@ interface ChatApi {
     suspend fun createChat(@Path("channelId") channelId: kotlin.String, @Body aiChatInput: AiChatInput): Response<AiChatSubmission>
 
     /**
+     * PATCH api/agents/channel/openapi/v1/{channelId}/chat/conversations/{conversationId}/goal
+     * 编辑目标 / Edit goal
+     * ### 使用场景 携带 goalId 和 goalRevision 更新目标正文，不改变激活状态；陈旧版本返回 409，失效目标返回 410。  ### Use case Update the objective with goalId and goalRevision without changing activation; stale revisions return 409 and invalidated goals return 410.  ### 前置条件 有效渠道身份；会话资源必须属于当前用户。  ### Prerequisites Valid channel identity; conversation resources must belong to the current user.  ### 行为与副作用 携带 goalId 和 goalRevision 更新目标正文，不改变激活状态；陈旧版本返回 409，失效目标返回 410。  ### Behavior and side effects Update the objective with goalId and goalRevision without changing activation; stale revisions return 409 and invalidated goals return 410.  ### 后续调用 根据返回的权威状态更新客户端。  ### Next step Update the client using the returned authoritative state.  ### 接口摘要 编辑目标 / Edit goal  ### Operation summary 编辑目标 / Edit goal
+     * Responses:
+     *  - 200: 编辑目标 / Edit goal 的成功响应。 / Successful response for editGoal.
+     *  - 401: 接口错误。 / API error.
+     *  - 403: 接口错误。 / API error.
+     *  - 409: 接口错误。 / API error.
+     *  - 410: 接口错误。 / API error.
+     *  - 413: 接口错误。 / API error.
+     *  - 422: 参数校验错误。 / Validation error.
+     *  - 429: 接口错误。 / API error.
+     *  - 500: 接口错误。 / API error.
+     *  - 503: 接口错误。 / API error.
+     *
+     * @param channelId Agent OpenAPI 渠道 UUID。 / Agent OpenAPI channel UUID.
+     * @param conversationId 会话 ID；必须属于当前外部用户。 / Conversation ID owned by the current external user.
+     * @param editAgentGoalInput 编辑目标 / Edit goal 的 JSON 请求参数。 / JSON request parameters for editGoal.
+     * @return [AgentGoal]
+     */
+    @PATCH("api/agents/channel/openapi/v1/{channelId}/chat/conversations/{conversationId}/goal")
+    suspend fun editGoal(@Path("channelId") channelId: kotlin.String, @Path("conversationId") conversationId: kotlin.String, @Body editAgentGoalInput: EditAgentGoalInput): Response<AgentGoal>
+
+    /**
+     * GET api/agents/channel/openapi/v1/{channelId}/chat/conversations/{conversationId}/goal
+     * 读取当前目标 / Get current goal
+     * ### 使用场景 无当前目标时返回 goal&#x3D;null。  ### Use case Return goal&#x3D;null when no current goal exists.  ### 前置条件 有效渠道身份；会话资源必须属于当前用户。  ### Prerequisites Valid channel identity; conversation resources must belong to the current user.  ### 行为与副作用 无当前目标时返回 goal&#x3D;null。  ### Behavior and side effects Return goal&#x3D;null when no current goal exists.  ### 后续调用 根据返回的权威状态更新客户端。  ### Next step Update the client using the returned authoritative state.  ### 接口摘要 读取当前目标 / Get current goal  ### Operation summary 读取当前目标 / Get current goal
+     * Responses:
+     *  - 200: 读取当前目标 / Get current goal 的成功响应。 / Successful response for getGoal.
+     *  - 401: 接口错误。 / API error.
+     *  - 403: 接口错误。 / API error.
+     *  - 413: 接口错误。 / API error.
+     *  - 422: 参数校验错误。 / Validation error.
+     *  - 429: 接口错误。 / API error.
+     *  - 500: 接口错误。 / API error.
+     *  - 503: 接口错误。 / API error.
+     *
+     * @param channelId Agent OpenAPI 渠道 UUID。 / Agent OpenAPI channel UUID.
+     * @param conversationId 会话 ID；必须属于当前外部用户。 / Conversation ID owned by the current external user.
+     * @return [AgentGoalView]
+     */
+    @GET("api/agents/channel/openapi/v1/{channelId}/chat/conversations/{conversationId}/goal")
+    suspend fun getGoal(@Path("channelId") channelId: kotlin.String, @Path("conversationId") conversationId: kotlin.String): Response<AgentGoalView>
+
+    /**
+     * GET api/agents/channel/openapi/v1/{channelId}/chat/conversations/{conversationId}/goal/history
+     * 查询目标历史 / Get goal history
+     * ### 使用场景 分页读取当前会话的目标历史。  ### Use case Read paged goal history for the conversation.  ### 前置条件 有效渠道身份；会话资源必须属于当前用户。  ### Prerequisites Valid channel identity; conversation resources must belong to the current user.  ### 行为与副作用 分页读取当前会话的目标历史。  ### Behavior and side effects Read paged goal history for the conversation.  ### 后续调用 根据返回的权威状态更新客户端。  ### Next step Update the client using the returned authoritative state.  ### 接口摘要 查询目标历史 / Get goal history  ### Operation summary 查询目标历史 / Get goal history
+     * Responses:
+     *  - 200: 查询目标历史 / Get goal history 的成功响应。 / Successful response for getGoalHistory.
+     *  - 401: 接口错误。 / API error.
+     *  - 403: 接口错误。 / API error.
+     *  - 413: 接口错误。 / API error.
+     *  - 422: 参数校验错误。 / Validation error.
+     *  - 429: 接口错误。 / API error.
+     *  - 500: 接口错误。 / API error.
+     *  - 503: 接口错误。 / API error.
+     *
+     * @param channelId Agent OpenAPI 渠道 UUID。 / Agent OpenAPI channel UUID.
+     * @param conversationId 会话 ID；必须属于当前外部用户。 / Conversation ID owned by the current external user.
+     * @param page 分页信息 / page metadata。 (optional, default to 0)
+     * @param size 单页记录数。 / Number of records per page. (optional, default to 20)
+     * @return [AgentGoalHistory]
+     */
+    @GET("api/agents/channel/openapi/v1/{channelId}/chat/conversations/{conversationId}/goal/history")
+    suspend fun getGoalHistory(@Path("channelId") channelId: kotlin.String, @Path("conversationId") conversationId: kotlin.String, @Query("page") page: kotlin.Int? = 0, @Query("size") size: kotlin.Int? = 20): Response<AgentGoalHistory>
+
+    /**
      * DELETE api/agents/channel/openapi/v1/{channelId}/chat/conversations/{conversationId}/interrupt
      * 中断会话执行 / Interrupt conversation execution
      * ### 使用场景 用户主动停止正在执行的会话。  ### Use case Stop an actively executing conversation at the user&#39;s request.  ### 前置条件 渠道凭证和外部用户已配置，目标资源属于当前用户。  ### Prerequisites Channel credentials and the external user are configured, and the target resource belongs to that user.  ### 行为与副作用 请求终止当前执行；已完成输出不会回滚。  ### Behavior and side effects Requests termination of active execution; completed output is not rolled back.  ### 后续调用 查询活动状态或消息详情确认终态。  ### Next step Query activity or message detail to confirm the terminal state.  ### 接口摘要 中断会话执行 / Interrupt conversation execution  ### Operation summary 中断会话执行 / Interrupt conversation execution
@@ -100,5 +197,53 @@ interface ChatApi {
      */
     @DELETE("api/agents/channel/openapi/v1/{channelId}/chat/conversations/{conversationId}/interrupt")
     suspend fun interruptConversation(@Path("channelId") channelId: kotlin.String, @Path("conversationId") conversationId: kotlin.String): Response<Unit>
+
+    /**
+     * POST api/agents/channel/openapi/v1/{channelId}/chat/conversations/{conversationId}/goal/pause
+     * 暂停目标 / Pause goal
+     * ### 使用场景 携带目标标识与版本，暂停并撤销自动续跑授权。  ### Use case Pause the identified goal at the expected revision and revoke automatic continuation.  ### 前置条件 有效渠道身份；会话资源必须属于当前用户。  ### Prerequisites Valid channel identity; conversation resources must belong to the current user.  ### 行为与副作用 携带目标标识与版本，暂停并撤销自动续跑授权。  ### Behavior and side effects Pause the identified goal at the expected revision and revoke automatic continuation.  ### 后续调用 根据返回的权威状态更新客户端。  ### Next step Update the client using the returned authoritative state.  ### 接口摘要 暂停目标 / Pause goal  ### Operation summary 暂停目标 / Pause goal
+     * Responses:
+     *  - 201: 暂停目标 / Pause goal 的成功响应。 / Successful response for pauseGoal.
+     *  - 401: 接口错误。 / API error.
+     *  - 403: 接口错误。 / API error.
+     *  - 409: 接口错误。 / API error.
+     *  - 410: 接口错误。 / API error.
+     *  - 413: 接口错误。 / API error.
+     *  - 422: 参数校验错误。 / Validation error.
+     *  - 429: 接口错误。 / API error.
+     *  - 500: 接口错误。 / API error.
+     *  - 503: 接口错误。 / API error.
+     *
+     * @param channelId Agent OpenAPI 渠道 UUID。 / Agent OpenAPI channel UUID.
+     * @param conversationId 会话 ID；必须属于当前外部用户。 / Conversation ID owned by the current external user.
+     * @param agentGoalRefInput 暂停目标 / Pause goal 的 JSON 请求参数。 / JSON request parameters for pauseGoal.
+     * @return [AgentGoal]
+     */
+    @POST("api/agents/channel/openapi/v1/{channelId}/chat/conversations/{conversationId}/goal/pause")
+    suspend fun pauseGoal(@Path("channelId") channelId: kotlin.String, @Path("conversationId") conversationId: kotlin.String, @Body agentGoalRefInput: AgentGoalRefInput): Response<AgentGoal>
+
+    /**
+     * POST api/agents/channel/openapi/v1/{channelId}/chat/conversations/{conversationId}/goal/resume
+     * 恢复目标 / Resume goal
+     * ### 使用场景 携带目标标识与版本，恢复目标并重新授予自动续跑授权。  ### Use case Resume the identified goal at the expected revision and authorize automatic continuation.  ### 前置条件 有效渠道身份；会话资源必须属于当前用户。  ### Prerequisites Valid channel identity; conversation resources must belong to the current user.  ### 行为与副作用 携带目标标识与版本，恢复目标并重新授予自动续跑授权。  ### Behavior and side effects Resume the identified goal at the expected revision and authorize automatic continuation.  ### 后续调用 根据返回的权威状态更新客户端。  ### Next step Update the client using the returned authoritative state.  ### 接口摘要 恢复目标 / Resume goal  ### Operation summary 恢复目标 / Resume goal
+     * Responses:
+     *  - 201: 恢复目标 / Resume goal 的成功响应。 / Successful response for resumeGoal.
+     *  - 401: 接口错误。 / API error.
+     *  - 403: 接口错误。 / API error.
+     *  - 409: 接口错误。 / API error.
+     *  - 410: 接口错误。 / API error.
+     *  - 413: 接口错误。 / API error.
+     *  - 422: 参数校验错误。 / Validation error.
+     *  - 429: 接口错误。 / API error.
+     *  - 500: 接口错误。 / API error.
+     *  - 503: 接口错误。 / API error.
+     *
+     * @param channelId Agent OpenAPI 渠道 UUID。 / Agent OpenAPI channel UUID.
+     * @param conversationId 会话 ID；必须属于当前外部用户。 / Conversation ID owned by the current external user.
+     * @param agentGoalRefInput 恢复目标 / Resume goal 的 JSON 请求参数。 / JSON request parameters for resumeGoal.
+     * @return [AgentGoal]
+     */
+    @POST("api/agents/channel/openapi/v1/{channelId}/chat/conversations/{conversationId}/goal/resume")
+    suspend fun resumeGoal(@Path("channelId") channelId: kotlin.String, @Path("conversationId") conversationId: kotlin.String, @Body agentGoalRefInput: AgentGoalRefInput): Response<AgentGoal>
 
 }

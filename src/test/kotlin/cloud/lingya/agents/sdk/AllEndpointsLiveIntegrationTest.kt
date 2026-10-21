@@ -3,13 +3,16 @@ package cloud.lingya.agents.sdk
 import cloud.lingya.agents.sdk.event.AiChatBriefEvent
 import cloud.lingya.agents.sdk.generated.api.SQLApi
 import cloud.lingya.agents.sdk.generated.model.AiChatEventsBatchInput
+import cloud.lingya.agents.sdk.generated.model.AgentGoalRefInput
+import cloud.lingya.agents.sdk.generated.model.EditAgentGoalInput
+import cloud.lingya.agents.sdk.generated.model.ConversationGroupNameInput
+import cloud.lingya.agents.sdk.generated.model.UpdateConversationGroupInput
 import cloud.lingya.agents.sdk.generated.model.AiChatInput
 import cloud.lingya.agents.sdk.generated.model.AiChatStreamInput
 import cloud.lingya.agents.sdk.generated.model.ChatStreamProbeInput
 import cloud.lingya.agents.sdk.generated.model.ConfirmUploadInput
 import cloud.lingya.agents.sdk.generated.model.ConversationActivityBatchInput
 import cloud.lingya.agents.sdk.generated.model.ConversationReadReceiptInput
-import cloud.lingya.agents.sdk.generated.model.ConversationShareInput
 import cloud.lingya.agents.sdk.generated.model.ConversationStatusInput
 import cloud.lingya.agents.sdk.generated.model.ConversationTitleInput
 import cloud.lingya.agents.sdk.generated.model.CreateFileInput
@@ -43,6 +46,25 @@ class AllEndpointsLiveIntegrationTest {
         }
 
         try {
+            coverage.successful("POST", "/presign") { fixture.user.configuration.createOpenApiToken() }
+            coverage.successful("GET", "/conversations/{conversationId}") { fixture.user.conversations.getConversationSummary(first.conversationId) }
+            val group = coverage.successful("POST", "/conversation-groups") { fixture.user.conversations.createConversationGroup(ConversationGroupNameInput("SDK contract group")) }
+            try {
+                coverage.successful("GET", "/conversation-groups") { fixture.user.conversations.listConversationGroups() }
+                coverage.successful("PATCH", "/conversation-groups/{groupId}") { fixture.user.conversations.renameConversationGroup(group.id, ConversationGroupNameInput("SDK renamed group")) }
+                coverage.successful("PATCH", "/conversations/{conversationId}/group") { fixture.user.conversations.moveConversationToGroup(first.conversationId, UpdateConversationGroupInput(group.id)) }
+            } finally {
+                coverage.successful("DELETE", "/conversation-groups/{groupId}") { fixture.user.conversations.deleteConversationGroup(group.id) }
+            }
+            coverage.successful("GET", "/conversations/{conversationId}/messages/sync") { fixture.user.messages.syncConversationMessages(first.conversationId) }
+            coverage.successful("GET", "/conversations/{conversationId}/messages/{messageId}/plan/status") { fixture.user.interactions.getMessagePlanStatus(first.conversationId, first.messageId) }
+            coverage.successful("GET", "/conversations/{conversationId}/goal") { fixture.user.chat.getGoal(first.conversationId) }
+            coverage.successful("GET", "/conversations/{conversationId}/goal/history") { fixture.user.chat.getGoalHistory(first.conversationId) }
+            val missingGoal = AgentGoalRefInput("missing-goal", 1)
+            coverage.expectedDomainResult("PATCH", "/conversations/{conversationId}/goal") { fixture.user.chat.editGoal(first.conversationId, EditAgentGoalInput("missing-goal", 1, "Missing goal")) }
+            coverage.expectedDomainResult("POST", "/conversations/{conversationId}/goal/pause") { fixture.user.chat.pauseGoal(first.conversationId, missingGoal) }
+            coverage.expectedDomainResult("POST", "/conversations/{conversationId}/goal/resume") { fixture.user.chat.resumeGoal(first.conversationId, missingGoal) }
+            coverage.expectedDomainResult("POST", "/conversations/{conversationId}/goal/clear") { fixture.user.chat.clearGoal(first.conversationId, missingGoal) }
             coverage.successful("GET", "/config") {
                 fixture.user.configuration.getAgentsConfig()
             }
@@ -164,22 +186,6 @@ class AllEndpointsLiveIntegrationTest {
                 fixture.user.messages.cancelQueuedMessage(
                     first.conversationId,
                     first.messageId,
-                )
-            }
-
-            val share = coverage.successful("POST", "/conversations/{conversationId}/shares") {
-                fixture.user.conversations.createConversationShare(
-                    first.conversationId,
-                    ConversationShareInput(),
-                )
-            }
-            coverage.successful("GET", "/conversations/{conversationId}/shares") {
-                fixture.user.conversations.listConversationShares(first.conversationId)
-            }
-            coverage.successful("DELETE", "/conversations/{conversationId}/shares/{shareId}") {
-                fixture.user.conversations.revokeConversationShare(
-                    first.conversationId,
-                    share.shareId,
                 )
             }
 
@@ -473,7 +479,7 @@ class AllEndpointsLiveIntegrationTest {
 
     private companion object {
         const val BASE_PATH = "/api/agents/channel/openapi/v1/{channelId}/chat"
-        val EXPECTED_DOMAIN_ERROR_CODES = setOf(400, 403, 404, 409, 422)
+        val EXPECTED_DOMAIN_ERROR_CODES = setOf(400, 403, 404, 409, 410, 422)
         val PATH_PATTERN = Regex("^  (/api/agents/channel/openapi/[^:]+):$")
         val METHOD_PATTERN = Regex("^    (get|post|put|patch|delete):$")
     }

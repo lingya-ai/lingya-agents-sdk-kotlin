@@ -100,7 +100,7 @@ class AgentsClientTest {
     fun `decodes list and page response wrappers`() = runTest {
         server.enqueue(
             MockResponse().setResponseCode(200).addHeader("Content-Type", "application/json")
-                .setBody("""{"records":[]}"""),
+                .setBody("""{"records":[],"page":{"current":0,"size":30,"total":0}}"""),
         )
         server.enqueue(
             MockResponse().setResponseCode(200).addHeader("Content-Type", "application/json")
@@ -159,7 +159,7 @@ class AgentsClientTest {
             transport = transport,
         )
 
-        assertThrows(SocketTimeoutException::class.java) {
+        assertThrows(ApiException::class.java) {
             client.blockingForUser("user-1").chat.createChat(AiChatInput("hello"))
         }
     }

@@ -85,11 +85,9 @@ val generateBoundApi = tasks.register<Exec>("generateBoundApi") {
 }
 
 tasks.named("compileKotlin") {
-    dependsOn(generateBoundApi)
 }
 
 tasks.matching { it.name == "sourcesJar" || it.name.startsWith("dokkaGenerate") }.configureEach {
-    dependsOn(generateBoundApi)
 }
 
 tasks.withType<Test>().configureEach {

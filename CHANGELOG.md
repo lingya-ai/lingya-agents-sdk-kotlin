@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.7.0 - 2026-10-20
+
+- Add coroutine/blocking request-option overloads, cancellable authentication, owned SSE/WebSocket subscriptions, unified errors, diagnostics and download metadata.
+- Add identity-bound HMAC/token construction, suspending fresh-token callbacks, cancellation and blocking facade support; disable token retries and redirects.
+- Align with contract v0.1.7: add token issuance, goals, groups, conversation summary, message sync and message plan status.
+- Correct chat modes, pagination, title metadata responses and dynamic message metadata; remove unavailable sharing and internal model events.
+
 ## 0.5.0 - 2026-09-27
 
 - Sync contract v0.1.5 and expose async task sync plus subagent list, sync, detail, result, and cancellation APIs.

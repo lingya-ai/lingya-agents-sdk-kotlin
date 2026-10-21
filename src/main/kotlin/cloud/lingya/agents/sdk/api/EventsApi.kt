@@ -2,6 +2,9 @@ package cloud.lingya.agents.sdk.api
 
 import cloud.lingya.agents.sdk.AgentsUserClient
 import cloud.lingya.agents.sdk.bodyOrThrow
+import cloud.lingya.agents.sdk.RequestOptions
+import cloud.lingya.agents.sdk.DownloadResponse
+import cloud.lingya.agents.sdk.filename
 import cloud.lingya.agents.sdk.generated.api.EventsApi as GeneratedEventsApi
 import cloud.lingya.agents.sdk.generated.model.*
 import kotlinx.coroutines.flow.Flow
@@ -29,8 +32,13 @@ public class EventsApi internal constructor(
     public suspend fun getChatEvents(
         conversationId: kotlin.String,
         messageId: kotlin.String,
+    ): AiChatBriefEventList = getChatEvents(conversationId, messageId, RequestOptions())
+    public suspend fun getChatEvents(
+        conversationId: kotlin.String,
+        messageId: kotlin.String,
+        requestOptions: RequestOptions,
     ): AiChatBriefEventList =
-        delegate.getChatEvents(channelId, conversationId, messageId).bodyOrThrow()
+        userClient.execute(requestOptions) { api -> api.events.getChatEvents(channelId, conversationId, messageId).bodyOrThrow() }
 
     /**
      * 批量读取消息事件 / Get message events in batch
@@ -40,7 +48,11 @@ public class EventsApi internal constructor(
      */
     public suspend fun getChatEventsBatch(
         input: AiChatEventsBatchInput,
+    ): AiChatEventsBatch = getChatEventsBatch(input, RequestOptions())
+    public suspend fun getChatEventsBatch(
+        input: AiChatEventsBatchInput,
+        requestOptions: RequestOptions,
     ): AiChatEventsBatch =
-        delegate.getChatEventsBatch(channelId, input).bodyOrThrow()
+        userClient.execute(requestOptions) { api -> api.events.getChatEventsBatch(channelId, input).bodyOrThrow() }
 
 }

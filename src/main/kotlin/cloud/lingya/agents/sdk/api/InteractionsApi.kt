@@ -2,6 +2,9 @@ package cloud.lingya.agents.sdk.api
 
 import cloud.lingya.agents.sdk.AgentsUserClient
 import cloud.lingya.agents.sdk.bodyOrThrow
+import cloud.lingya.agents.sdk.RequestOptions
+import cloud.lingya.agents.sdk.DownloadResponse
+import cloud.lingya.agents.sdk.filename
 import cloud.lingya.agents.sdk.generated.api.InteractionsApi as GeneratedInteractionsApi
 import cloud.lingya.agents.sdk.generated.model.*
 import kotlinx.coroutines.flow.Flow
@@ -27,8 +30,12 @@ public class InteractionsApi internal constructor(
      */
     public suspend fun approvePlan(
         input: PlanApprovalInput,
+    ): OperationResult = approvePlan(input, RequestOptions())
+    public suspend fun approvePlan(
+        input: PlanApprovalInput,
+        requestOptions: RequestOptions,
     ): OperationResult =
-        delegate.approvePlan(channelId, input).bodyOrThrow()
+        userClient.execute(requestOptions) { api -> api.interactions.approvePlan(channelId, input).bodyOrThrow() }
 
     /**
      * 查询计划审批状态 / Get plan approval status
@@ -38,8 +45,12 @@ public class InteractionsApi internal constructor(
      */
     public suspend fun getPlanStatus(
         planId: kotlin.String,
+    ): PlanStatus = getPlanStatus(planId, RequestOptions())
+    public suspend fun getPlanStatus(
+        planId: kotlin.String,
+        requestOptions: RequestOptions,
     ): PlanStatus =
-        delegate.getPlanStatus(channelId, planId).bodyOrThrow()
+        userClient.execute(requestOptions) { api -> api.interactions.getPlanStatus(channelId, planId).bodyOrThrow() }
 
     /**
      * 查询用户问答状态 / Get user-input status
@@ -53,8 +64,14 @@ public class InteractionsApi internal constructor(
         questionId: kotlin.String,
         conversationId: kotlin.String,
         messageId: kotlin.String,
+    ): UserInputStatus = getUserInputStatus(questionId, conversationId, messageId, RequestOptions())
+    public suspend fun getUserInputStatus(
+        questionId: kotlin.String,
+        conversationId: kotlin.String,
+        messageId: kotlin.String,
+        requestOptions: RequestOptions,
     ): UserInputStatus =
-        delegate.getUserInputStatus(channelId, questionId, conversationId, messageId).bodyOrThrow()
+        userClient.execute(requestOptions) { api -> api.interactions.getUserInputStatus(channelId, questionId, conversationId, messageId).bodyOrThrow() }
 
     /**
      * 提交用户回答 / Submit a user answer
@@ -64,7 +81,29 @@ public class InteractionsApi internal constructor(
      */
     public suspend fun answerUserInput(
         input: UserInputAnswerInput,
+    ): OperationResult = answerUserInput(input, RequestOptions())
+    public suspend fun answerUserInput(
+        input: UserInputAnswerInput,
+        requestOptions: RequestOptions,
     ): OperationResult =
-        delegate.answerUserInput(channelId, input).bodyOrThrow()
+        userClient.execute(requestOptions) { api -> api.interactions.answerUserInput(channelId, input).bodyOrThrow() }
+
+    /**
+     * 查询消息计划审批状态 / Get message plan status
+     *
+     * @param conversationId 会话 ID；必须属于当前外部用户。 / Conversation ID owned by the current external user.
+     * @param messageId 用户消息 ID；必须属于指定会话。 / User-message ID owned by the specified conversation.
+     * @return 契约定义的强类型响应。 / The typed response defined by the contract.
+     */
+    public suspend fun getMessagePlanStatus(
+        conversationId: kotlin.String,
+        messageId: kotlin.String,
+    ): PlanStatus = getMessagePlanStatus(conversationId, messageId, RequestOptions())
+    public suspend fun getMessagePlanStatus(
+        conversationId: kotlin.String,
+        messageId: kotlin.String,
+        requestOptions: RequestOptions,
+    ): PlanStatus =
+        userClient.execute(requestOptions) { api -> api.interactions.getMessagePlanStatus(channelId, conversationId, messageId).bodyOrThrow() }
 
 }

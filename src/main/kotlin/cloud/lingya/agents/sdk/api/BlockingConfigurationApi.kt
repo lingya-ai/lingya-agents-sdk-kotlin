@@ -4,6 +4,8 @@ import cloud.lingya.agents.sdk.generated.api.ConfigurationApi as GeneratedConfig
 import cloud.lingya.agents.sdk.generated.model.*
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
+import cloud.lingya.agents.sdk.RequestOptions
+import cloud.lingya.agents.sdk.DownloadResponse
 
 /**
  * configuration 分组的 Java 友好阻塞接口。 / Java-friendly blocking configuration operations.
@@ -23,6 +25,9 @@ public class BlockingConfigurationApi internal constructor(
         delegate.getAgentsConfig()
     }
 
+    public fun getAgentsConfig(
+        requestOptions: RequestOptions,
+    ): AgentsConfig = runBlocking { delegate.getAgentsConfig(requestOptions) }
     /**
      * 读取会话配置 / Get conversation configuration
      *
@@ -35,4 +40,21 @@ public class BlockingConfigurationApi internal constructor(
         delegate.getConversationConfig(conversationId)
     }
 
+    public fun getConversationConfig(
+        conversationId: kotlin.String,
+        requestOptions: RequestOptions,
+    ): ConversationConfig = runBlocking { delegate.getConversationConfig(conversationId, requestOptions) }
+    /**
+     * 签发一次性短期渠道令牌 / Create a single-use short-lived channel token
+     *
+     * @return 契约定义的强类型响应。 / The typed response defined by the contract.
+     */
+    public fun createOpenApiToken(
+    ): OpenApiToken = runBlocking {
+        delegate.createOpenApiToken()
+    }
+
+    public fun createOpenApiToken(
+        requestOptions: RequestOptions,
+    ): OpenApiToken = runBlocking { delegate.createOpenApiToken(requestOptions) }
 }

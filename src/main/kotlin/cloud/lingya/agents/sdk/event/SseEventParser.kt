@@ -14,7 +14,7 @@ internal class SseEventParser {
         return null
     }
 
-    fun finish(): String? = dispatch()
+    fun finish(): String? = null
 
     private fun dispatch(): String? {
         if (dataLines.isEmpty()) return null

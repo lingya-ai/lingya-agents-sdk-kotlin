@@ -4,6 +4,8 @@ import cloud.lingya.agents.sdk.generated.api.InteractionsApi as GeneratedInterac
 import cloud.lingya.agents.sdk.generated.model.*
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
+import cloud.lingya.agents.sdk.RequestOptions
+import cloud.lingya.agents.sdk.DownloadResponse
 
 /**
  * interactions 分组的 Java 友好阻塞接口。 / Java-friendly blocking interactions operations.
@@ -25,6 +27,10 @@ public class BlockingInteractionsApi internal constructor(
         delegate.approvePlan(input)
     }
 
+    public fun approvePlan(
+        input: PlanApprovalInput,
+        requestOptions: RequestOptions,
+    ): OperationResult = runBlocking { delegate.approvePlan(input, requestOptions) }
     /**
      * 查询计划审批状态 / Get plan approval status
      *
@@ -37,6 +43,10 @@ public class BlockingInteractionsApi internal constructor(
         delegate.getPlanStatus(planId)
     }
 
+    public fun getPlanStatus(
+        planId: kotlin.String,
+        requestOptions: RequestOptions,
+    ): PlanStatus = runBlocking { delegate.getPlanStatus(planId, requestOptions) }
     /**
      * 查询用户问答状态 / Get user-input status
      *
@@ -53,6 +63,12 @@ public class BlockingInteractionsApi internal constructor(
         delegate.getUserInputStatus(questionId, conversationId, messageId)
     }
 
+    public fun getUserInputStatus(
+        questionId: kotlin.String,
+        conversationId: kotlin.String,
+        messageId: kotlin.String,
+        requestOptions: RequestOptions,
+    ): UserInputStatus = runBlocking { delegate.getUserInputStatus(questionId, conversationId, messageId, requestOptions) }
     /**
      * 提交用户回答 / Submit a user answer
      *
@@ -65,4 +81,27 @@ public class BlockingInteractionsApi internal constructor(
         delegate.answerUserInput(input)
     }
 
+    public fun answerUserInput(
+        input: UserInputAnswerInput,
+        requestOptions: RequestOptions,
+    ): OperationResult = runBlocking { delegate.answerUserInput(input, requestOptions) }
+    /**
+     * 查询消息计划审批状态 / Get message plan status
+     *
+     * @param conversationId 会话 ID；必须属于当前外部用户。 / Conversation ID owned by the current external user.
+     * @param messageId 用户消息 ID；必须属于指定会话。 / User-message ID owned by the specified conversation.
+     * @return 契约定义的强类型响应。 / The typed response defined by the contract.
+     */
+    public fun getMessagePlanStatus(
+        conversationId: kotlin.String,
+        messageId: kotlin.String,
+    ): PlanStatus = runBlocking {
+        delegate.getMessagePlanStatus(conversationId, messageId)
+    }
+
+    public fun getMessagePlanStatus(
+        conversationId: kotlin.String,
+        messageId: kotlin.String,
+        requestOptions: RequestOptions,
+    ): PlanStatus = runBlocking { delegate.getMessagePlanStatus(conversationId, messageId, requestOptions) }
 }

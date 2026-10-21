@@ -2,6 +2,9 @@ package cloud.lingya.agents.sdk.api
 
 import cloud.lingya.agents.sdk.AgentsUserClient
 import cloud.lingya.agents.sdk.bodyOrThrow
+import cloud.lingya.agents.sdk.RequestOptions
+import cloud.lingya.agents.sdk.DownloadResponse
+import cloud.lingya.agents.sdk.filename
 import cloud.lingya.agents.sdk.generated.api.MessagesApi as GeneratedMessagesApi
 import cloud.lingya.agents.sdk.generated.model.*
 import kotlinx.coroutines.flow.Flow
@@ -39,8 +42,18 @@ public class MessagesApi internal constructor(
         orderDirection: GeneratedMessagesApi.OrderDirectionListConversationMessages? = GeneratedMessagesApi.OrderDirectionListConversationMessages.ASC,
         orderNullHandling: GeneratedMessagesApi.OrderNullHandlingListConversationMessages? = GeneratedMessagesApi.OrderNullHandlingListConversationMessages.NATIVE,
         keyword: kotlin.String? = null,
+    ): ConversationMessagePage = listConversationMessages(conversationId, current, size, orderBy, orderDirection, orderNullHandling, keyword, RequestOptions())
+    public suspend fun listConversationMessages(
+        conversationId: kotlin.String,
+        current: kotlin.Int? = null,
+        size: kotlin.Int? = 30,
+        orderBy: kotlin.collections.List<kotlin.String>? = null,
+        orderDirection: GeneratedMessagesApi.OrderDirectionListConversationMessages? = GeneratedMessagesApi.OrderDirectionListConversationMessages.ASC,
+        orderNullHandling: GeneratedMessagesApi.OrderNullHandlingListConversationMessages? = GeneratedMessagesApi.OrderNullHandlingListConversationMessages.NATIVE,
+        keyword: kotlin.String? = null,
+        requestOptions: RequestOptions,
     ): ConversationMessagePage =
-        delegate.listConversationMessages(channelId, conversationId, current, size, orderBy, orderDirection, orderNullHandling, keyword).bodyOrThrow()
+        userClient.execute(requestOptions) { api -> api.messages.listConversationMessages(channelId, conversationId, current, size, orderBy, orderDirection, orderNullHandling, keyword).bodyOrThrow() }
 
     /**
      * 读取单条会话消息 / Get a conversation message
@@ -52,8 +65,13 @@ public class MessagesApi internal constructor(
     public suspend fun getConversationMessage(
         conversationId: kotlin.String,
         messageId: kotlin.String,
+    ): ConversationMessage = getConversationMessage(conversationId, messageId, RequestOptions())
+    public suspend fun getConversationMessage(
+        conversationId: kotlin.String,
+        messageId: kotlin.String,
+        requestOptions: RequestOptions,
     ): ConversationMessage =
-        delegate.getConversationMessage(channelId, conversationId, messageId).bodyOrThrow()
+        userClient.execute(requestOptions) { api -> api.messages.getConversationMessage(channelId, conversationId, messageId).bodyOrThrow() }
 
     /**
      * 分页查询异步任务 / List asynchronous tasks
@@ -77,8 +95,19 @@ public class MessagesApi internal constructor(
         orderNullHandling: GeneratedMessagesApi.OrderNullHandlingListConversationAsyncTasks? = GeneratedMessagesApi.OrderNullHandlingListConversationAsyncTasks.NATIVE,
         keyword: kotlin.String? = null,
         status: kotlin.collections.List<kotlin.String>? = null,
+    ): AsyncTaskPage = listConversationAsyncTasks(conversationId, current, size, orderBy, orderDirection, orderNullHandling, keyword, status, RequestOptions())
+    public suspend fun listConversationAsyncTasks(
+        conversationId: kotlin.String,
+        current: kotlin.Int? = null,
+        size: kotlin.Int? = 30,
+        orderBy: kotlin.collections.List<kotlin.String>? = null,
+        orderDirection: GeneratedMessagesApi.OrderDirectionListConversationAsyncTasks? = GeneratedMessagesApi.OrderDirectionListConversationAsyncTasks.ASC,
+        orderNullHandling: GeneratedMessagesApi.OrderNullHandlingListConversationAsyncTasks? = GeneratedMessagesApi.OrderNullHandlingListConversationAsyncTasks.NATIVE,
+        keyword: kotlin.String? = null,
+        status: kotlin.collections.List<kotlin.String>? = null,
+        requestOptions: RequestOptions,
     ): AsyncTaskPage =
-        delegate.listConversationAsyncTasks(channelId, conversationId, current, size, orderBy, orderDirection, orderNullHandling, keyword, status).bodyOrThrow()
+        userClient.execute(requestOptions) { api -> api.messages.listConversationAsyncTasks(channelId, conversationId, current, size, orderBy, orderDirection, orderNullHandling, keyword, status).bodyOrThrow() }
 
     /**
      * 增量同步异步任务 / Sync asynchronous task updates
@@ -92,8 +121,14 @@ public class MessagesApi internal constructor(
         conversationId: kotlin.String,
         afterMessageId: kotlin.String? = null,
         size: kotlin.Int? = 50,
+    ): AgentAsyncTaskSync = syncConversationAsyncTasks(conversationId, afterMessageId, size, RequestOptions())
+    public suspend fun syncConversationAsyncTasks(
+        conversationId: kotlin.String,
+        afterMessageId: kotlin.String? = null,
+        size: kotlin.Int? = 50,
+        requestOptions: RequestOptions,
     ): AgentAsyncTaskSync =
-        delegate.syncConversationAsyncTasks(channelId, conversationId, afterMessageId, size).bodyOrThrow()
+        userClient.execute(requestOptions) { api -> api.messages.syncConversationAsyncTasks(channelId, conversationId, afterMessageId, size).bodyOrThrow() }
 
     /**
      * 读取异步任务 / Get an asynchronous task
@@ -105,8 +140,13 @@ public class MessagesApi internal constructor(
     public suspend fun getConversationAsyncTask(
         conversationId: kotlin.String,
         asyncTaskId: kotlin.String,
+    ): AsyncTask = getConversationAsyncTask(conversationId, asyncTaskId, RequestOptions())
+    public suspend fun getConversationAsyncTask(
+        conversationId: kotlin.String,
+        asyncTaskId: kotlin.String,
+        requestOptions: RequestOptions,
     ): AsyncTask =
-        delegate.getConversationAsyncTask(channelId, conversationId, asyncTaskId).bodyOrThrow()
+        userClient.execute(requestOptions) { api -> api.messages.getConversationAsyncTask(channelId, conversationId, asyncTaskId).bodyOrThrow() }
 
     /**
      * 分页查询子 Agent 任务 / List subagent tasks
@@ -130,8 +170,19 @@ public class MessagesApi internal constructor(
         orderNullHandling: GeneratedMessagesApi.OrderNullHandlingListConversationSubagents? = GeneratedMessagesApi.OrderNullHandlingListConversationSubagents.NATIVE,
         keyword: kotlin.String? = null,
         status: kotlin.collections.List<kotlin.String>? = null,
+    ): SubagentTaskPage = listConversationSubagents(conversationId, current, size, orderBy, orderDirection, orderNullHandling, keyword, status, RequestOptions())
+    public suspend fun listConversationSubagents(
+        conversationId: kotlin.String,
+        current: kotlin.Int? = null,
+        size: kotlin.Int? = 30,
+        orderBy: kotlin.collections.List<kotlin.String>? = null,
+        orderDirection: GeneratedMessagesApi.OrderDirectionListConversationSubagents? = GeneratedMessagesApi.OrderDirectionListConversationSubagents.ASC,
+        orderNullHandling: GeneratedMessagesApi.OrderNullHandlingListConversationSubagents? = GeneratedMessagesApi.OrderNullHandlingListConversationSubagents.NATIVE,
+        keyword: kotlin.String? = null,
+        status: kotlin.collections.List<kotlin.String>? = null,
+        requestOptions: RequestOptions,
     ): SubagentTaskPage =
-        delegate.listConversationSubagents(channelId, conversationId, current, size, orderBy, orderDirection, orderNullHandling, keyword, status).bodyOrThrow()
+        userClient.execute(requestOptions) { api -> api.messages.listConversationSubagents(channelId, conversationId, current, size, orderBy, orderDirection, orderNullHandling, keyword, status).bodyOrThrow() }
 
     /**
      * 增量同步子 Agent 状态 / Sync subagent task updates
@@ -145,8 +196,14 @@ public class MessagesApi internal constructor(
         conversationId: kotlin.String,
         cursor: kotlin.String? = null,
         size: kotlin.Int? = 50,
+    ): SubagentTaskSync = syncConversationSubagents(conversationId, cursor, size, RequestOptions())
+    public suspend fun syncConversationSubagents(
+        conversationId: kotlin.String,
+        cursor: kotlin.String? = null,
+        size: kotlin.Int? = 50,
+        requestOptions: RequestOptions,
     ): SubagentTaskSync =
-        delegate.syncConversationSubagents(channelId, conversationId, cursor, size).bodyOrThrow()
+        userClient.execute(requestOptions) { api -> api.messages.syncConversationSubagents(channelId, conversationId, cursor, size).bodyOrThrow() }
 
     /**
      * 读取子 Agent 状态 / Get a subagent task
@@ -158,8 +215,13 @@ public class MessagesApi internal constructor(
     public suspend fun getConversationSubagent(
         conversationId: kotlin.String,
         subagentTaskId: kotlin.String,
+    ): SubagentTask = getConversationSubagent(conversationId, subagentTaskId, RequestOptions())
+    public suspend fun getConversationSubagent(
+        conversationId: kotlin.String,
+        subagentTaskId: kotlin.String,
+        requestOptions: RequestOptions,
     ): SubagentTask =
-        delegate.getConversationSubagent(channelId, conversationId, subagentTaskId).bodyOrThrow()
+        userClient.execute(requestOptions) { api -> api.messages.getConversationSubagent(channelId, conversationId, subagentTaskId).bodyOrThrow() }
 
     /**
      * 取消子 Agent 任务 / Cancel a subagent task
@@ -171,8 +233,13 @@ public class MessagesApi internal constructor(
     public suspend fun cancelConversationSubagent(
         conversationId: kotlin.String,
         subagentTaskId: kotlin.String,
+    ): SubagentTask = cancelConversationSubagent(conversationId, subagentTaskId, RequestOptions())
+    public suspend fun cancelConversationSubagent(
+        conversationId: kotlin.String,
+        subagentTaskId: kotlin.String,
+        requestOptions: RequestOptions,
     ): SubagentTask =
-        delegate.cancelConversationSubagent(channelId, conversationId, subagentTaskId).bodyOrThrow()
+        userClient.execute(requestOptions) { api -> api.messages.cancelConversationSubagent(channelId, conversationId, subagentTaskId).bodyOrThrow() }
 
     /**
      * 读取子 Agent 结果 / Get a subagent result
@@ -184,8 +251,13 @@ public class MessagesApi internal constructor(
     public suspend fun getConversationSubagentResult(
         conversationId: kotlin.String,
         subagentTaskId: kotlin.String,
+    ): SubagentTaskResult = getConversationSubagentResult(conversationId, subagentTaskId, RequestOptions())
+    public suspend fun getConversationSubagentResult(
+        conversationId: kotlin.String,
+        subagentTaskId: kotlin.String,
+        requestOptions: RequestOptions,
     ): SubagentTaskResult =
-        delegate.getConversationSubagentResult(channelId, conversationId, subagentTaskId).bodyOrThrow()
+        userClient.execute(requestOptions) { api -> api.messages.getConversationSubagentResult(channelId, conversationId, subagentTaskId).bodyOrThrow() }
 
     /**
      * 取消排队消息 / Cancel a queued message
@@ -197,7 +269,33 @@ public class MessagesApi internal constructor(
     public suspend fun cancelQueuedMessage(
         conversationId: kotlin.String,
         messageId: kotlin.String,
+    ): ConversationMessage = cancelQueuedMessage(conversationId, messageId, RequestOptions())
+    public suspend fun cancelQueuedMessage(
+        conversationId: kotlin.String,
+        messageId: kotlin.String,
+        requestOptions: RequestOptions,
     ): ConversationMessage =
-        delegate.cancelQueuedMessage(channelId, conversationId, messageId).bodyOrThrow()
+        userClient.execute(requestOptions) { api -> api.messages.cancelQueuedMessage(channelId, conversationId, messageId).bodyOrThrow() }
+
+    /**
+     * 增量同步消息 / Sync conversation messages
+     *
+     * @param conversationId 会话 ID；必须属于当前外部用户。 / Conversation ID owned by the current external user.
+     * @param afterMessageId 通知消息同步游标。 / Notification-message sync cursor.
+     * @param size 单页记录数。 / Number of records per page.
+     * @return 契约定义的强类型响应。 / The typed response defined by the contract.
+     */
+    public suspend fun syncConversationMessages(
+        conversationId: kotlin.String,
+        afterMessageId: kotlin.String? = null,
+        size: kotlin.Int? = 50,
+    ): ConversationMessageSync = syncConversationMessages(conversationId, afterMessageId, size, RequestOptions())
+    public suspend fun syncConversationMessages(
+        conversationId: kotlin.String,
+        afterMessageId: kotlin.String? = null,
+        size: kotlin.Int? = 50,
+        requestOptions: RequestOptions,
+    ): ConversationMessageSync =
+        userClient.execute(requestOptions) { api -> api.messages.syncConversationMessages(channelId, conversationId, afterMessageId, size).bodyOrThrow() }
 
 }

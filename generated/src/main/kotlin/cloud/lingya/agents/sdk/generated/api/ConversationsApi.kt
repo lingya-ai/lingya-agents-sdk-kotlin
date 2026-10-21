@@ -10,27 +10,30 @@ import cloud.lingya.agents.sdk.generated.model.CodeMessage
 import cloud.lingya.agents.sdk.generated.model.ConversationActivityBatchInput
 import cloud.lingya.agents.sdk.generated.model.ConversationActivityList
 import cloud.lingya.agents.sdk.generated.model.ConversationContextUsage
+import cloud.lingya.agents.sdk.generated.model.ConversationGroup
+import cloud.lingya.agents.sdk.generated.model.ConversationGroupDeleted
+import cloud.lingya.agents.sdk.generated.model.ConversationGroupList
+import cloud.lingya.agents.sdk.generated.model.ConversationGroupNameInput
 import cloud.lingya.agents.sdk.generated.model.ConversationIds
+import cloud.lingya.agents.sdk.generated.model.ConversationMetadata
 import cloud.lingya.agents.sdk.generated.model.ConversationReadReceipt
 import cloud.lingya.agents.sdk.generated.model.ConversationReadReceiptInput
-import cloud.lingya.agents.sdk.generated.model.ConversationShareCreated
-import cloud.lingya.agents.sdk.generated.model.ConversationShareInput
-import cloud.lingya.agents.sdk.generated.model.ConversationShareList
-import cloud.lingya.agents.sdk.generated.model.ConversationShareRevoked
 import cloud.lingya.agents.sdk.generated.model.ConversationStats
 import cloud.lingya.agents.sdk.generated.model.ConversationStatusInput
+import cloud.lingya.agents.sdk.generated.model.ConversationSummary
 import cloud.lingya.agents.sdk.generated.model.ConversationSummaryList
 import cloud.lingya.agents.sdk.generated.model.ConversationTitle
 import cloud.lingya.agents.sdk.generated.model.ConversationTitleInput
+import cloud.lingya.agents.sdk.generated.model.UpdateConversationGroupInput
 import cloud.lingya.agents.sdk.generated.model.ValidationError
 
 interface ConversationsApi {
     /**
-     * POST api/agents/channel/openapi/v1/{channelId}/chat/conversations/{conversationId}/shares
-     * 创建会话分享 / Create a conversation share
-     * ### 使用场景 为会话创建受控的外部分享。  ### Use case Create controlled external sharing for a conversation.  ### 前置条件 渠道凭证和外部用户已配置，目标资源属于当前用户。  ### Prerequisites Channel credentials and the external user are configured, and the target resource belongs to that user.  ### 行为与副作用 创建新的分享记录和分享码。  ### Behavior and side effects Creates a share record and share code.  ### 后续调用 安全地交付分享信息，并定期检查有效期。  ### Next step Deliver share information securely and monitor its expiry.  ### 接口摘要 创建会话分享 / Create a conversation share  ### Operation summary 创建会话分享 / Create a conversation share
+     * POST api/agents/channel/openapi/v1/{channelId}/chat/conversation-groups
+     * 创建会话分组 / Create conversation group
+     * ### 使用场景 去除名称首尾空白后创建分组，名称最多 60 字符。  ### Use case Create a group after trimming the name; names are limited to 60 characters.  ### 前置条件 有效渠道身份；会话资源必须属于当前用户。  ### Prerequisites Valid channel identity; conversation resources must belong to the current user.  ### 行为与副作用 去除名称首尾空白后创建分组，名称最多 60 字符。  ### Behavior and side effects Create a group after trimming the name; names are limited to 60 characters.  ### 后续调用 根据返回的权威状态更新客户端。  ### Next step Update the client using the returned authoritative state.  ### 接口摘要 创建会话分组 / Create conversation group  ### Operation summary 创建会话分组 / Create conversation group
      * Responses:
-     *  - 201: 创建会话分享 / Create a conversation share 的成功响应。 / Successful response for createConversationShare.
+     *  - 201: 创建会话分组 / Create conversation group 的成功响应。 / Successful response for createConversationGroup.
      *  - 401: 接口错误。 / API error.
      *  - 403: 接口错误。 / API error.
      *  - 413: 接口错误。 / API error.
@@ -40,12 +43,11 @@ interface ConversationsApi {
      *  - 503: 接口错误。 / API error.
      *
      * @param channelId Agent OpenAPI 渠道 UUID。 / Agent OpenAPI channel UUID.
-     * @param conversationId 会话 ID；必须属于当前外部用户。 / Conversation ID owned by the current external user.
-     * @param conversationShareInput 创建会话分享 / Create a conversation share 的 JSON 请求参数。 / JSON request parameters for createConversationShare.
-     * @return [ConversationShareCreated]
+     * @param conversationGroupNameInput 创建会话分组 / Create conversation group 的 JSON 请求参数。 / JSON request parameters for createConversationGroup.
+     * @return [ConversationGroup]
      */
-    @POST("api/agents/channel/openapi/v1/{channelId}/chat/conversations/{conversationId}/shares")
-    suspend fun createConversationShare(@Path("channelId") channelId: kotlin.String, @Path("conversationId") conversationId: kotlin.String, @Body conversationShareInput: ConversationShareInput): Response<ConversationShareCreated>
+    @POST("api/agents/channel/openapi/v1/{channelId}/chat/conversation-groups")
+    suspend fun createConversationGroup(@Path("channelId") channelId: kotlin.String, @Body conversationGroupNameInput: ConversationGroupNameInput): Response<ConversationGroup>
 
     /**
      * DELETE api/agents/channel/openapi/v1/{channelId}/chat/conversations/{conversationId}
@@ -67,6 +69,27 @@ interface ConversationsApi {
      */
     @DELETE("api/agents/channel/openapi/v1/{channelId}/chat/conversations/{conversationId}")
     suspend fun deleteConversation(@Path("channelId") channelId: kotlin.String, @Path("conversationId") conversationId: kotlin.String): Response<Unit>
+
+    /**
+     * DELETE api/agents/channel/openapi/v1/{channelId}/chat/conversation-groups/{groupId}
+     * 删除会话分组 / Delete conversation group
+     * ### 使用场景 删除分组并将会话移回未分组，返回移动数量。  ### Use case Delete the group and move its conversations to ungrouped; return the moved count.  ### 前置条件 有效渠道身份；会话资源必须属于当前用户。  ### Prerequisites Valid channel identity; conversation resources must belong to the current user.  ### 行为与副作用 删除分组并将会话移回未分组，返回移动数量。  ### Behavior and side effects Delete the group and move its conversations to ungrouped; return the moved count.  ### 后续调用 根据返回的权威状态更新客户端。  ### Next step Update the client using the returned authoritative state.  ### 接口摘要 删除会话分组 / Delete conversation group  ### Operation summary 删除会话分组 / Delete conversation group
+     * Responses:
+     *  - 200: 删除会话分组 / Delete conversation group 的成功响应。 / Successful response for deleteConversationGroup.
+     *  - 401: 接口错误。 / API error.
+     *  - 403: 接口错误。 / API error.
+     *  - 413: 接口错误。 / API error.
+     *  - 422: 参数校验错误。 / Validation error.
+     *  - 429: 接口错误。 / API error.
+     *  - 500: 接口错误。 / API error.
+     *  - 503: 接口错误。 / API error.
+     *
+     * @param channelId Agent OpenAPI 渠道 UUID。 / Agent OpenAPI channel UUID.
+     * @param groupId 字段 groupId / group id field。
+     * @return [ConversationGroupDeleted]
+     */
+    @DELETE("api/agents/channel/openapi/v1/{channelId}/chat/conversation-groups/{groupId}")
+    suspend fun deleteConversationGroup(@Path("channelId") channelId: kotlin.String, @Path("groupId") groupId: kotlin.Long): Response<ConversationGroupDeleted>
 
     /**
      * GET api/agents/channel/openapi/v1/{channelId}/chat/conversations/{conversationId}/context-usage
@@ -110,6 +133,27 @@ interface ConversationsApi {
     suspend fun getConversationStats(@Path("channelId") channelId: kotlin.String): Response<ConversationStats>
 
     /**
+     * GET api/agents/channel/openapi/v1/{channelId}/chat/conversations/{conversationId}
+     * 读取会话摘要 / Get conversation summary
+     * ### 使用场景 按会话标识恢复当前用户的会话摘要。  ### Use case Restore the current user&#39;s conversation summary by ID.  ### 前置条件 有效渠道身份；会话资源必须属于当前用户。  ### Prerequisites Valid channel identity; conversation resources must belong to the current user.  ### 行为与副作用 按会话标识恢复当前用户的会话摘要。  ### Behavior and side effects Restore the current user&#39;s conversation summary by ID.  ### 后续调用 根据返回的权威状态更新客户端。  ### Next step Update the client using the returned authoritative state.  ### 接口摘要 读取会话摘要 / Get conversation summary  ### Operation summary 读取会话摘要 / Get conversation summary
+     * Responses:
+     *  - 200: 读取会话摘要 / Get conversation summary 的成功响应。 / Successful response for getConversationSummary.
+     *  - 401: 接口错误。 / API error.
+     *  - 403: 接口错误。 / API error.
+     *  - 413: 接口错误。 / API error.
+     *  - 422: 参数校验错误。 / Validation error.
+     *  - 429: 接口错误。 / API error.
+     *  - 500: 接口错误。 / API error.
+     *  - 503: 接口错误。 / API error.
+     *
+     * @param channelId Agent OpenAPI 渠道 UUID。 / Agent OpenAPI channel UUID.
+     * @param conversationId 会话 ID；必须属于当前外部用户。 / Conversation ID owned by the current external user.
+     * @return [ConversationSummary]
+     */
+    @GET("api/agents/channel/openapi/v1/{channelId}/chat/conversations/{conversationId}")
+    suspend fun getConversationSummary(@Path("channelId") channelId: kotlin.String, @Path("conversationId") conversationId: kotlin.String): Response<ConversationSummary>
+
+    /**
      * GET api/agents/channel/openapi/v1/{channelId}/chat/conversations/{conversationId}/title
      * 读取会话标题 / Get conversation title
      * ### 使用场景 读取自动生成或用户设置的会话标题。  ### Use case Read the generated or user-defined conversation title.  ### 前置条件 渠道凭证和外部用户已配置，目标资源属于当前用户。  ### Prerequisites Channel credentials and the external user are configured, and the target resource belongs to that user.  ### 行为与副作用 只读。  ### Behavior and side effects Read-only.  ### 后续调用 生成中时稍后重试，或允许用户更新标题。  ### Next step Retry while generation is pending or let the user update the title.  ### 接口摘要 读取会话标题 / Get conversation title  ### Operation summary 读取会话标题 / Get conversation title
@@ -151,11 +195,11 @@ interface ConversationsApi {
     suspend fun listActiveConversations(@Path("channelId") channelId: kotlin.String): Response<ConversationIds>
 
     /**
-     * GET api/agents/channel/openapi/v1/{channelId}/chat/conversations/{conversationId}/shares
-     * 查询会话分享 / List conversation shares
-     * ### 使用场景 查看会话当前创建的分享记录。  ### Use case Inspect the conversation&#39;s current share records.  ### 前置条件 渠道凭证和外部用户已配置，目标资源属于当前用户。  ### Prerequisites Channel credentials and the external user are configured, and the target resource belongs to that user.  ### 行为与副作用 只读。  ### Behavior and side effects Read-only.  ### 后续调用 按需创建新分享或撤销旧分享。  ### Next step Create a new share or revoke an existing one as needed.  ### 接口摘要 查询会话分享 / List conversation shares  ### Operation summary 查询会话分享 / List conversation shares
+     * GET api/agents/channel/openapi/v1/{channelId}/chat/conversation-groups
+     * 查询会话分组 / List conversation groups
+     * ### 使用场景 一次读取当前用户作用域下的完整分组目录。  ### Use case Read the complete group directory for the current user.  ### 前置条件 有效渠道身份；会话资源必须属于当前用户。  ### Prerequisites Valid channel identity; conversation resources must belong to the current user.  ### 行为与副作用 一次读取当前用户作用域下的完整分组目录。  ### Behavior and side effects Read the complete group directory for the current user.  ### 后续调用 根据返回的权威状态更新客户端。  ### Next step Update the client using the returned authoritative state.  ### 接口摘要 查询会话分组 / List conversation groups  ### Operation summary 查询会话分组 / List conversation groups
      * Responses:
-     *  - 200: 查询会话分享 / List conversation shares 的成功响应。 / Successful response for listConversationShares.
+     *  - 200: 查询会话分组 / List conversation groups 的成功响应。 / Successful response for listConversationGroups.
      *  - 401: 接口错误。 / API error.
      *  - 403: 接口错误。 / API error.
      *  - 413: 接口错误。 / API error.
@@ -165,29 +209,29 @@ interface ConversationsApi {
      *  - 503: 接口错误。 / API error.
      *
      * @param channelId Agent OpenAPI 渠道 UUID。 / Agent OpenAPI channel UUID.
-     * @param conversationId 会话 ID；必须属于当前外部用户。 / Conversation ID owned by the current external user.
-     * @return [ConversationShareList]
+     * @return [ConversationGroupList]
      */
-    @GET("api/agents/channel/openapi/v1/{channelId}/chat/conversations/{conversationId}/shares")
-    suspend fun listConversationShares(@Path("channelId") channelId: kotlin.String, @Path("conversationId") conversationId: kotlin.String): Response<ConversationShareList>
+    @GET("api/agents/channel/openapi/v1/{channelId}/chat/conversation-groups")
+    suspend fun listConversationGroups(@Path("channelId") channelId: kotlin.String): Response<ConversationGroupList>
 
 
     /**
-    * enum for parameter orderDirection
+    * enum for parameter status
     */
-    enum class OrderDirectionListConversations(val value: kotlin.String) {
-            @JsonProperty(value = "ASC") ASC("ASC"),
-            @JsonProperty(value = "DESC") DESC("DESC"),
+    enum class StatusListConversations(val value: kotlin.String) {
+            @JsonProperty(value = "ACTIVE") ACTIVE("ACTIVE"),
+            @JsonProperty(value = "ARCHIVED") ARCHIVED("ARCHIVED"),
+            @JsonProperty(value = "ALL") ALL("ALL"),
     }
 
 
     /**
-    * enum for parameter orderNullHandling
+    * enum for parameter groupFilter
     */
-    enum class OrderNullHandlingListConversations(val value: kotlin.String) {
-            @JsonProperty(value = "NATIVE") NATIVE("NATIVE"),
-            @JsonProperty(value = "NULLS_FIRST") NULLS_FIRST("NULLS_FIRST"),
-            @JsonProperty(value = "NULLS_LAST") NULLS_LAST("NULLS_LAST"),
+    enum class GroupFilterListConversations(val value: kotlin.String) {
+            @JsonProperty(value = "ALL") ALL("ALL"),
+            @JsonProperty(value = "UNGROUPED") UNGROUPED("UNGROUPED"),
+            @JsonProperty(value = "GROUP") GROUP("GROUP"),
     }
 
     /**
@@ -205,17 +249,16 @@ interface ConversationsApi {
      *  - 503: 接口错误。 / API error.
      *
      * @param channelId Agent OpenAPI 渠道 UUID。 / Agent OpenAPI channel UUID.
-     * @param current 从 0 开始的页码。 / Zero-based page index. (optional)
+     * @param current 从 0 开始的页码。 / Zero-based page index. (optional, default to 0)
      * @param size 单页记录数。 / Number of records per page. (optional, default to 30)
-     * @param orderBy 排序字段列表。 / Ordered list of sort fields. (optional)
-     * @param orderDirection 排序方向。 / Sort direction. (optional, default to OrderDirection.ASC)
-     * @param orderNullHandling 空值排序策略。 / Null ordering strategy. (optional, default to OrderNullHandling.NATIVE)
+     * @param status 状态过滤条件。 / Status filter. (optional, default to Status.ACTIVE)
      * @param keyword 标题或正文检索关键字。 / Title or content search keyword. (optional)
-     * @param status 状态过滤条件。 / Status filter. (optional)
+     * @param groupFilter 字段 groupFilter / group filter field。 (optional, default to GroupFilter.ALL)
+     * @param groupId groupFilter 为 GROUP 时必填。 / Required when groupFilter is GROUP. (optional)
      * @return [ConversationSummaryList]
      */
     @GET("api/agents/channel/openapi/v1/{channelId}/chat/conversations")
-    suspend fun listConversations(@Path("channelId") channelId: kotlin.String, @Query("current") current: kotlin.Int? = null, @Query("size") size: kotlin.Int? = 30, @Query("orderBy") orderBy: @JvmSuppressWildcards kotlin.collections.List<kotlin.String>? = null, @Query("orderDirection") orderDirection: OrderDirectionListConversations? = OrderDirectionListConversations.ASC, @Query("orderNullHandling") orderNullHandling: OrderNullHandlingListConversations? = OrderNullHandlingListConversations.NATIVE, @Query("keyword") keyword: kotlin.String? = null, @Query("status") status: kotlin.String? = null): Response<ConversationSummaryList>
+    suspend fun listConversations(@Path("channelId") channelId: kotlin.String, @Query("current") current: kotlin.Int? = 0, @Query("size") size: kotlin.Int? = 30, @Query("status") status: StatusListConversations? = StatusListConversations.ACTIVE, @Query("keyword") keyword: kotlin.String? = null, @Query("groupFilter") groupFilter: GroupFilterListConversations? = GroupFilterListConversations.ALL, @Query("groupId") groupId: kotlin.Long? = null): Response<ConversationSummaryList>
 
     /**
      * GET api/agents/channel/openapi/v1/{channelId}/chat/conversations/unread
@@ -260,6 +303,28 @@ interface ConversationsApi {
     suspend fun markConversationRead(@Path("channelId") channelId: kotlin.String, @Path("conversationId") conversationId: kotlin.String, @Body conversationReadReceiptInput: ConversationReadReceiptInput): Response<ConversationReadReceipt>
 
     /**
+     * PATCH api/agents/channel/openapi/v1/{channelId}/chat/conversations/{conversationId}/group
+     * 移动会话分组 / Move conversation to group
+     * ### 使用场景 必须显式提供 groupId；null 表示移回未分组。  ### Use case Supply groupId explicitly; null moves the conversation to ungrouped.  ### 前置条件 有效渠道身份；会话资源必须属于当前用户。  ### Prerequisites Valid channel identity; conversation resources must belong to the current user.  ### 行为与副作用 必须显式提供 groupId；null 表示移回未分组。  ### Behavior and side effects Supply groupId explicitly; null moves the conversation to ungrouped.  ### 后续调用 根据返回的权威状态更新客户端。  ### Next step Update the client using the returned authoritative state.  ### 接口摘要 移动会话分组 / Move conversation to group  ### Operation summary 移动会话分组 / Move conversation to group
+     * Responses:
+     *  - 200: 移动会话分组 / Move conversation to group 的成功响应。 / Successful response for moveConversationToGroup.
+     *  - 401: 接口错误。 / API error.
+     *  - 403: 接口错误。 / API error.
+     *  - 413: 接口错误。 / API error.
+     *  - 422: 参数校验错误。 / Validation error.
+     *  - 429: 接口错误。 / API error.
+     *  - 500: 接口错误。 / API error.
+     *  - 503: 接口错误。 / API error.
+     *
+     * @param channelId Agent OpenAPI 渠道 UUID。 / Agent OpenAPI channel UUID.
+     * @param conversationId 会话 ID；必须属于当前外部用户。 / Conversation ID owned by the current external user.
+     * @param updateConversationGroupInput 移动会话分组 / Move conversation to group 的 JSON 请求参数。 / JSON request parameters for moveConversationToGroup.
+     * @return [ConversationMetadata]
+     */
+    @PATCH("api/agents/channel/openapi/v1/{channelId}/chat/conversations/{conversationId}/group")
+    suspend fun moveConversationToGroup(@Path("channelId") channelId: kotlin.String, @Path("conversationId") conversationId: kotlin.String, @Body updateConversationGroupInput: UpdateConversationGroupInput): Response<ConversationMetadata>
+
+    /**
      * POST api/agents/channel/openapi/v1/{channelId}/chat/conversations/activity/query
      * 批量查询会话活动 / Query conversation activities
      * ### 使用场景 批量刷新多个会话的执行与未读状态。  ### Use case Refresh execution and unread state for multiple conversations in one request.  ### 前置条件 已持有最多 1000 个当前用户的会话 ID。  ### Prerequisites Up to 1000 conversation IDs for the current user are available.  ### 行为与副作用 只读，返回每个会话的活动投影。  ### Behavior and side effects Read-only and returns an activity projection per conversation.  ### 后续调用 更新列表状态并恢复必要的流。  ### Next step Update list state and recover any required streams.  ### 接口摘要 批量查询会话活动 / Query conversation activities  ### Operation summary 批量查询会话活动 / Query conversation activities
@@ -281,11 +346,11 @@ interface ConversationsApi {
     suspend fun queryConversationActivities(@Path("channelId") channelId: kotlin.String, @Body conversationActivityBatchInput: ConversationActivityBatchInput): Response<ConversationActivityList>
 
     /**
-     * DELETE api/agents/channel/openapi/v1/{channelId}/chat/conversations/{conversationId}/shares/{shareId}
-     * 撤销会话分享 / Revoke a conversation share
-     * ### 使用场景 使不再需要的分享立即失效。  ### Use case Invalidate a share that is no longer needed.  ### 前置条件 渠道凭证和外部用户已配置，目标资源属于当前用户。  ### Prerequisites Channel credentials and the external user are configured, and the target resource belongs to that user.  ### 行为与副作用 撤销指定分享，不删除原会话。  ### Behavior and side effects Revokes the selected share without deleting the conversation.  ### 后续调用 刷新分享列表并停止分发旧链接。  ### Next step Refresh the share list and stop distributing the old link.  ### 接口摘要 撤销会话分享 / Revoke a conversation share  ### Operation summary 撤销会话分享 / Revoke a conversation share
+     * PATCH api/agents/channel/openapi/v1/{channelId}/chat/conversation-groups/{groupId}
+     * 重命名会话分组 / Rename conversation group
+     * ### 使用场景 更新当前用户的分组名称。  ### Use case Update the name of a group owned by the current user.  ### 前置条件 有效渠道身份；会话资源必须属于当前用户。  ### Prerequisites Valid channel identity; conversation resources must belong to the current user.  ### 行为与副作用 更新当前用户的分组名称。  ### Behavior and side effects Update the name of a group owned by the current user.  ### 后续调用 根据返回的权威状态更新客户端。  ### Next step Update the client using the returned authoritative state.  ### 接口摘要 重命名会话分组 / Rename conversation group  ### Operation summary 重命名会话分组 / Rename conversation group
      * Responses:
-     *  - 200: 撤销会话分享 / Revoke a conversation share 的成功响应。 / Successful response for revokeConversationShare.
+     *  - 200: 重命名会话分组 / Rename conversation group 的成功响应。 / Successful response for renameConversationGroup.
      *  - 401: 接口错误。 / API error.
      *  - 403: 接口错误。 / API error.
      *  - 413: 接口错误。 / API error.
@@ -295,12 +360,12 @@ interface ConversationsApi {
      *  - 503: 接口错误。 / API error.
      *
      * @param channelId Agent OpenAPI 渠道 UUID。 / Agent OpenAPI channel UUID.
-     * @param conversationId 会话 ID；必须属于当前外部用户。 / Conversation ID owned by the current external user.
-     * @param shareId 会话分享记录 ID。 / Conversation-share record ID.
-     * @return [ConversationShareRevoked]
+     * @param groupId 字段 groupId / group id field。
+     * @param conversationGroupNameInput 重命名会话分组 / Rename conversation group 的 JSON 请求参数。 / JSON request parameters for renameConversationGroup.
+     * @return [ConversationGroup]
      */
-    @DELETE("api/agents/channel/openapi/v1/{channelId}/chat/conversations/{conversationId}/shares/{shareId}")
-    suspend fun revokeConversationShare(@Path("channelId") channelId: kotlin.String, @Path("conversationId") conversationId: kotlin.String, @Path("shareId") shareId: kotlin.Long): Response<ConversationShareRevoked>
+    @PATCH("api/agents/channel/openapi/v1/{channelId}/chat/conversation-groups/{groupId}")
+    suspend fun renameConversationGroup(@Path("channelId") channelId: kotlin.String, @Path("groupId") groupId: kotlin.Long, @Body conversationGroupNameInput: ConversationGroupNameInput): Response<ConversationGroup>
 
     /**
      * PATCH api/agents/channel/openapi/v1/{channelId}/chat/conversations/{conversationId}/status
@@ -327,9 +392,9 @@ interface ConversationsApi {
     /**
      * PATCH api/agents/channel/openapi/v1/{channelId}/chat/conversations/{conversationId}/title
      * 更新会话标题 / Update conversation title
-     * ### 使用场景 保存用户编辑的会话标题。  ### Use case Save a user-edited conversation title.  ### 前置条件 渠道凭证和外部用户已配置，目标资源属于当前用户。  ### Prerequisites Channel credentials and the external user are configured, and the target resource belongs to that user.  ### 行为与副作用 异步更新标题。  ### Behavior and side effects Updates the title asynchronously.  ### 后续调用 重新读取标题或刷新列表。  ### Next step Read the title again or refresh the list.  ### 接口摘要 更新会话标题 / Update conversation title  ### Operation summary 更新会话标题 / Update conversation title
+     * ### 使用场景 保存用户编辑的会话标题。  ### Use case Save a user-edited conversation title.  ### 前置条件 渠道凭证和外部用户已配置，目标资源属于当前用户。  ### Prerequisites Channel credentials and the external user are configured, and the target resource belongs to that user.  ### 行为与副作用 同步更新标题并返回权威会话元数据。  ### Behavior and side effects Update the title and return authoritative conversation metadata.  ### 后续调用 重新读取标题或刷新列表。  ### Next step Read the title again or refresh the list.  ### 接口摘要 更新会话标题 / Update conversation title  ### Operation summary 更新会话标题 / Update conversation title
      * Responses:
-     *  - 202: 更新会话标题 / Update conversation title 的成功响应。 / Successful response for updateConversationTitle.
+     *  - 200: 更新会话标题 / Update conversation title 的成功响应。 / Successful response for updateConversationTitle.
      *  - 401: 接口错误。 / API error.
      *  - 403: 接口错误。 / API error.
      *  - 413: 接口错误。 / API error.
@@ -341,9 +406,9 @@ interface ConversationsApi {
      * @param channelId Agent OpenAPI 渠道 UUID。 / Agent OpenAPI channel UUID.
      * @param conversationId 会话 ID；必须属于当前外部用户。 / Conversation ID owned by the current external user.
      * @param conversationTitleInput 更新会话标题 / Update conversation title 的 JSON 请求参数。 / JSON request parameters for updateConversationTitle.
-     * @return [Unit]
+     * @return [ConversationMetadata]
      */
     @PATCH("api/agents/channel/openapi/v1/{channelId}/chat/conversations/{conversationId}/title")
-    suspend fun updateConversationTitle(@Path("channelId") channelId: kotlin.String, @Path("conversationId") conversationId: kotlin.String, @Body conversationTitleInput: ConversationTitleInput): Response<Unit>
+    suspend fun updateConversationTitle(@Path("channelId") channelId: kotlin.String, @Path("conversationId") conversationId: kotlin.String, @Body conversationTitleInput: ConversationTitleInput): Response<ConversationMetadata>
 
 }

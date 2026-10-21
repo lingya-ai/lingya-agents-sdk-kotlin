@@ -12,6 +12,7 @@ import cloud.lingya.agents.sdk.generated.model.AsyncTaskPage
 import cloud.lingya.agents.sdk.generated.model.CodeMessage
 import cloud.lingya.agents.sdk.generated.model.ConversationMessage
 import cloud.lingya.agents.sdk.generated.model.ConversationMessagePage
+import cloud.lingya.agents.sdk.generated.model.ConversationMessageSync
 import cloud.lingya.agents.sdk.generated.model.SubagentTask
 import cloud.lingya.agents.sdk.generated.model.SubagentTaskPage
 import cloud.lingya.agents.sdk.generated.model.SubagentTaskResult
@@ -313,6 +314,29 @@ interface MessagesApi {
      */
     @GET("api/agents/channel/openapi/v1/{channelId}/chat/conversations/{conversationId}/async-tasks/sync")
     suspend fun syncConversationAsyncTasks(@Path("channelId") channelId: kotlin.String, @Path("conversationId") conversationId: kotlin.String, @Query("afterMessageId") afterMessageId: kotlin.String? = null, @Query("size") size: kotlin.Int? = 50): Response<AgentAsyncTaskSync>
+
+    /**
+     * GET api/agents/channel/openapi/v1/{channelId}/chat/conversations/{conversationId}/messages/sync
+     * 增量同步消息 / Sync conversation messages
+     * ### 使用场景 按公开消息游标读取新增消息；无新增时保留原游标。  ### Use case Read new public messages after a cursor; retain the cursor if no new messages exist.  ### 前置条件 有效渠道身份；会话资源必须属于当前用户。  ### Prerequisites Valid channel identity; conversation resources must belong to the current user.  ### 行为与副作用 按公开消息游标读取新增消息；无新增时保留原游标。  ### Behavior and side effects Read new public messages after a cursor; retain the cursor if no new messages exist.  ### 后续调用 根据返回的权威状态更新客户端。  ### Next step Update the client using the returned authoritative state.  ### 接口摘要 增量同步消息 / Sync conversation messages  ### Operation summary 增量同步消息 / Sync conversation messages
+     * Responses:
+     *  - 200: 增量同步消息 / Sync conversation messages 的成功响应。 / Successful response for syncConversationMessages.
+     *  - 401: 接口错误。 / API error.
+     *  - 403: 接口错误。 / API error.
+     *  - 413: 接口错误。 / API error.
+     *  - 422: 参数校验错误。 / Validation error.
+     *  - 429: 接口错误。 / API error.
+     *  - 500: 接口错误。 / API error.
+     *  - 503: 接口错误。 / API error.
+     *
+     * @param channelId Agent OpenAPI 渠道 UUID。 / Agent OpenAPI channel UUID.
+     * @param conversationId 会话 ID；必须属于当前外部用户。 / Conversation ID owned by the current external user.
+     * @param afterMessageId 通知消息同步游标。 / Notification-message sync cursor. (optional)
+     * @param size 单页记录数。 / Number of records per page. (optional, default to 50)
+     * @return [ConversationMessageSync]
+     */
+    @GET("api/agents/channel/openapi/v1/{channelId}/chat/conversations/{conversationId}/messages/sync")
+    suspend fun syncConversationMessages(@Path("channelId") channelId: kotlin.String, @Path("conversationId") conversationId: kotlin.String, @Query("afterMessageId") afterMessageId: kotlin.String? = null, @Query("size") size: kotlin.Int? = 50): Response<ConversationMessageSync>
 
     /**
      * GET api/agents/channel/openapi/v1/{channelId}/chat/conversations/{conversationId}/subagents/sync

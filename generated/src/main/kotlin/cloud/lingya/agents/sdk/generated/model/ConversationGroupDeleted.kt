@@ -28,24 +28,24 @@ import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonProperty
 
 /**
- * ConversationShareInput 的公开协议结构。 / Public contract for conversation share input.
+ * ConversationGroupDeleted 的公开协议结构。 / Public contract for conversation group deleted.
  *
- * @param password 字段 password / password field。
- * @param expiresAt 字段 expiresAt / expires at field。
+ * @param groupId 字段 groupId / group id field。
+ * @param movedConversationCount 字段 movedConversationCount / moved conversation count field。
  */
 
 
-data class ConversationShareInput (
+data class ConversationGroupDeleted (
 
-    /* 字段 password / password field。 */
-    @param:JsonProperty("password")
-    @get:JsonProperty("password")
-    val password: kotlin.String? = null,
+    /* 字段 groupId / group id field。 */
+    @param:JsonProperty("groupId")
+    @get:JsonProperty("groupId")
+    val groupId: kotlin.Long,
 
-    /* 字段 expiresAt / expires at field。 */
-    @param:JsonProperty("expiresAt")
-    @get:JsonProperty("expiresAt")
-    val expiresAt: java.time.OffsetDateTime? = null
+    /* 字段 movedConversationCount / moved conversation count field。 */
+    @param:JsonProperty("movedConversationCount")
+    @get:JsonProperty("movedConversationCount")
+    val movedConversationCount: kotlin.Int
 
 ) {
 

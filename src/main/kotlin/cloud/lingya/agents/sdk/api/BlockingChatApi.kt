@@ -4,6 +4,8 @@ import cloud.lingya.agents.sdk.generated.api.ChatApi as GeneratedChatApi
 import cloud.lingya.agents.sdk.generated.model.*
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
+import cloud.lingya.agents.sdk.RequestOptions
+import cloud.lingya.agents.sdk.DownloadResponse
 
 /**
  * chat 分组的 Java 友好阻塞接口。 / Java-friendly blocking chat operations.
@@ -25,6 +27,10 @@ public class BlockingChatApi internal constructor(
         delegate.createChat(input)
     }
 
+    public fun createChat(
+        input: AiChatInput,
+        requestOptions: RequestOptions,
+    ): AiChatSubmission = runBlocking { delegate.createChat(input, requestOptions) }
     /**
      * 向已有会话提交消息 / Submit a message to an existing conversation
      *
@@ -39,6 +45,11 @@ public class BlockingChatApi internal constructor(
         delegate.continueChat(conversationId, input)
     }
 
+    public fun continueChat(
+        conversationId: kotlin.String,
+        input: AiChatInput,
+        requestOptions: RequestOptions,
+    ): AiChatSubmission = runBlocking { delegate.continueChat(conversationId, input, requestOptions) }
     /**
      * 订阅消息事件流 / Stream message events
      *
@@ -55,6 +66,12 @@ public class BlockingChatApi internal constructor(
         delegate.streamChatEvents(conversationId, input, xRequestID).toList()
     }
 
+    public fun streamChatEvents(
+        conversationId: kotlin.String,
+        input: AiChatStreamInput,
+        xRequestID: kotlin.String? = null,
+        requestOptions: RequestOptions,
+    ): List<cloud.lingya.agents.sdk.event.AiChatBriefEvent> = runBlocking { delegate.streamChatEvents(conversationId, input, xRequestID, requestOptions).toList() }
     /**
      * 探测 SSE 连接 / Probe the SSE connection
      *
@@ -69,6 +86,11 @@ public class BlockingChatApi internal constructor(
         delegate.probeEventStream(input, xRequestID).toList()
     }
 
+    public fun probeEventStream(
+        input: ChatStreamProbeInput,
+        xRequestID: kotlin.String? = null,
+        requestOptions: RequestOptions,
+    ): List<ChatStreamProbeEvent> = runBlocking { delegate.probeEventStream(input, xRequestID, requestOptions).toList() }
     /**
      * 中断会话执行 / Interrupt conversation execution
      *
@@ -81,6 +103,10 @@ public class BlockingChatApi internal constructor(
         delegate.interruptConversation(conversationId)
     }
 
+    public fun interruptConversation(
+        conversationId: kotlin.String,
+        requestOptions: RequestOptions,
+    ): Unit = runBlocking { delegate.interruptConversation(conversationId, requestOptions) }
     /**
      * 压缩会话上下文 / Compact conversation context
      *
@@ -95,4 +121,124 @@ public class BlockingChatApi internal constructor(
         delegate.compactConversation(conversationId, force)
     }
 
+    public fun compactConversation(
+        conversationId: kotlin.String,
+        force: kotlin.Boolean? = true,
+        requestOptions: RequestOptions,
+    ): Unit = runBlocking { delegate.compactConversation(conversationId, force, requestOptions) }
+    /**
+     * 读取当前目标 / Get current goal
+     *
+     * @param conversationId 会话 ID；必须属于当前外部用户。 / Conversation ID owned by the current external user.
+     * @return 契约定义的强类型响应。 / The typed response defined by the contract.
+     */
+    public fun getGoal(
+        conversationId: kotlin.String,
+    ): AgentGoalView = runBlocking {
+        delegate.getGoal(conversationId)
+    }
+
+    public fun getGoal(
+        conversationId: kotlin.String,
+        requestOptions: RequestOptions,
+    ): AgentGoalView = runBlocking { delegate.getGoal(conversationId, requestOptions) }
+    /**
+     * 编辑目标 / Edit goal
+     *
+     * @param conversationId 会话 ID；必须属于当前外部用户。 / Conversation ID owned by the current external user.
+     * @param input 编辑目标 / Edit goal 的强类型请求体。 / Typed request body for editGoal.
+     * @return 契约定义的强类型响应。 / The typed response defined by the contract.
+     */
+    public fun editGoal(
+        conversationId: kotlin.String,
+        input: EditAgentGoalInput,
+    ): AgentGoal = runBlocking {
+        delegate.editGoal(conversationId, input)
+    }
+
+    public fun editGoal(
+        conversationId: kotlin.String,
+        input: EditAgentGoalInput,
+        requestOptions: RequestOptions,
+    ): AgentGoal = runBlocking { delegate.editGoal(conversationId, input, requestOptions) }
+    /**
+     * 查询目标历史 / Get goal history
+     *
+     * @param conversationId 会话 ID；必须属于当前外部用户。 / Conversation ID owned by the current external user.
+     * @param page 分页信息 / page metadata。
+     * @param size 单页记录数。 / Number of records per page.
+     * @return 契约定义的强类型响应。 / The typed response defined by the contract.
+     */
+    public fun getGoalHistory(
+        conversationId: kotlin.String,
+        page: kotlin.Int? = 0,
+        size: kotlin.Int? = 20,
+    ): AgentGoalHistory = runBlocking {
+        delegate.getGoalHistory(conversationId, page, size)
+    }
+
+    public fun getGoalHistory(
+        conversationId: kotlin.String,
+        page: kotlin.Int? = 0,
+        size: kotlin.Int? = 20,
+        requestOptions: RequestOptions,
+    ): AgentGoalHistory = runBlocking { delegate.getGoalHistory(conversationId, page, size, requestOptions) }
+    /**
+     * 暂停目标 / Pause goal
+     *
+     * @param conversationId 会话 ID；必须属于当前外部用户。 / Conversation ID owned by the current external user.
+     * @param input 暂停目标 / Pause goal 的强类型请求体。 / Typed request body for pauseGoal.
+     * @return 契约定义的强类型响应。 / The typed response defined by the contract.
+     */
+    public fun pauseGoal(
+        conversationId: kotlin.String,
+        input: AgentGoalRefInput,
+    ): AgentGoal = runBlocking {
+        delegate.pauseGoal(conversationId, input)
+    }
+
+    public fun pauseGoal(
+        conversationId: kotlin.String,
+        input: AgentGoalRefInput,
+        requestOptions: RequestOptions,
+    ): AgentGoal = runBlocking { delegate.pauseGoal(conversationId, input, requestOptions) }
+    /**
+     * 恢复目标 / Resume goal
+     *
+     * @param conversationId 会话 ID；必须属于当前外部用户。 / Conversation ID owned by the current external user.
+     * @param input 恢复目标 / Resume goal 的强类型请求体。 / Typed request body for resumeGoal.
+     * @return 契约定义的强类型响应。 / The typed response defined by the contract.
+     */
+    public fun resumeGoal(
+        conversationId: kotlin.String,
+        input: AgentGoalRefInput,
+    ): AgentGoal = runBlocking {
+        delegate.resumeGoal(conversationId, input)
+    }
+
+    public fun resumeGoal(
+        conversationId: kotlin.String,
+        input: AgentGoalRefInput,
+        requestOptions: RequestOptions,
+    ): AgentGoal = runBlocking { delegate.resumeGoal(conversationId, input, requestOptions) }
+    /**
+     * 清除目标 / Clear goal
+     *
+     * @param conversationId 会话 ID；必须属于当前外部用户。 / Conversation ID owned by the current external user.
+     * @param input 清除目标 / Clear goal 的强类型请求体。 / Typed request body for clearGoal.
+     * @return 契约定义的强类型响应。 / The typed response defined by the contract.
+     */
+    public fun clearGoal(
+        conversationId: kotlin.String,
+        input: AgentGoalRefInput,
+    ): AgentGoal = runBlocking {
+        delegate.clearGoal(conversationId, input)
+    }
+
+    public fun clearGoal(
+        conversationId: kotlin.String,
+        input: AgentGoalRefInput,
+        requestOptions: RequestOptions,
+    ): AgentGoal = runBlocking { delegate.clearGoal(conversationId, input, requestOptions) }
+    @JvmOverloads public fun subscribeChatEvents(conversationId: String, input: AiChatStreamInput, transport: String = "sse", requestOptions: RequestOptions = RequestOptions()): cloud.lingya.agents.sdk.ChatSubscription = delegate.subscribeChatEvents(conversationId, input, transport, requestOptions)
 }

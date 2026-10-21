@@ -32,6 +32,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
  * ConversationConfig 的公开协议结构。 / Public contract for conversation config.
  *
  * @param lastChatModelSpec 字段 lastChatModelSpec / last chat model spec field。
+ * @param planMode 字段 planMode / plan mode field。
  */
 
 
@@ -40,7 +41,12 @@ data class ConversationConfig (
     /* 字段 lastChatModelSpec / last chat model spec field。 */
     @param:JsonProperty("lastChatModelSpec")
     @get:JsonProperty("lastChatModelSpec")
-    val lastChatModelSpec: ChatModelSpec? = null
+    val lastChatModelSpec: ChatModelSpec?,
+
+    /* 字段 planMode / plan mode field。 */
+    @param:JsonProperty("planMode")
+    @get:JsonProperty("planMode")
+    val planMode: kotlin.Boolean = false
 
 ) {
 

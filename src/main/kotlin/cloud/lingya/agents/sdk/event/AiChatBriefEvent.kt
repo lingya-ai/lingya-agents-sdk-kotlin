@@ -8,8 +8,6 @@ import cloud.lingya.agents.sdk.generated.model.AiChatEndBriefEvent
 import cloud.lingya.agents.sdk.generated.model.AiChatErrorBriefEvent
 import cloud.lingya.agents.sdk.generated.model.AiChatManualInterruptBriefEvent
 import cloud.lingya.agents.sdk.generated.model.AiChatMessageBriefEvent
-import cloud.lingya.agents.sdk.generated.model.AiChatRequestBriefEvent
-import cloud.lingya.agents.sdk.generated.model.AiChatResponseBriefEvent
 import cloud.lingya.agents.sdk.generated.model.AiChatStartBriefEvent
 import cloud.lingya.agents.sdk.generated.model.AiChatSubAgentCallBriefEvent
 import cloud.lingya.agents.sdk.generated.model.AiChatThinkBriefEvent
@@ -51,12 +49,6 @@ public sealed interface AiChatBriefEvent {
 
     /** 模型思考文本事件。 / Model reasoning-text event. */
     public data class Think(public val value: AiChatThinkBriefEvent) : AiChatBriefEvent { override val type: String = "think" }
-
-    /** 发往模型的请求快照。 / Request snapshot sent to the model. */
-    public data class ChatClientRequest(public val value: AiChatRequestBriefEvent) : AiChatBriefEvent { override val type: String = "chat-client-request" }
-
-    /** 模型响应快照。 / Model response snapshot. */
-    public data class ChatClientResponse(public val value: AiChatResponseBriefEvent) : AiChatBriefEvent { override val type: String = "chat-client-response" }
 
     /** 助手可见文本事件。 / User-visible assistant message event. */
     public data class Message(public val value: AiChatMessageBriefEvent) : AiChatBriefEvent { override val type: String = "message" }

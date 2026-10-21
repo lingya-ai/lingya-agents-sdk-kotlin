@@ -4,6 +4,8 @@ import cloud.lingya.agents.sdk.generated.api.MessagesApi as GeneratedMessagesApi
 import cloud.lingya.agents.sdk.generated.model.*
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
+import cloud.lingya.agents.sdk.RequestOptions
+import cloud.lingya.agents.sdk.DownloadResponse
 
 /**
  * messages 分组的 Java 友好阻塞接口。 / Java-friendly blocking messages operations.
@@ -37,6 +39,16 @@ public class BlockingMessagesApi internal constructor(
         delegate.listConversationMessages(conversationId, current, size, orderBy, orderDirection, orderNullHandling, keyword)
     }
 
+    public fun listConversationMessages(
+        conversationId: kotlin.String,
+        current: kotlin.Int? = null,
+        size: kotlin.Int? = 30,
+        orderBy: kotlin.collections.List<kotlin.String>? = null,
+        orderDirection: GeneratedMessagesApi.OrderDirectionListConversationMessages? = GeneratedMessagesApi.OrderDirectionListConversationMessages.ASC,
+        orderNullHandling: GeneratedMessagesApi.OrderNullHandlingListConversationMessages? = GeneratedMessagesApi.OrderNullHandlingListConversationMessages.NATIVE,
+        keyword: kotlin.String? = null,
+        requestOptions: RequestOptions,
+    ): ConversationMessagePage = runBlocking { delegate.listConversationMessages(conversationId, current, size, orderBy, orderDirection, orderNullHandling, keyword, requestOptions) }
     /**
      * 读取单条会话消息 / Get a conversation message
      *
@@ -51,6 +63,11 @@ public class BlockingMessagesApi internal constructor(
         delegate.getConversationMessage(conversationId, messageId)
     }
 
+    public fun getConversationMessage(
+        conversationId: kotlin.String,
+        messageId: kotlin.String,
+        requestOptions: RequestOptions,
+    ): ConversationMessage = runBlocking { delegate.getConversationMessage(conversationId, messageId, requestOptions) }
     /**
      * 分页查询异步任务 / List asynchronous tasks
      *
@@ -77,6 +94,17 @@ public class BlockingMessagesApi internal constructor(
         delegate.listConversationAsyncTasks(conversationId, current, size, orderBy, orderDirection, orderNullHandling, keyword, status)
     }
 
+    public fun listConversationAsyncTasks(
+        conversationId: kotlin.String,
+        current: kotlin.Int? = null,
+        size: kotlin.Int? = 30,
+        orderBy: kotlin.collections.List<kotlin.String>? = null,
+        orderDirection: GeneratedMessagesApi.OrderDirectionListConversationAsyncTasks? = GeneratedMessagesApi.OrderDirectionListConversationAsyncTasks.ASC,
+        orderNullHandling: GeneratedMessagesApi.OrderNullHandlingListConversationAsyncTasks? = GeneratedMessagesApi.OrderNullHandlingListConversationAsyncTasks.NATIVE,
+        keyword: kotlin.String? = null,
+        status: kotlin.collections.List<kotlin.String>? = null,
+        requestOptions: RequestOptions,
+    ): AsyncTaskPage = runBlocking { delegate.listConversationAsyncTasks(conversationId, current, size, orderBy, orderDirection, orderNullHandling, keyword, status, requestOptions) }
     /**
      * 增量同步异步任务 / Sync asynchronous task updates
      *
@@ -93,6 +121,12 @@ public class BlockingMessagesApi internal constructor(
         delegate.syncConversationAsyncTasks(conversationId, afterMessageId, size)
     }
 
+    public fun syncConversationAsyncTasks(
+        conversationId: kotlin.String,
+        afterMessageId: kotlin.String? = null,
+        size: kotlin.Int? = 50,
+        requestOptions: RequestOptions,
+    ): AgentAsyncTaskSync = runBlocking { delegate.syncConversationAsyncTasks(conversationId, afterMessageId, size, requestOptions) }
     /**
      * 读取异步任务 / Get an asynchronous task
      *
@@ -107,6 +141,11 @@ public class BlockingMessagesApi internal constructor(
         delegate.getConversationAsyncTask(conversationId, asyncTaskId)
     }
 
+    public fun getConversationAsyncTask(
+        conversationId: kotlin.String,
+        asyncTaskId: kotlin.String,
+        requestOptions: RequestOptions,
+    ): AsyncTask = runBlocking { delegate.getConversationAsyncTask(conversationId, asyncTaskId, requestOptions) }
     /**
      * 分页查询子 Agent 任务 / List subagent tasks
      *
@@ -133,6 +172,17 @@ public class BlockingMessagesApi internal constructor(
         delegate.listConversationSubagents(conversationId, current, size, orderBy, orderDirection, orderNullHandling, keyword, status)
     }
 
+    public fun listConversationSubagents(
+        conversationId: kotlin.String,
+        current: kotlin.Int? = null,
+        size: kotlin.Int? = 30,
+        orderBy: kotlin.collections.List<kotlin.String>? = null,
+        orderDirection: GeneratedMessagesApi.OrderDirectionListConversationSubagents? = GeneratedMessagesApi.OrderDirectionListConversationSubagents.ASC,
+        orderNullHandling: GeneratedMessagesApi.OrderNullHandlingListConversationSubagents? = GeneratedMessagesApi.OrderNullHandlingListConversationSubagents.NATIVE,
+        keyword: kotlin.String? = null,
+        status: kotlin.collections.List<kotlin.String>? = null,
+        requestOptions: RequestOptions,
+    ): SubagentTaskPage = runBlocking { delegate.listConversationSubagents(conversationId, current, size, orderBy, orderDirection, orderNullHandling, keyword, status, requestOptions) }
     /**
      * 增量同步子 Agent 状态 / Sync subagent task updates
      *
@@ -149,6 +199,12 @@ public class BlockingMessagesApi internal constructor(
         delegate.syncConversationSubagents(conversationId, cursor, size)
     }
 
+    public fun syncConversationSubagents(
+        conversationId: kotlin.String,
+        cursor: kotlin.String? = null,
+        size: kotlin.Int? = 50,
+        requestOptions: RequestOptions,
+    ): SubagentTaskSync = runBlocking { delegate.syncConversationSubagents(conversationId, cursor, size, requestOptions) }
     /**
      * 读取子 Agent 状态 / Get a subagent task
      *
@@ -163,6 +219,11 @@ public class BlockingMessagesApi internal constructor(
         delegate.getConversationSubagent(conversationId, subagentTaskId)
     }
 
+    public fun getConversationSubagent(
+        conversationId: kotlin.String,
+        subagentTaskId: kotlin.String,
+        requestOptions: RequestOptions,
+    ): SubagentTask = runBlocking { delegate.getConversationSubagent(conversationId, subagentTaskId, requestOptions) }
     /**
      * 取消子 Agent 任务 / Cancel a subagent task
      *
@@ -177,6 +238,11 @@ public class BlockingMessagesApi internal constructor(
         delegate.cancelConversationSubagent(conversationId, subagentTaskId)
     }
 
+    public fun cancelConversationSubagent(
+        conversationId: kotlin.String,
+        subagentTaskId: kotlin.String,
+        requestOptions: RequestOptions,
+    ): SubagentTask = runBlocking { delegate.cancelConversationSubagent(conversationId, subagentTaskId, requestOptions) }
     /**
      * 读取子 Agent 结果 / Get a subagent result
      *
@@ -191,6 +257,11 @@ public class BlockingMessagesApi internal constructor(
         delegate.getConversationSubagentResult(conversationId, subagentTaskId)
     }
 
+    public fun getConversationSubagentResult(
+        conversationId: kotlin.String,
+        subagentTaskId: kotlin.String,
+        requestOptions: RequestOptions,
+    ): SubagentTaskResult = runBlocking { delegate.getConversationSubagentResult(conversationId, subagentTaskId, requestOptions) }
     /**
      * 取消排队消息 / Cancel a queued message
      *
@@ -205,4 +276,31 @@ public class BlockingMessagesApi internal constructor(
         delegate.cancelQueuedMessage(conversationId, messageId)
     }
 
+    public fun cancelQueuedMessage(
+        conversationId: kotlin.String,
+        messageId: kotlin.String,
+        requestOptions: RequestOptions,
+    ): ConversationMessage = runBlocking { delegate.cancelQueuedMessage(conversationId, messageId, requestOptions) }
+    /**
+     * 增量同步消息 / Sync conversation messages
+     *
+     * @param conversationId 会话 ID；必须属于当前外部用户。 / Conversation ID owned by the current external user.
+     * @param afterMessageId 通知消息同步游标。 / Notification-message sync cursor.
+     * @param size 单页记录数。 / Number of records per page.
+     * @return 契约定义的强类型响应。 / The typed response defined by the contract.
+     */
+    public fun syncConversationMessages(
+        conversationId: kotlin.String,
+        afterMessageId: kotlin.String? = null,
+        size: kotlin.Int? = 50,
+    ): ConversationMessageSync = runBlocking {
+        delegate.syncConversationMessages(conversationId, afterMessageId, size)
+    }
+
+    public fun syncConversationMessages(
+        conversationId: kotlin.String,
+        afterMessageId: kotlin.String? = null,
+        size: kotlin.Int? = 50,
+        requestOptions: RequestOptions,
+    ): ConversationMessageSync = runBlocking { delegate.syncConversationMessages(conversationId, afterMessageId, size, requestOptions) }
 }

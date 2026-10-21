@@ -23,6 +23,7 @@
 
 package cloud.lingya.agents.sdk.generated.model
 
+import cloud.lingya.agents.sdk.generated.model.AgentGoalConfig
 import cloud.lingya.agents.sdk.generated.model.AttachmentExtension
 import cloud.lingya.agents.sdk.generated.model.ModelConfig
 
@@ -35,6 +36,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
  * @param modelConfig 字段 modelConfig / model config field。
  * @param supportAttachmentExt 字段 supportAttachmentExt / support attachment ext field。
  * @param maxAttachmentCount 字段 maxAttachmentCount / max attachment count field。
+ * @param goal 字段 goal / goal field。
  */
 
 
@@ -53,7 +55,12 @@ data class AgentsConfig (
     /* 字段 maxAttachmentCount / max attachment count field。 */
     @param:JsonProperty("maxAttachmentCount")
     @get:JsonProperty("maxAttachmentCount")
-    val maxAttachmentCount: kotlin.Int
+    val maxAttachmentCount: kotlin.Int,
+
+    /* 字段 goal / goal field。 */
+    @param:JsonProperty("goal")
+    @get:JsonProperty("goal")
+    val goal: AgentGoalConfig? = null
 
 ) {
 

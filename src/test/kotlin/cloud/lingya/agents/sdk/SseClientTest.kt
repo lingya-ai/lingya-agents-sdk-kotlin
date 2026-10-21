@@ -35,7 +35,7 @@ class SseClientTest {
                         "data: {\"type\":\n" +
                         "data: \"future-event\",\"payload\":{\"kept\":true}}\n\n" +
                         "data: {\"type\":\"error\",\"message\":\"recoverable\"}\n\n" +
-                        "data: {\"type\":\"end\",\"executionTimeMillis\":1,\"totalUsage\":{\"inputTokens\":1,\"outputTokens\":1,\"totalTokens\":2},\"artifacts\":[],\"nonFileArtifacts\":[]}\n",
+                        "data: {\"type\":\"end\",\"executionTimeMillis\":1,\"totalUsage\":{\"inputTokens\":1,\"outputTokens\":1,\"totalTokens\":2},\"artifacts\":[],\"nonFileArtifacts\":[]}\n\n",
                     2,
                 ),
         )

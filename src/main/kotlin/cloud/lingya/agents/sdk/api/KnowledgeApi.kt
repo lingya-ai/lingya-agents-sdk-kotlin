@@ -2,6 +2,9 @@ package cloud.lingya.agents.sdk.api
 
 import cloud.lingya.agents.sdk.AgentsUserClient
 import cloud.lingya.agents.sdk.bodyOrThrow
+import cloud.lingya.agents.sdk.RequestOptions
+import cloud.lingya.agents.sdk.DownloadResponse
+import cloud.lingya.agents.sdk.filename
 import cloud.lingya.agents.sdk.generated.api.KnowledgeApi as GeneratedKnowledgeApi
 import cloud.lingya.agents.sdk.generated.model.*
 import kotlinx.coroutines.flow.Flow
@@ -27,8 +30,12 @@ public class KnowledgeApi internal constructor(
      */
     public suspend fun getCitationMetadataBatch(
         input: kotlin.collections.List<ReturnedReference>,
+    ): CitationMetadataList = getCitationMetadataBatch(input, RequestOptions())
+    public suspend fun getCitationMetadataBatch(
+        input: kotlin.collections.List<ReturnedReference>,
+        requestOptions: RequestOptions,
     ): CitationMetadataList =
-        delegate.getCitationMetadataBatch(channelId, input).bodyOrThrow()
+        userClient.execute(requestOptions) { api -> api.knowledge.getCitationMetadataBatch(channelId, input).bodyOrThrow() }
 
     /**
      * 读取引用元数据 / Get citation metadata
@@ -40,7 +47,12 @@ public class KnowledgeApi internal constructor(
     public suspend fun getCitationMetadata(
         citationType: kotlin.String,
         referenceId: kotlin.Long,
+    ): CitationMetadata = getCitationMetadata(citationType, referenceId, RequestOptions())
+    public suspend fun getCitationMetadata(
+        citationType: kotlin.String,
+        referenceId: kotlin.Long,
+        requestOptions: RequestOptions,
     ): CitationMetadata =
-        delegate.getCitationMetadata(channelId, citationType, referenceId).bodyOrThrow()
+        userClient.execute(requestOptions) { api -> api.knowledge.getCitationMetadata(channelId, citationType, referenceId).bodyOrThrow() }
 
 }

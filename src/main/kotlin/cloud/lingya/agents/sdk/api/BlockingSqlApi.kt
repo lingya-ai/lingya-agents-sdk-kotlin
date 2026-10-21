@@ -4,6 +4,8 @@ import cloud.lingya.agents.sdk.generated.api.SQLApi as GeneratedSQLApi
 import cloud.lingya.agents.sdk.generated.model.*
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
+import cloud.lingya.agents.sdk.RequestOptions
+import cloud.lingya.agents.sdk.DownloadResponse
 
 /**
  * sql 分组的 Java 友好阻塞接口。 / Java-friendly blocking sql operations.
@@ -31,6 +33,13 @@ public class BlockingSqlApi internal constructor(
         delegate.getSqlQueryResult(conversationId, resultId, current, size)
     }
 
+    public fun getSqlQueryResult(
+        conversationId: kotlin.String,
+        resultId: kotlin.String,
+        current: kotlin.Int? = 0,
+        size: kotlin.Int? = 100,
+        requestOptions: RequestOptions,
+    ): SqlQueryResultPage = runBlocking { delegate.getSqlQueryResult(conversationId, resultId, current, size, requestOptions) }
     /**
      * 读取 SQL 图表数据 / Get SQL chart data
      *
@@ -45,6 +54,11 @@ public class BlockingSqlApi internal constructor(
         delegate.getSqlQueryChartData(conversationId, resultId)
     }
 
+    public fun getSqlQueryChartData(
+        conversationId: kotlin.String,
+        resultId: kotlin.String,
+        requestOptions: RequestOptions,
+    ): SqlChartDataset = runBlocking { delegate.getSqlQueryChartData(conversationId, resultId, requestOptions) }
     /**
      * 导出 SQL 结果 / Export SQL results
      *
@@ -63,4 +77,18 @@ public class BlockingSqlApi internal constructor(
         delegate.exportSqlQueryResult(conversationId, resultId, format, accept)
     }
 
+    public fun exportSqlQueryResult(
+        conversationId: kotlin.String,
+        resultId: kotlin.String,
+        format: GeneratedSQLApi.FormatExportSqlQueryResult,
+        accept: kotlin.String? = null,
+        requestOptions: RequestOptions,
+    ): ByteArray = runBlocking { delegate.exportSqlQueryResult(conversationId, resultId, format, accept, requestOptions) }
+    public fun exportSqlQueryResultWithMetadata(
+        conversationId: kotlin.String,
+        resultId: kotlin.String,
+        format: GeneratedSQLApi.FormatExportSqlQueryResult,
+        accept: kotlin.String? = null,
+        requestOptions: RequestOptions = RequestOptions(),
+    ): DownloadResponse = runBlocking { delegate.exportSqlQueryResultWithMetadata(conversationId, resultId, format, accept, requestOptions) }
 }

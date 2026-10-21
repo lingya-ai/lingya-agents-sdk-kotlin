@@ -28,36 +28,36 @@ import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonProperty
 
 /**
- * ToolCall 的公开协议结构。 / Public contract for tool call.
+ * ConversationGroup 的公开协议结构。 / Public contract for conversation group.
  *
  * @param id 字段 id / id field。
- * @param type 类型判别值 / type discriminator。
  * @param name 字段 name / name field。
- * @param arguments 字段 arguments / arguments field。
+ * @param createdTime 创建时间 / creation time。
+ * @param lastUpdateTime 最后更新时间 / last update time。
  */
 
 
-data class ToolCall (
+data class ConversationGroup (
 
     /* 字段 id / id field。 */
     @param:JsonProperty("id")
     @get:JsonProperty("id")
-    val id: kotlin.String,
-
-    /* 类型判别值 / type discriminator。 */
-    @param:JsonProperty("type")
-    @get:JsonProperty("type")
-    val type: kotlin.String,
+    val id: kotlin.Long,
 
     /* 字段 name / name field。 */
     @param:JsonProperty("name")
     @get:JsonProperty("name")
     val name: kotlin.String,
 
-    /* 字段 arguments / arguments field。 */
-    @param:JsonProperty("arguments")
-    @get:JsonProperty("arguments")
-    val arguments: kotlin.String
+    /* 创建时间 / creation time。 */
+    @param:JsonProperty("createdTime")
+    @get:JsonProperty("createdTime")
+    val createdTime: java.time.OffsetDateTime,
+
+    /* 最后更新时间 / last update time。 */
+    @param:JsonProperty("lastUpdateTime")
+    @get:JsonProperty("lastUpdateTime")
+    val lastUpdateTime: java.time.OffsetDateTime
 
 ) {
 

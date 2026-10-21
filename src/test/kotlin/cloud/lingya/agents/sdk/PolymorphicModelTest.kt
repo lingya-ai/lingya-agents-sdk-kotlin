@@ -26,8 +26,6 @@ class PolymorphicModelTest {
             """{"type":"error","message":"failed"}""",
             """{"type":"start"}""",
             """{"type":"think","message":"reasoning"}""",
-            """{"type":"chat-client-request","messages":[],"chatOptions":null}""",
-            """{"type":"chat-client-response","assistantMessages":[],"usage":{"inputTokens":1,"outputTokens":2,"totalTokens":3}}""",
             """{"type":"message","message":"answer"}""",
             """{"type":"tool-execution","toolId":"tool-1","toolName":"read","status":"Success","action":"READ","summary":null,"extension":null}""",
             """{"type":"tool-execution-sub-agent-call","toolCallId":"call-1","toolName":"delegate","subAgentConversationId":"conversation-2","subAgentMessageId":"message-2"}""",
@@ -37,7 +35,7 @@ class PolymorphicModelTest {
 
         val events = documents.map(decoder::decode)
 
-        assertEquals(15, events.map(AiChatBriefEvent::type).distinct().size)
+        assertEquals(13, events.map(AiChatBriefEvent::type).distinct().size)
         assertInstanceOf(AiChatBriefEvent.UserQuery::class.java, events.first())
         assertInstanceOf(AiChatBriefEvent.End::class.java, events.last())
     }

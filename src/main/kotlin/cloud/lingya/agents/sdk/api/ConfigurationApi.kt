@@ -2,6 +2,9 @@ package cloud.lingya.agents.sdk.api
 
 import cloud.lingya.agents.sdk.AgentsUserClient
 import cloud.lingya.agents.sdk.bodyOrThrow
+import cloud.lingya.agents.sdk.RequestOptions
+import cloud.lingya.agents.sdk.DownloadResponse
+import cloud.lingya.agents.sdk.filename
 import cloud.lingya.agents.sdk.generated.api.ConfigurationApi as GeneratedConfigurationApi
 import cloud.lingya.agents.sdk.generated.model.*
 import kotlinx.coroutines.flow.Flow
@@ -25,8 +28,11 @@ public class ConfigurationApi internal constructor(
      * @return 契约定义的强类型响应。 / The typed response defined by the contract.
      */
     public suspend fun getAgentsConfig(
+    ): AgentsConfig = getAgentsConfig(RequestOptions())
+    public suspend fun getAgentsConfig(
+        requestOptions: RequestOptions,
     ): AgentsConfig =
-        delegate.getAgentsConfig(channelId).bodyOrThrow()
+        userClient.execute(requestOptions) { api -> api.configuration.getAgentsConfig(channelId).bodyOrThrow() }
 
     /**
      * 读取会话配置 / Get conversation configuration
@@ -36,7 +42,23 @@ public class ConfigurationApi internal constructor(
      */
     public suspend fun getConversationConfig(
         conversationId: kotlin.String,
+    ): ConversationConfig = getConversationConfig(conversationId, RequestOptions())
+    public suspend fun getConversationConfig(
+        conversationId: kotlin.String,
+        requestOptions: RequestOptions,
     ): ConversationConfig =
-        delegate.getConversationConfig(channelId, conversationId).bodyOrThrow()
+        userClient.execute(requestOptions) { api -> api.configuration.getConversationConfig(channelId, conversationId).bodyOrThrow() }
+
+    /**
+     * 签发一次性短期渠道令牌 / Create a single-use short-lived channel token
+     *
+     * @return 契约定义的强类型响应。 / The typed response defined by the contract.
+     */
+    public suspend fun createOpenApiToken(
+    ): OpenApiToken = createOpenApiToken(RequestOptions())
+    public suspend fun createOpenApiToken(
+        requestOptions: RequestOptions,
+    ): OpenApiToken =
+        userClient.execute(requestOptions) { api -> api.configuration.createOpenApiToken(channelId).bodyOrThrow() }
 
 }

@@ -79,6 +79,9 @@ for (const group of groups) {
         '',
         'import cloud.lingya.agents.sdk.AgentsUserClient',
         'import cloud.lingya.agents.sdk.bodyOrThrow',
+        'import cloud.lingya.agents.sdk.RequestOptions',
+        'import cloud.lingya.agents.sdk.DownloadResponse',
+        'import cloud.lingya.agents.sdk.filename',
         `import cloud.lingya.agents.sdk.generated.api.${generatedApi} as ${generatedAlias}`,
         'import cloud.lingya.agents.sdk.generated.model.*',
         'import kotlinx.coroutines.flow.Flow',
@@ -104,6 +107,8 @@ for (const group of groups) {
         'import cloud.lingya.agents.sdk.generated.model.*',
         'import kotlinx.coroutines.flow.toList',
         'import kotlinx.coroutines.runBlocking',
+        'import cloud.lingya.agents.sdk.RequestOptions',
+        'import cloud.lingya.agents.sdk.DownloadResponse',
         '',
         '/**',
         ` * ${group} 分组的 Java 友好阻塞接口。 / Java-friendly blocking ${group} operations.`,
@@ -142,12 +147,16 @@ for (const group of groups) {
         asyncLines.push('     */');
         asyncLines.push(`    public ${operation.sse ? 'fun' : 'suspend fun'} ${operation.operationId}(`);
         for (const parameter of parameters) asyncLines.push(`        ${parameter},`);
+        asyncLines.push(`    ): ${returnType} = ${operation.operationId}(${[...argumentNames, 'RequestOptions()'].join(', ')})`);
+        asyncLines.push(`    public ${operation.sse ? 'fun' : 'suspend fun'} ${operation.operationId}(`);
+        for (const parameter of parameters) asyncLines.push(`        ${parameter},`);
+        asyncLines.push('        requestOptions: RequestOptions,');
         asyncLines.push(`    ): ${returnType} =`);
         if (operation.sse) {
-            asyncLines.push(`        userClient.${operation.operationId}Internal(${argumentNames.join(', ')})`);
+            asyncLines.push(`        userClient.${operation.operationId}Internal(${[...argumentNames, 'requestOptions'].join(', ')})`);
         } else {
-            const call = `delegate.${operation.operationId}(${['channelId', ...argumentNames].join(', ')})`;
-            asyncLines.push(generated.responseType === 'ResponseBody' ? `        ${call}.bodyOrThrow().bytes()` : `        ${call}.bodyOrThrow()`);
+            const call = `api.${group}.${operation.operationId}(${['channelId', ...argumentNames].join(', ')})`;
+            asyncLines.push(generated.responseType === 'ResponseBody' ? `        userClient.execute(requestOptions) { api -> ${call}.bodyOrThrow().use { it.bytes() } }` : `        userClient.execute(requestOptions) { api -> ${call}.bodyOrThrow() }`);
         }
         asyncLines.push('');
 
@@ -167,7 +176,26 @@ for (const group of groups) {
         blockingLines.push(`        delegate.${operation.operationId}(${argumentNames.join(', ')})${operation.sse ? '.toList()' : ''}`);
         blockingLines.push('    }');
         blockingLines.push('');
+        blockingLines.push(`    public fun ${operation.operationId}(`);
+        for (const parameter of parameters) blockingLines.push(`        ${parameter},`);
+        blockingLines.push('        requestOptions: RequestOptions,');
+        blockingLines.push(`    ): ${blockingReturn} = runBlocking { delegate.${operation.operationId}(${[...argumentNames, 'requestOptions'].join(', ')})${operation.sse ? '.toList()' : ''} }`);
+        if (generated.responseType === 'ResponseBody') {
+            asyncLines.push(`    public suspend fun ${operation.operationId}WithMetadata(`);
+            for (const parameter of parameters) asyncLines.push(`        ${parameter},`);
+            asyncLines.push('        requestOptions: RequestOptions = RequestOptions(),');
+            asyncLines.push('    ): DownloadResponse = userClient.execute(requestOptions) { api ->');
+            asyncLines.push(`        val response = api.${group}.${operation.operationId}(${['channelId', ...argumentNames].join(', ')})`);
+            asyncLines.push('        response.bodyOrThrow().use { body -> DownloadResponse(body.bytes(), filename(response.headers()), response.headers()["Content-Type"], response.headers(), response.code(), response.headers()["X-Request-ID"]) }');
+            asyncLines.push('    }');
+            blockingLines.push(`    public fun ${operation.operationId}WithMetadata(`);
+            for (const parameter of parameters) blockingLines.push(`        ${parameter},`);
+            blockingLines.push('        requestOptions: RequestOptions = RequestOptions(),');
+            blockingLines.push(`    ): DownloadResponse = runBlocking { delegate.${operation.operationId}WithMetadata(${[...argumentNames, 'requestOptions'].join(', ')}) }`);
+        }
     }
+    if (group === 'chat') blockingLines.push('    @JvmOverloads public fun subscribeChatEvents(conversationId: String, input: AiChatStreamInput, transport: String = "sse", requestOptions: RequestOptions = RequestOptions()): cloud.lingya.agents.sdk.ChatSubscription = delegate.subscribeChatEvents(conversationId, input, transport, requestOptions)');
+    if (group === 'chat') asyncLines.push('    public fun subscribeChatEvents(conversationId: String, input: AiChatStreamInput, transport: String = "sse", requestOptions: RequestOptions = RequestOptions()): cloud.lingya.agents.sdk.ChatSubscription = userClient.subscribeChatEventsInternal(conversationId, input, transport, requestOptions)');
     asyncLines.push('}');
     blockingLines.push('}');
     await writeFile(new URL(`${className}.kt`, outputDir), `${asyncLines.join('\n')}\n`, 'utf8');

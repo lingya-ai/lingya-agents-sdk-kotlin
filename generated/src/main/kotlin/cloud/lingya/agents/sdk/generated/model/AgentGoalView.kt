@@ -23,23 +23,24 @@
 
 package cloud.lingya.agents.sdk.generated.model
 
+import cloud.lingya.agents.sdk.generated.model.AgentGoal
 
 import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonProperty
 
 /**
- * ConversationShareRevoked 的公开协议结构。 / Public contract for conversation share revoked.
+ * AgentGoalView 的公开协议结构。 / Public contract for agent goal view.
  *
- * @param shareId 字段 shareId / share id field。
+ * @param goal 字段 goal / goal field。
  */
 
 
-data class ConversationShareRevoked (
+data class AgentGoalView (
 
-    /* 字段 shareId / share id field。 */
-    @param:JsonProperty("shareId")
-    @get:JsonProperty("shareId")
-    val shareId: kotlin.Long
+    /* 字段 goal / goal field。 */
+    @param:JsonProperty("goal")
+    @get:JsonProperty("goal")
+    val goal: AgentGoal?
 
 ) {
 

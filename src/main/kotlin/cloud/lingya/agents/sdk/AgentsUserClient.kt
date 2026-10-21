@@ -19,11 +19,16 @@ import cloud.lingya.agents.sdk.generated.model.AiChatSubmission
 import cloud.lingya.agents.sdk.generated.model.ChatStreamProbeEvent
 import cloud.lingya.agents.sdk.generated.model.ChatStreamProbeInput
 import com.fasterxml.jackson.databind.ObjectMapper
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.flow.transformWhile
+import kotlinx.coroutines.flow.onCompletion
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.HttpUrl
@@ -49,7 +54,15 @@ public class AgentsUserClient internal constructor(
     public val channelId: String,
     private val transport: OkHttpClient,
     private val objectMapper: ObjectMapper,
+    private val tokenProvider: TokenProvider? = null,
 ) {
+    internal suspend fun <T> execute(options: RequestOptions, operation: suspend (AgentsApis) -> T): T = runRequest(options) {
+        val apis = if (options.timeoutMs == null) lowLevel else AgentsApis(Retrofit.Builder().baseUrl(baseUrl)
+            .client(transport.newBuilder().callTimeout(options.timeoutMs, java.util.concurrent.TimeUnit.MILLISECONDS).build())
+            .addConverterFactory(JacksonConverterFactory.create(objectMapper)).build())
+        operation(apis)
+    }
+
     /** 供迁移和高级协议调试使用的生成 API。 / Generated APIs for migration and protocol-level debugging. */
     public val lowLevel: AgentsApis = AgentsApis(
         Retrofit.Builder()
@@ -117,6 +130,7 @@ public class AgentsUserClient internal constructor(
         conversationId: String,
         input: AiChatStreamInput,
         requestId: String? = null,
+        options: RequestOptions = RequestOptions(),
     ): Flow<AiChatBriefEvent> {
         val url = baseUrl.newBuilder()
             .addPathSegments("api/agents/channel/openapi/v1")
@@ -133,7 +147,12 @@ public class AgentsUserClient internal constructor(
             .apply { if (requestId != null) header("X-Request-ID", requestId) }
             .build()
         val decoder = AiChatEventDecoder(objectMapper)
-        return streamData(request).map(decoder::decode)
+        var ended = false
+        return streamData(request, options).map(decoder::decode).transformWhile { event ->
+            if (event.type == "end") ended = true
+            emit(event)
+            !ended
+        }.onCompletion { cause -> if (cause == null && !ended) throw ApiException(0, null, "unexpected_eof") }
     }
 
     /** @suppress */
@@ -147,6 +166,7 @@ public class AgentsUserClient internal constructor(
     internal fun probeEventStreamInternal(
         input: ChatStreamProbeInput,
         requestId: String? = null,
+        options: RequestOptions = RequestOptions(),
     ): Flow<ChatStreamProbeEvent> {
         val url = baseUrl.newBuilder()
             .addPathSegments("api/agents/channel/openapi/v1")
@@ -160,11 +180,19 @@ public class AgentsUserClient internal constructor(
             .header("Accept", "text/event-stream")
             .apply { if (requestId != null) header("X-Request-ID", requestId) }
             .build()
-        return streamData(request).map { objectMapper.readValue(it, ChatStreamProbeEvent::class.java) }
+        return streamData(request, options).map { objectMapper.readValue(it, ChatStreamProbeEvent::class.java) }
     }
 
-    private fun streamData(request: Request): Flow<String> = callbackFlow {
-        val call = transport.newCall(request)
+    private fun streamData(request: Request, options: RequestOptions): Flow<String> = flow {
+        runRequest(options) { emitAll(streamDataSource(request, options)) }
+    }
+
+    private fun streamDataSource(request: Request, options: RequestOptions): Flow<String> = callbackFlow {
+        val client = transport.newBuilder().apply {
+            options.timeoutMs?.let { callTimeout(it, java.util.concurrent.TimeUnit.MILLISECONDS) }
+            readTimeout(options.idleTimeoutMs ?: 0, java.util.concurrent.TimeUnit.MILLISECONDS)
+        }.build()
+        val call = client.newCall(request)
         call.enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 if (!call.isCanceled()) close(e)
@@ -173,14 +201,23 @@ public class AgentsUserClient internal constructor(
             override fun onResponse(call: Call, response: Response) {
                 response.use {
                     if (!response.isSuccessful) {
-                        close(ApiException(response.code, response.body.string()))
+                        close(ApiException(response.code, response.body.string(), requestId = response.header("X-Request-ID")))
                         return
                     }
+                    if (response.header("Content-Type")?.substringBefore(';')?.trim()?.lowercase() != "text/event-stream") { close(ApiException(response.code, null, "protocol")); return }
+                    options.notify(ConnectionEvent("opened", "sse", response.header("X-Request-ID")))
                     try {
                         val parser = SseEventParser()
-                        val source = response.body.source()
-                        while (!source.exhausted()) {
-                            parser.accept(source.readUtf8Line() ?: break)?.let { trySendBlocking(it).getOrThrow() }
+                        val reader = response.body.byteStream().bufferedReader(Charsets.UTF_8)
+                        while (true) {
+                            val line = reader.readLine() ?: break
+                            if (line.startsWith(':')) options.notify(ConnectionEvent(if (line.trim() == ":ready") "ready" else "heartbeat", "sse"))
+                            parser.accept(line)?.let {
+                                val end = objectMapper.readValue(it, StreamEventType::class.java).type == "end"
+                                if (end) { response.close(); call.cancel() }
+                                trySendBlocking(it).getOrThrow()
+                                if (end) { close(); return }
+                            }
                         }
                         parser.finish()?.let { trySendBlocking(it).getOrThrow() }
                         close()
@@ -190,10 +227,68 @@ public class AgentsUserClient internal constructor(
                 }
             }
         })
-        awaitClose { call.cancel() }
+        awaitClose { call.cancel(); options.notify(ConnectionEvent("closed", "sse")) }
+    }
+
+    internal fun subscribeChatEventsInternal(conversationId: String, input: AiChatStreamInput, transportName: String, options: RequestOptions): ChatSubscription {
+        require(transportName == "sse" || transportName == "websocket")
+        val connectionOptions = options.copy(connectionId = java.util.UUID.randomUUID().toString())
+        val sourceOptions = connectionOptions.copy(onConnectionEvent = { event -> if (event.type != "closed") connectionOptions.notify(event) })
+        return ChatSubscription(if (transportName == "sse") streamChatEventsInternal(conversationId, input, options = sourceOptions) else websocketEvents(conversationId, input, sourceOptions), connectionOptions, transportName)
+    }
+
+    private fun websocketEvents(conversationId: String, input: AiChatStreamInput, options: RequestOptions): Flow<AiChatBriefEvent> = flow {
+        runRequest(options) {
+            val token = try { tokenProvider?.let { freshToken(it, channelId) } }
+            catch (error: kotlinx.coroutines.CancellationException) { throw error }
+            catch (error: Exception) { throw ApiException(0, null, "authentication") }
+            if (token != null && (token.isEmpty() || token.any { it.code !in 33..126 })) throw ApiException(0, null, "authentication")
+            val url = baseUrl.newBuilder().addPathSegments("api/agents/channel/openapi/v1").addPathSegment(channelId)
+                .addPathSegments("chat/conversations").addPathSegment(conversationId).addPathSegments("stream/ws").addQueryParameter("messageId", input.messageId).build()
+            val request = Request.Builder().url(url).apply { if (token != null) header("Sec-WebSocket-Protocol", "xlt-openapi-token.$token") }.build()
+            val client = transport.newBuilder().apply {
+                interceptors().removeAll { it is OpenApiTokenInterceptor }
+                networkInterceptors().removeAll { it is TokenAttemptInterceptor }
+            }.build()
+            emitAll(callbackFlow {
+                var ready = false
+                val activity = kotlinx.coroutines.channels.Channel<Unit>(kotlinx.coroutines.channels.Channel.CONFLATED)
+                val idleWatcher = options.idleTimeoutMs?.let { idle ->
+                    launch { while (true) { if (kotlinx.coroutines.withTimeoutOrNull(idle) { activity.receive() } == null) { close(ApiException(0, null, "timeout")); break } } }
+                }
+                val socket = client.newWebSocket(request, object : okhttp3.WebSocketListener() {
+                    override fun onOpen(webSocket: okhttp3.WebSocket, response: Response) { options.notify(ConnectionEvent("opened", "websocket", response.header("X-Request-ID"))) }
+                    override fun onMessage(webSocket: okhttp3.WebSocket, text: String) {
+                        activity.trySend(Unit)
+                        try {
+                            val frame = objectMapper.readValue(text, WebSocketEnvelope::class.java)
+                            if (frame.id != input.messageId) throw ApiException(0, null, "protocol")
+                            when (frame.event) {
+                                "ready" -> { ready = true; options.notify(ConnectionEvent("ready", "websocket")) }
+                                "complete" -> { webSocket.close(1000, "complete"); close(TransportCompleted("complete")) }
+                                "transport-error" -> { webSocket.close(1000, "error"); close(ApiException(0, frame.data?.rawJson, "protocol")) }
+                                else -> {
+                                    if (!ready) throw ApiException(0, null, "protocol")
+                                    val event = AiChatEventDecoder(objectMapper).decode(frame.data?.rawJson ?: throw ApiException(0, null, "protocol"))
+                                    if (event.type == "end") webSocket.close(1000, "end")
+                                    if (!trySend(event).isSuccess) { webSocket.cancel(); throw ApiException(0, null, "protocol") }
+                                    if (event.type == "end") close()
+                                }
+                            }
+                        } catch (error: Exception) { webSocket.cancel(); close(if (error is ApiException) error else ApiException(0, null, "protocol", cause = error)) }
+                    }
+                    override fun onMessage(webSocket: okhttp3.WebSocket, bytes: okio.ByteString) { webSocket.cancel(); close(ApiException(0, null, "protocol")) }
+                    override fun onClosing(webSocket: okhttp3.WebSocket, code: Int, reason: String) { webSocket.close(code, reason); if (code == 1000) close(TransportCompleted("normal")) else close(ApiException(0, null, "unexpected_eof")) }
+                    override fun onFailure(webSocket: okhttp3.WebSocket, t: Throwable, response: Response?) { close(ApiException(response?.code ?: 0, null, "network", response?.header("X-Request-ID"))) }
+                })
+                awaitClose { idleWatcher?.cancel(); activity.close(); socket.cancel() }
+            })
+        }
     }
 
     private companion object {
         val JSON_MEDIA_TYPE = "application/json".toMediaType()
     }
 }
+
+private data class StreamEventType(val type: String = "")

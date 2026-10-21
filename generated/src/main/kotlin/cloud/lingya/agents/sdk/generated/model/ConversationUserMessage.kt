@@ -36,9 +36,9 @@ import com.fasterxml.jackson.annotation.JsonValue
  * @param text 字段 text / text field。
  * @param executionType 字段 executionType / execution type field。
  * @param type 类型判别值 / type discriminator。
+ * @param metadata 消息来源定义的动态 JSON 元数据。 / Dynamic JSON metadata defined by the message source.
  * @param multimodalAttachments 字段 multimodalAttachments / multimodal attachments field。
  * @param attachments 字段 attachments / attachments field。
- * @param metadataRawJson 字段 metadataRawJson / metadata raw json field。
  */
 
 
@@ -59,6 +59,11 @@ data class ConversationUserMessage (
     @get:JsonProperty("type")
     val type: ConversationUserMessage.Type,
 
+    /* 消息来源定义的动态 JSON 元数据。 / Dynamic JSON metadata defined by the message source. */
+    @param:JsonProperty("metadata")
+    @get:JsonProperty("metadata")
+    val metadata: kotlin.collections.Map<kotlin.String, kotlin.Any>,
+
     /* 字段 multimodalAttachments / multimodal attachments field。 */
     @param:JsonProperty("multimodalAttachments")
     @get:JsonProperty("multimodalAttachments")
@@ -67,12 +72,7 @@ data class ConversationUserMessage (
     /* 字段 attachments / attachments field。 */
     @param:JsonProperty("attachments")
     @get:JsonProperty("attachments")
-    val attachments: kotlin.collections.List<MediaAttachment>? = null,
-
-    /* 字段 metadataRawJson / metadata raw json field。 */
-    @param:JsonProperty("metadataRawJson")
-    @get:JsonProperty("metadataRawJson")
-    val metadataRawJson: kotlin.String? = null
+    val attachments: kotlin.collections.List<MediaAttachment>? = null
 
 ) {
 
