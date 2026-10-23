@@ -35,6 +35,7 @@ import com.fasterxml.jackson.annotation.JsonValue
  * @param module 字段 module / module field。
  * @param contentMd5 字段 contentMd5 / content md5 field。
  * @param fileId 文件 ID / file ID。
+ * @param sizeBytes 实际文件大小（字节） / actual file size in bytes。
  */
 
 
@@ -58,7 +59,12 @@ data class GeneratePreSignedUrlInput (
     /* 文件 ID / file ID。 */
     @param:JsonProperty("fileId")
     @get:JsonProperty("fileId")
-    val fileId: kotlin.Long? = null
+    val fileId: kotlin.Long? = null,
+
+    /* 实际文件大小（字节） / actual file size in bytes。 */
+    @param:JsonProperty("sizeBytes")
+    @get:JsonProperty("sizeBytes")
+    val sizeBytes: kotlin.Long? = null
 
 ) {
 

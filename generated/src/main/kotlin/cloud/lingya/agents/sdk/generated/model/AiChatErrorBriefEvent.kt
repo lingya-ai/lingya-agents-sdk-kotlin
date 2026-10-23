@@ -33,6 +33,7 @@ import com.fasterxml.jackson.annotation.JsonValue
  *
  * @param type 类型判别值 / type discriminator。
  * @param message 消息正文 / message text。
+ * @param terminalReason 字段 terminalReason / terminal reason field。
  */
 
 
@@ -46,7 +47,12 @@ data class AiChatErrorBriefEvent (
     /* 消息正文 / message text。 */
     @param:JsonProperty("message")
     @get:JsonProperty("message")
-    val message: kotlin.String
+    val message: kotlin.String,
+
+    /* 字段 terminalReason / terminal reason field。 */
+    @param:JsonProperty("terminalReason")
+    @get:JsonProperty("terminalReason")
+    val terminalReason: AiChatErrorBriefEvent.TerminalReason? = null
 
 ) {
 
@@ -57,6 +63,25 @@ data class AiChatErrorBriefEvent (
      */
     enum class Type(@get:JsonValue val value: kotlin.String) {
         @JsonProperty(value = "error") error("error"),
+        @JsonProperty(value = "unknown_default_open_api") @JsonEnumDefaultValue unknown_default_open_api("unknown_default_open_api");
+    }
+    /**
+     * 字段 terminalReason / terminal reason field。
+     *
+     * Values: COMPLETED,EXECUTION_ERROR,INTERRUPTED,USER_INTERRUPTED,SYSTEM_INTERRUPTED,WORKSPACE_COMMIT_FAILED,EXECUTION_LEASE_EXPIRED,EXECUTION_DEADLINE_EXCEEDED,TERMINAL_EVENT_RECONCILED,TERMINAL_EVENT_MISSING_RECONCILED,LEGACY_STATE_RECONCILED,unknown_default_open_api
+     */
+    enum class TerminalReason(@get:JsonValue val value: kotlin.String) {
+        @JsonProperty(value = "COMPLETED") COMPLETED("COMPLETED"),
+        @JsonProperty(value = "EXECUTION_ERROR") EXECUTION_ERROR("EXECUTION_ERROR"),
+        @JsonProperty(value = "INTERRUPTED") INTERRUPTED("INTERRUPTED"),
+        @JsonProperty(value = "USER_INTERRUPTED") USER_INTERRUPTED("USER_INTERRUPTED"),
+        @JsonProperty(value = "SYSTEM_INTERRUPTED") SYSTEM_INTERRUPTED("SYSTEM_INTERRUPTED"),
+        @JsonProperty(value = "WORKSPACE_COMMIT_FAILED") WORKSPACE_COMMIT_FAILED("WORKSPACE_COMMIT_FAILED"),
+        @JsonProperty(value = "EXECUTION_LEASE_EXPIRED") EXECUTION_LEASE_EXPIRED("EXECUTION_LEASE_EXPIRED"),
+        @JsonProperty(value = "EXECUTION_DEADLINE_EXCEEDED") EXECUTION_DEADLINE_EXCEEDED("EXECUTION_DEADLINE_EXCEEDED"),
+        @JsonProperty(value = "TERMINAL_EVENT_RECONCILED") TERMINAL_EVENT_RECONCILED("TERMINAL_EVENT_RECONCILED"),
+        @JsonProperty(value = "TERMINAL_EVENT_MISSING_RECONCILED") TERMINAL_EVENT_MISSING_RECONCILED("TERMINAL_EVENT_MISSING_RECONCILED"),
+        @JsonProperty(value = "LEGACY_STATE_RECONCILED") LEGACY_STATE_RECONCILED("LEGACY_STATE_RECONCILED"),
         @JsonProperty(value = "unknown_default_open_api") @JsonEnumDefaultValue unknown_default_open_api("unknown_default_open_api");
     }
 

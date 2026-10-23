@@ -54,7 +54,7 @@ class PolymorphicModelTest {
             "jsRunScript" to """{"script":"1+1"}""",
             "jsRunScriptResult" to """{"result":"2","stdout":""}""",
             "skillResource" to """{"operationType":"CREATE","filepath":"SKILL.md"}""",
-            "taskProgress" to """{"action":"CREATE","currentTaskId":"1","currentTaskStatus":"pending","archived":false,"total":1,"pending":1,"inProgress":0,"completed":0,"progressPercent":0,"tasks":[{"id":"1","subject":"test","activeForm":null,"status":"pending","blocks":[],"blockedBy":[]}]}""",
+            "taskProgress" to """{"action":"WRITE","total":1,"pending":1,"inProgress":0,"completed":0,"progressPercent":0,"tasks":[{"id":"1","content":"test","status":"PENDING"}]}""",
         )
 
         val extensions = contents.map { (category, content) ->

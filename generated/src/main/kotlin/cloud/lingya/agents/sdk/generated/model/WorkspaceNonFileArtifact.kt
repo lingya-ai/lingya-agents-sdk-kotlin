@@ -26,6 +26,7 @@ package cloud.lingya.agents.sdk.generated.model
 
 import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.annotation.JsonValue
 
 /**
  * WorkspaceNonFileArtifact 的公开协议结构。 / Public contract for workspace non file artifact.
@@ -36,6 +37,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
  * @param description 可读说明 / human-readable description。
  * @param lastUpdateTime 最后更新时间 / last update time。
  * @param previewUrl 字段 previewUrl / preview url field。
+ * @param htmlPageAuthoringMode 字段 htmlPageAuthoringMode / html page authoring mode field。
  */
 
 
@@ -69,10 +71,25 @@ data class WorkspaceNonFileArtifact (
     /* 字段 previewUrl / preview url field。 */
     @param:JsonProperty("previewUrl")
     @get:JsonProperty("previewUrl")
-    val previewUrl: java.net.URI? = null
+    val previewUrl: java.net.URI? = null,
+
+    /* 字段 htmlPageAuthoringMode / html page authoring mode field。 */
+    @param:JsonProperty("htmlPageAuthoringMode")
+    @get:JsonProperty("htmlPageAuthoringMode")
+    val htmlPageAuthoringMode: WorkspaceNonFileArtifact.HtmlPageAuthoringMode? = null
 
 ) {
 
+    /**
+     * 字段 htmlPageAuthoringMode / html page authoring mode field。
+     *
+     * Values: SOURCE,DIAGRAM,unknown_default_open_api
+     */
+    enum class HtmlPageAuthoringMode(@get:JsonValue val value: kotlin.String) {
+        @JsonProperty(value = "SOURCE") SOURCE("SOURCE"),
+        @JsonProperty(value = "DIAGRAM") DIAGRAM("DIAGRAM"),
+        @JsonProperty(value = "unknown_default_open_api") @JsonEnumDefaultValue unknown_default_open_api("unknown_default_open_api");
+    }
 
 }
 

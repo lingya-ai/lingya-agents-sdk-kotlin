@@ -30,6 +30,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 /**
  * WorkspaceFile 的公开协议结构。 / Public contract for workspace file.
  *
+ * @param fileId 文件 ID / file ID。
  * @param relativePath 字段 relativePath / relative path field。
  * @param propertySize 大小（字节）或分页容量 / byte size or page size。
  * @param fileName 文件名 / file name。
@@ -39,6 +40,11 @@ import com.fasterxml.jackson.annotation.JsonProperty
 
 
 data class WorkspaceFile (
+
+    /* 文件 ID / file ID。 */
+    @param:JsonProperty("fileId")
+    @get:JsonProperty("fileId")
+    val fileId: kotlin.Long,
 
     /* 字段 relativePath / relative path field。 */
     @param:JsonProperty("relativePath")

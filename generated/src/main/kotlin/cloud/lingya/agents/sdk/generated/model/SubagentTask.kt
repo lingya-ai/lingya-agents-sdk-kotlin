@@ -43,7 +43,6 @@ import com.fasterxml.jackson.annotation.JsonProperty
  * @param lastUpdateTime 最后更新时间 / last update time。
  * @param cancellable 字段 cancellable / cancellable field。
  * @param phase 字段 phase / phase field。
- * @param progressPercent 字段 progressPercent / progress percent field。
  * @param childConversationId 字段 childConversationId / child conversation id field。
  * @param childMessageId 字段 childMessageId / child message id field。
  * @param failureCode 字段 failureCode / failure code field。
@@ -119,11 +118,6 @@ data class SubagentTask (
     @param:JsonProperty("phase")
     @get:JsonProperty("phase")
     val phase: kotlin.String? = null,
-
-    /* 字段 progressPercent / progress percent field。 */
-    @param:JsonProperty("progressPercent")
-    @get:JsonProperty("progressPercent")
-    val progressPercent: kotlin.Int? = null,
 
     /* 字段 childConversationId / child conversation id field。 */
     @param:JsonProperty("childConversationId")

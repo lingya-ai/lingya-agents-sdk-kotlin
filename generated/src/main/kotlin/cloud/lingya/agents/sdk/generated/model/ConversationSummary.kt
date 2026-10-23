@@ -73,7 +73,7 @@ data class ConversationSummary (
     /* 字段 messageCount / message count field。 */
     @param:JsonProperty("messageCount")
     @get:JsonProperty("messageCount")
-    val messageCount: kotlin.Long,
+    val messageCount: kotlin.Int,
 
     /* 总 Token 数 / total token count。 */
     @param:JsonProperty("totalTokens")

@@ -31,7 +31,6 @@ import com.fasterxml.jackson.annotation.JsonProperty
  * AiChatFileRef 的公开协议结构。 / Public contract for ai chat file ref.
  *
  * @param id 字段 id / id field。
- * @param fileName 文件名 / file name。
  */
 
 
@@ -40,12 +39,7 @@ data class AiChatFileRef (
     /* 字段 id / id field。 */
     @param:JsonProperty("id")
     @get:JsonProperty("id")
-    val id: kotlin.Long,
-
-    /* 文件名 / file name。 */
-    @param:JsonProperty("fileName")
-    @get:JsonProperty("fileName")
-    val fileName: kotlin.String? = null
+    val id: kotlin.Long
 
 ) {
 

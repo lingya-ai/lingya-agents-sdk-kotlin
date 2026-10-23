@@ -35,6 +35,7 @@ import com.fasterxml.jackson.annotation.JsonValue
  * @param type 类型判别值 / type discriminator。
  * @param query 用户问题 / user query。
  * @param attachments 字段 attachments / attachments field。
+ * @param executionType 字段 executionType / execution type field。
  */
 
 
@@ -53,7 +54,12 @@ data class AiChatUserQueryBriefEvent (
     /* 字段 attachments / attachments field。 */
     @param:JsonProperty("attachments")
     @get:JsonProperty("attachments")
-    val attachments: kotlin.collections.List<MediaAttachment>? = null
+    val attachments: kotlin.collections.List<MediaAttachment>? = null,
+
+    /* 字段 executionType / execution type field。 */
+    @param:JsonProperty("executionType")
+    @get:JsonProperty("executionType")
+    val executionType: AiChatUserQueryBriefEvent.ExecutionType? = null
 
 ) {
 
@@ -64,6 +70,24 @@ data class AiChatUserQueryBriefEvent (
      */
     enum class Type(@get:JsonValue val value: kotlin.String) {
         @JsonProperty(value = "user-query") userMinusQuery("user-query"),
+        @JsonProperty(value = "unknown_default_open_api") @JsonEnumDefaultValue unknown_default_open_api("unknown_default_open_api");
+    }
+    /**
+     * 字段 executionType / execution type field。
+     *
+     * Values: USER_MESSAGE,ASYNC_TASK_NOTIFICATION,SUBAGENT_ASYNC_EXECUTION,SUBAGENT,CONTEXT_COMPRESSION,CONTEXT_INSPECTION,COLLABORATION_TURN,COLLABORATION_STEER,COLLABORATION_NOTIFICATION,GOAL_CONTINUATION,unknown_default_open_api
+     */
+    enum class ExecutionType(@get:JsonValue val value: kotlin.String) {
+        @JsonProperty(value = "USER_MESSAGE") USER_MESSAGE("USER_MESSAGE"),
+        @JsonProperty(value = "ASYNC_TASK_NOTIFICATION") ASYNC_TASK_NOTIFICATION("ASYNC_TASK_NOTIFICATION"),
+        @JsonProperty(value = "SUBAGENT_ASYNC_EXECUTION") SUBAGENT_ASYNC_EXECUTION("SUBAGENT_ASYNC_EXECUTION"),
+        @JsonProperty(value = "SUBAGENT") SUBAGENT("SUBAGENT"),
+        @JsonProperty(value = "CONTEXT_COMPRESSION") CONTEXT_COMPRESSION("CONTEXT_COMPRESSION"),
+        @JsonProperty(value = "CONTEXT_INSPECTION") CONTEXT_INSPECTION("CONTEXT_INSPECTION"),
+        @JsonProperty(value = "COLLABORATION_TURN") COLLABORATION_TURN("COLLABORATION_TURN"),
+        @JsonProperty(value = "COLLABORATION_STEER") COLLABORATION_STEER("COLLABORATION_STEER"),
+        @JsonProperty(value = "COLLABORATION_NOTIFICATION") COLLABORATION_NOTIFICATION("COLLABORATION_NOTIFICATION"),
+        @JsonProperty(value = "GOAL_CONTINUATION") GOAL_CONTINUATION("GOAL_CONTINUATION"),
         @JsonProperty(value = "unknown_default_open_api") @JsonEnumDefaultValue unknown_default_open_api("unknown_default_open_api");
     }
 

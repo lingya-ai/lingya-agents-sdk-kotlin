@@ -32,15 +32,12 @@ import com.fasterxml.jackson.annotation.JsonProperty
  * TaskProgressExtensionContent 的公开协议结构。 / Public contract for task progress extension content.
  *
  * @param action 字段 action / action field。
- * @param archived 字段 archived / archived field。
  * @param total 字段 total / total field。
  * @param pending 字段 pending / pending field。
  * @param inProgress 字段 inProgress / in progress field。
  * @param completed 字段 completed / completed field。
  * @param progressPercent 字段 progressPercent / progress percent field。
  * @param tasks 字段 tasks / tasks field。
- * @param currentTaskId 字段 currentTaskId / current task id field。
- * @param currentTaskStatus 字段 currentTaskStatus / current task status field。
  */
 
 
@@ -50,11 +47,6 @@ data class TaskProgressExtensionContent (
     @param:JsonProperty("action")
     @get:JsonProperty("action")
     val action: kotlin.String,
-
-    /* 字段 archived / archived field。 */
-    @param:JsonProperty("archived")
-    @get:JsonProperty("archived")
-    val archived: kotlin.Boolean,
 
     /* 字段 total / total field。 */
     @param:JsonProperty("total")
@@ -84,17 +76,7 @@ data class TaskProgressExtensionContent (
     /* 字段 tasks / tasks field。 */
     @param:JsonProperty("tasks")
     @get:JsonProperty("tasks")
-    val tasks: kotlin.collections.List<TaskSummary>,
-
-    /* 字段 currentTaskId / current task id field。 */
-    @param:JsonProperty("currentTaskId")
-    @get:JsonProperty("currentTaskId")
-    val currentTaskId: kotlin.String? = null,
-
-    /* 字段 currentTaskStatus / current task status field。 */
-    @param:JsonProperty("currentTaskStatus")
-    @get:JsonProperty("currentTaskStatus")
-    val currentTaskStatus: kotlin.String? = null
+    val tasks: kotlin.collections.List<TaskSummary>
 
 ) {
 

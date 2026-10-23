@@ -62,7 +62,7 @@ interface FilesApi {
     /**
      * POST api/agents/channel/openapi/v1/{channelId}/chat/files/pre-signed-url/write
      * 创建预签名上传地址 / Create a presigned upload URL
-     * ### 使用场景 为需要上传的新附件申请对象存储地址。  ### Use case Request an object-storage URL for a new attachment.  ### 前置条件 已计算文件 MD5，文件模块为 ai-chat-attachments。  ### Prerequisites The file MD5 is known and the module is ai-chat-attachments.  ### 行为与副作用 创建短期上传授权，不代表上传完成。  ### Behavior and side effects Creates short-lived upload authorization; upload is not yet complete.  ### 后续调用 按返回 headers 上传文件，再调用确认接口。  ### Next step Upload with the returned headers, then call confirmation.  ### 接口摘要 创建预签名上传地址 / Create a presigned upload URL  ### Operation summary 创建预签名上传地址 / Create a presigned upload URL
+     * ### 使用场景 为需要上传的新附件申请对象存储地址。  ### Use case Request an object-storage URL for a new attachment.  ### 前置条件 已计算文件 MD5 并取得实际文件大小，文件模块为 ai-chat-attachments。  ### Prerequisites The file MD5 and actual file size are known, and the module is ai-chat-attachments.  ### 行为与副作用 创建短期上传授权并预占配额，不代表上传完成。  ### Behavior and side effects Creates short-lived upload authorization and reserves quota; upload is not yet complete.  ### 后续调用 按返回的 uploadMethod 执行 PUT 或 POST_FORM 上传，遵守 maximumBytes，再调用确认接口。  ### Next step Upload with the returned uploadMethod (PUT or POST_FORM) within maximumBytes, then call confirmation.  ### 接口摘要 创建预签名上传地址 / Create a presigned upload URL  ### Operation summary 创建预签名上传地址 / Create a presigned upload URL
      * Responses:
      *  - 201: 创建预签名上传地址 / Create a presigned upload URL 的成功响应。 / Successful response for createPreSignedUpload.
      *  - 401: 接口错误。 / API error.

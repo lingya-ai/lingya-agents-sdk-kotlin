@@ -22,6 +22,8 @@ class StrongModelSourceTest {
             .flatMap { source ->
                 Files.readAllLines(source).mapIndexedNotNull { index, line ->
                     if (source.fileName.toString() == "ConversationUserMessage.kt" && line.trim().startsWith("val metadata:")) return@mapIndexedNotNull null
+                    // Object-storage form fields are a string-to-string map by protocol design.
+                    if (source.fileName.toString() == "GeneratePreSignedUrlOutput.kt" && line.trim().startsWith("val formFields:")) return@mapIndexedNotNull null
                     forbidden.firstOrNull { (pattern) -> pattern.containsMatchIn(line) }
                         ?.let { (_, label) -> "$source:${index + 1}: $label" }
                 }

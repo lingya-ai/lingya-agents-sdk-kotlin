@@ -26,6 +26,7 @@ package cloud.lingya.agents.sdk.generated.model
 
 import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.annotation.JsonValue
 
 /**
  * GeneratePreSignedUrlOutput 的公开协议结构。 / Public contract for generate pre signed url output.
@@ -33,6 +34,9 @@ import com.fasterxml.jackson.annotation.JsonProperty
  * @param support 当前存储是否支持该操作 / whether the storage supports this operation。
  * @param fileUk 字段 fileUk / file uk field。
  * @param url 预签名 URL / presigned URL。
+ * @param uploadMethod 客户端上传方式 / upload method。
+ * @param formFields 表单上传字段 / form fields。
+ * @param maximumBytes 受限上传允许的最大字节数 / maximum bytes for bounded upload。
  */
 
 
@@ -51,10 +55,35 @@ data class GeneratePreSignedUrlOutput (
     /* 预签名 URL / presigned URL。 */
     @param:JsonProperty("url")
     @get:JsonProperty("url")
-    val url: java.net.URI? = null
+    val url: java.net.URI? = null,
+
+    /* 客户端上传方式 / upload method。 */
+    @param:JsonProperty("uploadMethod")
+    @get:JsonProperty("uploadMethod")
+    val uploadMethod: GeneratePreSignedUrlOutput.UploadMethod? = null,
+
+    /* 表单上传字段 / form fields。 */
+    @param:JsonProperty("formFields")
+    @get:JsonProperty("formFields")
+    val formFields: kotlin.collections.Map<kotlin.String, kotlin.String>? = null,
+
+    /* 受限上传允许的最大字节数 / maximum bytes for bounded upload。 */
+    @param:JsonProperty("maximumBytes")
+    @get:JsonProperty("maximumBytes")
+    val maximumBytes: kotlin.Long? = null
 
 ) {
 
+    /**
+     * 客户端上传方式 / upload method。
+     *
+     * Values: PUT,POST_FORM,unknown_default_open_api
+     */
+    enum class UploadMethod(@get:JsonValue val value: kotlin.String) {
+        @JsonProperty(value = "PUT") PUT("PUT"),
+        @JsonProperty(value = "POST_FORM") POST_FORM("POST_FORM"),
+        @JsonProperty(value = "unknown_default_open_api") @JsonEnumDefaultValue unknown_default_open_api("unknown_default_open_api");
+    }
 
 }
 
